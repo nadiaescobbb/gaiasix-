@@ -265,7 +265,7 @@ export default function GaiaSix() {
                 className="hidden md:flex items-center space-x-2 hover:text-red-600 transition-colors"
               >
                 <User size={20} />
-                <span>Ingresar</span>
+                <span>Unite a Gaia Six</span>
               </button>
             )}
             
@@ -323,7 +323,7 @@ export default function GaiaSix() {
               onClick={() => setCurrentPage('shop')}
               className="bg-red-600 text-white px-12 py-4 text-lg font-semibold hover:bg-red-700 transition-all transform hover:scale-105 shadow-lg"
             >
-              Explorar Colección
+             Ver looks
             </button>
           </div>
         </div>
@@ -404,7 +404,7 @@ export default function GaiaSix() {
     return (
       <div className="min-h-screen bg-gray-50 py-12 px-4">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-5xl font-playfair font-bold text-center mb-12">Nuestra Colección</h1>
+          <h1 className="text-5xl font-playfair font-bold text-center mb-12">Looks que hablan por vos.</h1>
           
           <div className="flex flex-wrap justify-center gap-4 mb-12">
             {categories.map(cat => (
@@ -768,7 +768,7 @@ export default function GaiaSix() {
         </div>
         
         <div>
-          <h4 className="font-semibold mb-4">Vení a vernos”</h4>
+          <h4 className="font-semibold mb-4">Vení a vernos</h4>
           <ul className="space-y-2 text-gray-400">
             <li className="flex items-center gap-2">
               <Mail size={16} />
