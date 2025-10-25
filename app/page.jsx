@@ -783,7 +783,7 @@ export default function GaiaSix() {
             </li>
             <li className="flex items-center gap-2">
               <MapPin size={16} />
-              <span>Buenos Aires, Argentina</span>
+              <span>Tierra del fuego, Argentina</span>
             </li>
           </ul>
         </div>
@@ -802,7 +802,7 @@ export default function GaiaSix() {
       </div>
       
       <div className="max-w-7xl mx-auto mt-8 pt-8 border-t border-gray-800 text-center text-gray-400">
-        <p>&copy; 2024 Gaia Six. Todos los derechos reservados. Hecho con 🖤 por ndv</p>
+        <p>&copy; 2025 Gaia Six. Todos los derechos reservados </p>
       </div>
     </footer>
   );
