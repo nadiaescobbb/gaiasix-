@@ -332,7 +332,7 @@ export default function GaiaSix() {
     <section className="py-20 px-4 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-4xl font-playfair font-bold text-center mb-16">
-          Nuestros favoritos, siempre en 6 cuotas
+          Nuestros favoritos, hasta en 3 cuotas sin interes
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {products.slice(0, 3).map(product => (
@@ -369,31 +369,43 @@ export default function GaiaSix() {
     </section>
 
     <section className="py-20 px-4 bg-black text-white">
-      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-        <div>
-          <h2 className="text-4xl font-playfair font-bold mb-6">Sobre Gaia Six</h2>
-          <p className="text-lg text-gray-300 mb-6">
-            Cada prenda está pensada para que te sientas vos misma: con libertad, confianza y tu propia onda.
-          </p>
-          <p className="text-lg text-gray-300 mb-8">
-            Ropa que se combina fácil, que acompaña tu día a día y te hace sentir bien sin complicaciones.
-          </p>
-          <button 
-            onClick={() => setCurrentPage('about')}
-            className="border-2 border-white text-white px-8 py-3 hover:bg-white hover:text-black transition-all"
-          >
-            Conocer más
-          </button>
-        </div>
-        <div className="relative h-96">
-          <img 
-            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=800&fit=crop"
-            alt="About Gaia Six"
-            className="w-full h-full object-cover rounded-lg shadow-2xl"
-          />
-        </div>
+  <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+    <div>
+      <h2 className="text-4xl font-playfair font-bold mb-6">
+        Más que ropa, es tu momento
+      </h2>
+      <p className="text-lg text-gray-300 mb-6 leading-relaxed">
+        Gaia Six nació para vos, para esos días donde querés sentirte increíble sin pensarlo demasiado. 
+        <span className="text-white font-semibold"> Ropa que habla tu idioma: </span>
+        cómoda, con onda y lista para lo que venga.
+      </p>
+      <p className="text-lg text-gray-300 mb-8 leading-relaxed">
+        No seguimos tendencias, creamos las nuestras. Cada prenda está diseñada para que la combines como quieras, 
+        sin reglas ni complicaciones. 
+        <span className="text-red-400"> Porque tu estilo es tuyo, y punto.</span>
+      </p>
+      <button 
+        onClick={() => setCurrentPage('about')}
+        className="border-2 border-white text-white px-8 py-3 hover:bg-white hover:text-black transition-all font-semibold group"
+      >
+        Conocé nuestra historia
+        <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
+      </button>
+    </div>
+    <div className="relative h-96">
+      <img 
+        src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=800&fit=crop"
+        alt="Mujer con estilo Gaia Six"
+        className="w-full h-full object-cover rounded-lg shadow-2xl"
+      />
+      <div className="absolute -bottom-6 -right-6 bg-red-600 text-white p-6 rounded-lg shadow-xl max-w-xs">
+        <p className="font-semibold text-sm">
+          "Ropa que se siente tan bien como se ve" ✨
+        </p>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
   </div>
 );
 
