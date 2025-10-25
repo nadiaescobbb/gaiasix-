@@ -32,3 +32,4 @@ export default function GaiaSix() {
   const [currentUser, setCurrentUser] = useState(null);
   const [authMode, setAuthMode] = useState('login');
   const [orderHistory, setOrderHistory] = useState([]);
+}
