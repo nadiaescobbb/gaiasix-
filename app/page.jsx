@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingCart, Menu, X, Instagram, MessageCircle, MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ShoppingCart, Menu, X, Instagram, MessageCircle, MapPin, ChevronLeft, ChevronRight, User, LogOut, Package } from 'lucide-react';
 
 // Productos de ejemplo
 const products = [
@@ -40,6 +40,151 @@ export default function GaiaSix() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authMode, setAuthMode] = useState('login'); // 'login' or 'register'
+  const [orderHistory, setOrderHistory] = useState([]);
+
+  // Load user session on mount
+  useEffect(() => {
+    loadUserSession();
+  }, []);
+
+  const loadUserSession = async () => {
+    try {
+      const result = await window.storage.get('current_user');
+      if (result) {
+        const user = JSON.parse(result.value);
+        setCurrentUser(user);
+        await loadUserOrders(user.email);
+      }
+    } catch (error) {
+      // No session found
+    }
+  };
+
+  const loadUserOrders = async (email) => {
+    try {
+      const result = await window.storage.get(`orders_${email}`);
+      if (result) {
+        setOrderHistory(JSON.parse(result.value));
+      }
+    } catch (error) {
+      setOrderHistory([]);
+    }
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const userData = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      password: formData.get('password'),
+      phone: formData.get('phone'),
+      address: formData.get('address'),
+      city: formData.get('city'),
+      postalCode: formData.get('postalCode'),
+      createdAt: new Date().toISOString()
+    };
+
+    try {
+      // Check if user already exists
+      const existingUser = await window.storage.get(`user_${userData.email}`);
+      if (existingUser) {
+        alert('Este email ya está registrado. Por favor, iniciá sesión.');
+        setAuthMode('login');
+        return;
+      }
+
+      // Save user
+      await window.storage.set(`user_${userData.email}`, JSON.stringify(userData));
+      
+      // Set current session
+      await window.storage.set('current_user', JSON.stringify(userData));
+      
+      setCurrentUser(userData);
+      setCurrentPage('home');
+      alert('¡Cuenta creada exitosamente! Bienvenida a Gaia Six 🖤');
+    } catch (error) {
+      alert('Error al crear la cuenta. Por favor, intentá nuevamente.');
+    }
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const email = formData.get('email');
+    const password = formData.get('password');
+
+    try {
+      const result = await window.storage.get(`user_${email}`);
+      if (!result) {
+        alert('Usuario no encontrado. ¿Querés crear una cuenta?');
+        return;
+      }
+
+      const userData = JSON.parse(result.value);
+      
+      if (userData.password !== password) {
+        alert('Contraseña incorrecta');
+        return;
+      }
+
+      // Set current session
+      await window.storage.set('current_user', JSON.stringify(userData));
+      
+      setCurrentUser(userData);
+      await loadUserOrders(userData.email);
+      setCurrentPage('home');
+      alert(`¡Bienvenida de vuelta, ${userData.name}! 🖤`);
+    } catch (error) {
+      alert('Error al iniciar sesión. Por favor, intentá nuevamente.');
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await window.storage.delete('current_user');
+      setCurrentUser(null);
+      setOrderHistory([]);
+      setCurrentPage('home');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
+  const handleCheckout = async () => {
+    if (!currentUser) {
+      alert('Por favor, iniciá sesión para finalizar tu compra');
+      navigateTo('auth');
+      return;
+    }
+
+    const order = {
+      id: Date.now(),
+      date: new Date().toISOString(),
+      items: cart,
+      total: cartTotal,
+      status: 'Procesando',
+      shippingAddress: {
+        address: currentUser.address,
+        city: currentUser.city,
+        postalCode: currentUser.postalCode
+      }
+    };
+
+    try {
+      const newOrderHistory = [order, ...orderHistory];
+      await window.storage.set(`orders_${currentUser.email}`, JSON.stringify(newOrderHistory));
+      setOrderHistory(newOrderHistory);
+      setCart([]);
+      setCartOpen(false);
+      alert('¡Pedido realizado exitosamente! Vas a recibir un email de confirmación 🎉');
+      navigateTo('account');
+    } catch (error) {
+      alert('Error al procesar el pedido. Por favor, intentá nuevamente.');
+    }
+  };
 
   // Hero slider automático
   useEffect(() => {
@@ -126,6 +271,32 @@ export default function GaiaSix() {
           </nav>
 
           <div className="flex items-center space-x-4">
+            {currentUser ? (
+              <div className="hidden md:flex items-center space-x-3">
+                <button 
+                  onClick={() => navigateTo('account')}
+                  className="flex items-center gap-2 hover:text-gray-300 transition"
+                >
+                  <User size={20} />
+                  <span className="text-sm">{currentUser.name}</span>
+                </button>
+                <button 
+                  onClick={handleLogout}
+                  className="hover:text-gray-300 transition"
+                  title="Cerrar sesión"
+                >
+                  <LogOut size={20} />
+                </button>
+              </div>
+            ) : (
+              <button 
+                onClick={() => navigateTo('auth')}
+                className="hidden md:flex items-center gap-2 hover:text-gray-300 transition"
+              >
+                <User size={20} />
+                <span className="text-sm">Ingresar</span>
+              </button>
+            )}
             <button 
               onClick={() => setCartOpen(!cartOpen)}
               className="relative hover:text-gray-300 transition"
@@ -150,6 +321,14 @@ export default function GaiaSix() {
             <button onClick={() => navigateTo('shop')} className="block w-full text-left py-2 hover:text-gray-300 transition">Colección</button>
             <button onClick={() => navigateTo('about')} className="block w-full text-left py-2 hover:text-gray-300 transition">Sobre Nosotras</button>
             <button onClick={() => navigateTo('contact')} className="block w-full text-left py-2 hover:text-gray-300 transition">Contacto</button>
+            {currentUser ? (
+              <>
+                <button onClick={() => navigateTo('account')} className="block w-full text-left py-2 hover:text-gray-300 transition">Mi Cuenta</button>
+                <button onClick={handleLogout} className="block w-full text-left py-2 hover:text-gray-300 transition">Cerrar Sesión</button>
+              </>
+            ) : (
+              <button onClick={() => navigateTo('auth')} className="block w-full text-left py-2 hover:text-gray-300 transition">Ingresar / Registrarse</button>
+            )}
           </nav>
         )}
       </header>
@@ -209,9 +388,17 @@ export default function GaiaSix() {
                       <span>Total:</span>
                       <span>${cartTotal.toLocaleString()}</span>
                     </div>
-                    <button className="w-full bg-red-700 text-white py-3 rounded font-body font-semibold hover:bg-red-800 transition">
+                    <button 
+                      onClick={handleCheckout}
+                      className="w-full bg-red-700 text-white py-3 rounded font-body font-semibold hover:bg-red-800 transition"
+                    >
                       Finalizar Compra
                     </button>
+                    {!currentUser && (
+                      <p className="text-xs text-gray-500 text-center mt-3">
+                        Iniciá sesión para completar tu compra
+                      </p>
+                    )}
                   </div>
                 </>
               )}
@@ -459,6 +646,324 @@ export default function GaiaSix() {
           </section>
         )}
 
+        {currentPage === 'auth' && (
+          <section className="max-w-md mx-auto px-4 py-16">
+            <div className="bg-white rounded-lg shadow-lg p-8">
+              <div className="flex gap-4 mb-8 border-b">
+                <button
+                  onClick={() => setAuthMode('login')}
+                  className={`flex-1 pb-3 font-body font-semibold transition ${
+                    authMode === 'login' 
+                      ? 'border-b-2 border-red-700 text-red-700' 
+                      : 'text-gray-500'
+                  }`}
+                >
+                  Iniciar Sesión
+                </button>
+                <button
+                  onClick={() => setAuthMode('register')}
+                  className={`flex-1 pb-3 font-body font-semibold transition ${
+                    authMode === 'register' 
+                      ? 'border-b-2 border-red-700 text-red-700' 
+                      : 'text-gray-500'
+                  }`}
+                >
+                  Registrarse
+                </button>
+              </div>
+
+              {authMode === 'login' ? (
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <h2 className="font-heading text-3xl font-bold mb-6">Bienvenida de vuelta</h2>
+                  
+                  <div>
+                    <label className="block font-body font-semibold mb-2">Email</label>
+                    <input
+                      type="email"
+                      name="email"
+                      required
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent"
+                      placeholder="tu@email.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-body font-semibold mb-2">Contraseña</label>
+                    <input
+                      type="password"
+                      name="password"
+                      required
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent"
+                      placeholder="••••••••"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full bg-red-700 text-white py-3 rounded-lg font-body font-semibold hover:bg-red-800 transition"
+                  >
+                    Iniciar Sesión
+                  </button>
+
+                  <p className="text-center text-sm text-gray-600 font-body">
+                    ¿No tenés cuenta?{' '}
+                    <button
+                      type="button"
+                      onClick={() => setAuthMode('register')}
+                      className="text-red-700 font-semibold hover:underline"
+                    >
+                      Registrate acá
+                    </button>
+                  </p>
+                </form>
+              ) : (
+                <form onSubmit={handleRegister} className="space-y-4">
+                  <h2 className="font-heading text-3xl font-bold mb-6">Unite a Gaia Six</h2>
+                  
+                  <div>
+                    <label className="block font-body font-semibold mb-2">Nombre completo</label>
+                    <input
+                      type="text"
+                      name="name"
+                      required
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent"
+                      placeholder="María García"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-body font-semibold mb-2">Email</label>
+                    <input
+                      type="email"
+                      name="email"
+                      required
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent"
+                      placeholder="tu@email.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-body font-semibold mb-2">Teléfono</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      required
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent"
+                      placeholder="+54 9 11 1234-5678"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-body font-semibold mb-2">Contraseña</label>
+                    <input
+                      type="password"
+                      name="password"
+                      required
+                      minLength="6"
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent"
+                      placeholder="Mínimo 6 caracteres"
+                    />
+                  </div>
+
+                  <div className="border-t pt-4 mt-6">
+                    <h3 className="font-body font-semibold mb-3">Dirección de envío</h3>
+                    
+                    <div className="space-y-3">
+                      <input
+                        type="text"
+                        name="address"
+                        required
+                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent"
+                        placeholder="Calle y número"
+                      />
+                      
+                      <div className="grid grid-cols-2 gap-3">
+                        <input
+                          type="text"
+                          name="city"
+                          required
+                          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent"
+                          placeholder="Ciudad"
+                        />
+                        <input
+                          type="text"
+                          name="postalCode"
+                          required
+                          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-700 focus:border-transparent"
+                          placeholder="Código postal"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full bg-red-700 text-white py-3 rounded-lg font-body font-semibold hover:bg-red-800 transition"
+                  >
+                    Crear Cuenta
+                  </button>
+
+                  <p className="text-center text-sm text-gray-600 font-body">
+                    ¿Ya tenés cuenta?{' '}
+                    <button
+                      type="button"
+                      onClick={() => setAuthMode('login')}
+                      className="text-red-700 font-semibold hover:underline"
+                    >
+                      Iniciá sesión
+                    </button>
+                  </p>
+                </form>
+              )}
+            </div>
+          </section>
+        )}
+
+        {currentPage === 'account' && (
+          <section className="max-w-6xl mx-auto px-4 py-16">
+            {!currentUser ? (
+              <div className="text-center py-16">
+                <User size={64} className="mx-auto mb-4 text-gray-400" />
+                <h2 className="font-heading text-3xl font-bold mb-4">Iniciá sesión para ver tu cuenta</h2>
+                <button
+                  onClick={() => navigateTo('auth')}
+                  className="bg-red-700 text-white px-8 py-3 rounded-lg font-body font-semibold hover:bg-red-800 transition"
+                >
+                  Iniciar Sesión
+                </button>
+              </div>
+            ) : (
+              <div>
+                <div className="flex items-center justify-between mb-8">
+                  <h1 className="font-heading text-4xl font-bold">Mi Cuenta</h1>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 text-gray-600 hover:text-black transition font-body"
+                  >
+                    <LogOut size={20} />
+                    Cerrar Sesión
+                  </button>
+                </div>
+
+                <div className="grid md:grid-cols-3 gap-8">
+                  {/* User Info */}
+                  <div className="bg-white rounded-lg shadow-lg p-6">
+                    <h2 className="font-body font-bold text-xl mb-4 flex items-center gap-2">
+                      <User size={20} />
+                      Información Personal
+                    </h2>
+                    <div className="space-y-3 font-body text-gray-700">
+                      <div>
+                        <p className="text-sm text-gray-500">Nombre</p>
+                        <p className="font-semibold">{currentUser.name}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Email</p>
+                        <p className="font-semibold">{currentUser.email}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Teléfono</p>
+                        <p className="font-semibold">{currentUser.phone}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Shipping Address */}
+                  <div className="bg-white rounded-lg shadow-lg p-6">
+                    <h2 className="font-body font-bold text-xl mb-4 flex items-center gap-2">
+                      <MapPin size={20} />
+                      Dirección de Envío
+                    </h2>
+                    <div className="space-y-2 font-body text-gray-700">
+                      <p>{currentUser.address}</p>
+                      <p>{currentUser.city}, CP {currentUser.postalCode}</p>
+                    </div>
+                  </div>
+
+                  {/* Stats */}
+                  <div className="bg-white rounded-lg shadow-lg p-6">
+                    <h2 className="font-body font-bold text-xl mb-4 flex items-center gap-2">
+                      <Package size={20} />
+                      Resumen
+                    </h2>
+                    <div className="space-y-3 font-body">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Pedidos totales</span>
+                        <span className="font-bold">{orderHistory.length}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Miembro desde</span>
+                        <span className="font-bold">
+                          {new Date(currentUser.createdAt).toLocaleDateString('es-AR', { 
+                            month: 'short', 
+                            year: 'numeric' 
+                          })}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Order History */}
+                <div className="mt-8 bg-white rounded-lg shadow-lg p-6">
+                  <h2 className="font-body font-bold text-2xl mb-6">Historial de Pedidos</h2>
+                  
+                  {orderHistory.length === 0 ? (
+                    <div className="text-center py-12">
+                      <Package size={64} className="mx-auto mb-4 text-gray-300" />
+                      <p className="font-body text-gray-500 mb-4">
+                        Todavía no hiciste ningún pedido
+                      </p>
+                      <button
+                        onClick={() => navigateTo('shop')}
+                        className="bg-red-700 text-white px-6 py-2 rounded font-body font-semibold hover:bg-red-800 transition"
+                      >
+                        Explorar Colección
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {orderHistory.map(order => (
+                        <div key={order.id} className="border rounded-lg p-4">
+                          <div className="flex justify-between items-start mb-3">
+                            <div>
+                              <p className="font-body font-bold text-lg">Pedido #{order.id}</p>
+                              <p className="font-body text-sm text-gray-600">
+                                {new Date(order.date).toLocaleDateString('es-AR', {
+                                  day: 'numeric',
+                                  month: 'long',
+                                  year: 'numeric'
+                                })}
+                              </p>
+                            </div>
+                            <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-body font-semibold">
+                              {order.status}
+                            </span>
+                          </div>
+                          
+                          <div className="border-t pt-3 space-y-2">
+                            {order.items.map(item => (
+                              <div key={item.id} className="flex justify-between font-body text-sm">
+                                <span>{item.name} x{item.quantity}</span>
+                                <span>${(item.price * item.quantity).toLocaleString()}</span>
+                              </div>
+                            ))}
+                          </div>
+                          
+                          <div className="border-t mt-3 pt-3 flex justify-between font-body font-bold">
+                            <span>Total</span>
+                            <span>${order.total.toLocaleString()}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </section>
+        )}
+
         {currentPage === 'contact' && (
           <section className="max-w-4xl mx-auto px-4 py-16">
             <h1 className="font-heading text-5xl font-bold mb-12 text-center">Hablemos</h1>
@@ -543,6 +1048,7 @@ export default function GaiaSix() {
                 <li><button onClick={() => navigateTo('shop')} className="hover:text-white transition">Colección</button></li>
                 <li><button onClick={() => navigateTo('about')} className="hover:text-white transition">Sobre Nosotras</button></li>
                 <li><button onClick={() => navigateTo('contact')} className="hover:text-white transition">Contacto</button></li>
+                {currentUser && <li><button onClick={() => navigateTo('account')} className="hover:text-white transition">Mi Cuenta</button></li>}
               </ul>
             </div>
 
