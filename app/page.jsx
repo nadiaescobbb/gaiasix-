@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, User, Heart, Menu, X, Search, ChevronRight, Instagram, Facebook, Mail, Phone, MapPin, Star } from 'lucide-react';
+import { ShoppingBag, User, Heart, Menu, X, Instagram, Facebook, Mail, Phone, MapPin, Star } from 'lucide-react';
 
 // Mock Data
 const products = [
@@ -76,9 +76,10 @@ const categories = [
   { id: 'conjuntos', name: 'Conjuntos', icon: '✨' }
 ];
 
-// Services
+// Services con guards
 const authService = {
   login: (email, password) => {
+    if (typeof window === 'undefined') return null;
     const users = JSON.parse(localStorage.getItem('gaia_users') || '[]');
     const user = users.find(u => u.email === email && u.password === password);
     if (user) {
@@ -88,6 +89,7 @@ const authService = {
     return null;
   },
   register: (userData) => {
+    if (typeof window === 'undefined') return null;
     const users = JSON.parse(localStorage.getItem('gaia_users') || '[]');
     const newUser = { ...userData, id: Date.now(), orders: [] };
     users.push(newUser);
@@ -96,9 +98,11 @@ const authService = {
     return newUser;
   },
   logout: () => {
+    if (typeof window === 'undefined') return;
     localStorage.removeItem('gaia_current_user');
   },
   getCurrentUser: () => {
+    if (typeof window === 'undefined') return null;
     const user = localStorage.getItem('gaia_current_user');
     return user ? JSON.parse(user) : null;
   }
@@ -106,6 +110,7 @@ const authService = {
 
 const orderService = {
   createOrder: (userId, cart, total) => {
+    if (typeof window === 'undefined') return null;
     const order = {
       id: Date.now(),
       userId,
@@ -120,6 +125,7 @@ const orderService = {
     return order;
   },
   getUserOrders: (userId) => {
+    if (typeof window === 'undefined') return [];
     const orders = JSON.parse(localStorage.getItem('gaia_orders') || '[]');
     return orders.filter(o => o.userId === userId);
   }
@@ -152,22 +158,26 @@ export default function GaiaSix() {
   const [authMode, setAuthMode] = useState('login');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const user = authService.getCurrentUser();
-    if (user) setCurrentUser(user);
-    
-    const savedCart = localStorage.getItem('gaia_cart');
-    if (savedCart) setCart(JSON.parse(savedCart));
+    setMounted(true);
+    if (typeof window !== 'undefined') {
+      const user = authService.getCurrentUser();
+      if (user) setCurrentUser(user);
+      const savedCart = localStorage.getItem('gaia_cart');
+      if (savedCart) setCart(JSON.parse(savedCart));
+    }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('gaia_cart', JSON.stringify(cart));
-  }, [cart]);
+    if (mounted && typeof window !== 'undefined') {
+      localStorage.setItem('gaia_cart', JSON.stringify(cart));
+    }
+  }, [cart, mounted]);
 
   const addToCart = (product, size) => {
     const existingItem = cart.find(item => item.id === product.id && item.size === size);
-    
     if (existingItem) {
       setCart(cart.map(item =>
         item.id === product.id && item.size === size
@@ -202,7 +212,6 @@ export default function GaiaSix() {
       setAuthMode('login');
       return;
     }
-    
     const total = calculateCartTotal(cart);
     orderService.createOrder(currentUser.id, cart, total);
     setCart([]);
@@ -231,6 +240,14 @@ export default function GaiaSix() {
     setCurrentUser(null);
     setCurrentPage('home');
   };
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="text-white text-3xl font-playfair animate-pulse">GAIA SIX</div>
+      </div>
+    );
+  }
 
   // Header Component
   const Header = () => (
@@ -307,177 +324,158 @@ export default function GaiaSix() {
   );
 
   // Home Page
- // Home Page
-const Home = () => (
-  <div className="min-h-screen">
-    {/* Hero Section Mejorado */}
-    <div className="relative h-screen bg-gradient-to-br from-black via-gray-900 to-red-950 overflow-hidden">
-      {/* Overlay con textura */}
-      <div className="absolute inset-0 bg-black opacity-50"></div>
-      
-      {/* Elemento decorativo animado */}
-      <div className="absolute top-20 right-20 w-96 h-96 bg-red-600 rounded-full blur-3xl opacity-20 animate-pulse"></div>
-      <div className="absolute bottom-20 left-20 w-80 h-80 bg-white rounded-full blur-3xl opacity-10 animate-pulse" style={{animationDelay: '1s'}}></div>
-      
-      <div className="relative z-10 h-full flex items-center justify-center text-center px-4">
-        <div className="max-w-5xl">
-          {/* Badge superior */}
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-2 mb-8 animate-fade-in">
-            <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-            <span className="text-white text-sm font-medium">Nueva Colección 2025</span>
-          </div>
-          
-          {/* Título principal con animación */}
-          <h1 className="text-5xl md:text-8xl lg:text-9xl font-playfair font-bold text-white mb-6 tracking-tight leading-tight animate-fade-in">
-            Tu estilo,
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">
-              sin excusas
-            </span>
-          </h1>
-          
-          {/* Subtítulo mejorado */}
-          <p className="text-lg md:text-2xl text-gray-200 mb-12 max-w-2xl mx-auto leading-relaxed animate-fade-in font-light" style={{animationDelay: '0.2s'}}>
-            Ropa que fluye con vos. Cómoda cuando necesitás moverte, 
-            <span className="text-white font-medium"> elegante cuando querés brillar.</span>
-          </p>
-          
-          {/* Botones mejorados */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in" style={{animationDelay: '0.4s'}}>
-            <button 
-              onClick={() => setCurrentPage('shop')}
-              className="group bg-red-600 text-white px-10 py-4 text-lg font-semibold hover:bg-red-700 transition-all transform hover:scale-105 shadow-2xl rounded-sm relative overflow-hidden"
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                Explorar colección
-                <span className="group-hover:translate-x-1 transition-transform">→</span>
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
-            </button>
+  const Home = () => (
+    <div className="min-h-screen">
+      <div className="relative min-h-screen bg-gradient-to-br from-black via-gray-900 to-red-950 overflow-hidden flex items-center justify-center">
+        <div className="absolute inset-0 bg-black opacity-50"></div>
+        <div className="absolute top-20 right-20 w-96 h-96 bg-red-600 rounded-full blur-3xl opacity-20 animate-pulse"></div>
+        <div className="absolute bottom-20 left-20 w-80 h-80 bg-white rounded-full blur-3xl opacity-10" style={{animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite', animationDelay: '1s'}}></div>
+        
+        <div className="relative z-10 text-center px-4 py-20">
+          <div className="max-w-5xl mx-auto">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-2 mb-8">
+              <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+              <span className="text-white text-sm font-medium">Nueva Colección 2025</span>
+            </div>
             
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-playfair font-bold text-white mb-6 tracking-tight leading-tight">
+              Tu estilo,
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">
+                sin excusas
+              </span>
+            </h1>
+            
+            <p className="text-lg md:text-2xl text-gray-200 mb-12 max-w-2xl mx-auto leading-relaxed font-light">
+              Ropa que fluye con vos. Cómoda cuando necesitás moverte, 
+              <span className="text-white font-medium"> elegante cuando querés brillar.</span>
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+              <button 
+                onClick={() => setCurrentPage('shop')}
+                className="group bg-red-600 text-white px-10 py-4 text-lg font-semibold hover:bg-red-700 transition-all transform hover:scale-105 shadow-2xl rounded-sm relative overflow-hidden"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  Explorar colección
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+                </span>
+              </button>
+              
+              <button 
+                onClick={() => setCurrentPage('about')}
+                className="group border-2 border-white text-white px-10 py-4 text-lg font-semibold hover:bg-white hover:text-black transition-all rounded-sm"
+              >
+                <span className="flex items-center gap-2">
+                  Nuestra historia
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+                </span>
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto border-t border-white/20 pt-8">
+              <div className="text-center">
+                <p className="text-3xl md:text-4xl font-bold text-red-400">6</p>
+                <p className="text-sm text-gray-300 mt-1">Cuotas sin interés</p>
+              </div>
+              <div className="text-center">
+                <p className="text-3xl md:text-4xl font-bold text-white">24/48hs</p>
+                <p className="text-sm text-gray-300 mt-1">Envío gratis</p>
+              </div>
+              <div className="text-center">
+                <p className="text-3xl md:text-4xl font-bold text-red-400">500+</p>
+                <p className="text-sm text-gray-300 mt-1">Clientas felices</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="flex flex-col items-center gap-2 text-white/60">
+            <span className="text-xs uppercase tracking-widest">Scroll</span>
+            <div className="w-px h-12 bg-white/40"></div>
+          </div>
+        </div>
+      </div>
+
+      <section className="py-20 px-4 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl font-playfair font-bold text-center mb-16">
+            Nuestros favoritos, hasta en 3 cuotas sin interés
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {products.slice(0, 3).map(product => (
+              <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow group">
+                <div className="relative overflow-hidden">
+                  <img 
+                    src={product.image} 
+                    alt={product.name}
+                    className="w-full h-96 object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute top-4 right-4">
+                    <button className="bg-white p-2 rounded-full shadow-lg hover:bg-red-600 hover:text-white transition-colors">
+                      <Heart size={20} />
+                    </button>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
+                  <p className="text-gray-600 mb-4">{product.description}</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-2xl font-bold text-red-600">{formatPrice(product.price)}</span>
+                    <button 
+                      onClick={() => { setSelectedProduct(product); setCurrentPage('shop'); }}
+                      className="bg-black text-white px-6 py-2 hover:bg-red-600 transition-colors"
+                    >
+                      Ver más
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-4 bg-black text-white">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 className="text-4xl font-playfair font-bold mb-6">Más que ropa, es tu momento</h2>
+            <p className="text-lg text-gray-300 mb-6 leading-relaxed">
+              Gaia Six nació para vos, para esos días donde querés sentirte increíble sin pensarlo demasiado. 
+              <span className="text-white font-semibold"> Ropa que habla tu idioma: </span>
+              cómoda, con onda y lista para lo que venga.
+            </p>
+            <p className="text-lg text-gray-300 mb-8 leading-relaxed">
+              No seguimos tendencias, creamos las nuestras. Cada prenda está diseñada para que la combines como quieras, 
+              sin reglas ni complicaciones. 
+              <span className="text-red-400"> Porque tu estilo es tuyo, y punto.</span>
+            </p>
             <button 
               onClick={() => setCurrentPage('about')}
-              className="group border-2 border-white text-white px-10 py-4 text-lg font-semibold hover:bg-white hover:text-black transition-all rounded-sm"
+              className="border-2 border-white text-white px-8 py-3 hover:bg-white hover:text-black transition-all font-semibold group"
             >
-              <span className="flex items-center gap-2">
-                Nuestra historia
-                <span className="group-hover:translate-x-1 transition-transform">→</span>
-              </span>
+              Conocé nuestra historia
+              <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
             </button>
           </div>
-          
-          {/* Stats rápidos */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto border-t border-white/20 pt-8 animate-fade-in" style={{animationDelay: '0.6s'}}>
-            <div className="text-center">
-              <p className="text-3xl md:text-4xl font-bold text-red-400">6</p>
-              <p className="text-sm text-gray-300 mt-1">Cuotas sin interés</p>
-            </div>
-            <div className="text-center">
-              <p className="text-3xl md:text-4xl font-bold text-white">24/48hs</p>
-              <p className="text-sm text-gray-300 mt-1">Envío gratis</p>
-            </div>
-            <div className="text-center">
-              <p className="text-3xl md:text-4xl font-bold text-red-400">500+</p>
-              <p className="text-sm text-gray-300 mt-1">Clientas felices</p>
+          <div className="relative h-96">
+            <img 
+              src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=800&fit=crop"
+              alt="Mujer con estilo Gaia Six"
+              className="w-full h-full object-cover rounded-lg shadow-2xl"
+            />
+            <div className="absolute -bottom-6 -right-6 bg-red-600 text-white p-6 rounded-lg shadow-xl max-w-xs">
+              <p className="font-semibold text-sm">"Ropa que se siente tan bien como se ve" ✨</p>
             </div>
           </div>
         </div>
-      </div>
-      
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <div className="flex flex-col items-center gap-2 text-white/60">
-          <span className="text-xs uppercase tracking-widest">Scroll</span>
-          <div className="w-px h-12 bg-white/40"></div>
-        </div>
-      </div>
+      </section>
     </div>
-
-    <section className="py-20 px-4 bg-gray-50">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl font-playfair font-bold text-center mb-16">
-          Nuestros favoritos, hasta en 3 cuotas sin interes
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {products.slice(0, 3).map(product => (
-            <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow group">
-              <div className="relative overflow-hidden">
-                <img 
-                  src={product.image} 
-                  alt={product.name}
-                  className="w-full h-96 object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute top-4 right-4">
-                  <button className="bg-white p-2 rounded-full shadow-lg hover:bg-red-600 hover:text-white transition-colors">
-                    <Heart size={20} />
-                  </button>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
-                <p className="text-gray-600 mb-4">{product.description}</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-2xl font-bold text-red-600">{formatPrice(product.price)}</span>
-                  <button 
-                    onClick={() => { setSelectedProduct(product); setCurrentPage('shop'); }}
-                    className="bg-black text-white px-6 py-2 hover:bg-red-600 transition-colors"
-                  >
-                    Ver más
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section className="py-20 px-4 bg-black text-white">
-  <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-    <div>
-      <h2 className="text-4xl font-playfair font-bold mb-6">
-        Más que ropa, es tu momento
-      </h2>
-      <p className="text-lg text-gray-300 mb-6 leading-relaxed">
-        Gaia Six nació para vos, para esos días donde querés sentirte increíble sin pensarlo demasiado. 
-        <span className="text-white font-semibold"> Ropa que habla tu idioma: </span>
-        cómoda, con onda y lista para lo que venga.
-      </p>
-      <p className="text-lg text-gray-300 mb-8 leading-relaxed">
-        No seguimos tendencias, creamos las nuestras. Cada prenda está diseñada para que la combines como quieras, 
-        sin reglas ni complicaciones. 
-        <span className="text-red-400"> Porque tu estilo es tuyo, y punto.</span>
-      </p>
-      <button 
-        onClick={() => setCurrentPage('about')}
-        className="border-2 border-white text-white px-8 py-3 hover:bg-white hover:text-black transition-all font-semibold group"
-      >
-        Conocé nuestra historia
-        <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
-      </button>
-    </div>
-    <div className="relative h-96">
-      <img 
-        src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=800&fit=crop"
-        alt="Mujer con estilo Gaia Six"
-        className="w-full h-full object-cover rounded-lg shadow-2xl"
-      />
-      <div className="absolute -bottom-6 -right-6 bg-red-600 text-white p-6 rounded-lg shadow-xl max-w-xs">
-        <p className="font-semibold text-sm">
-          "Ropa que se siente tan bien como se ve" ✨
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-  </div>
-);
-
+  );
 
   // Shop Page
   const Shop = () => {
-    const filteredProducts = selectedCategory === 'all' 
-      ? products 
-      : products.filter(p => p.category === selectedCategory);
+    const filteredProducts = selectedCategory === 'all' ? products : products.filter(p => p.category === selectedCategory);
 
     return (
       <div className="min-h-screen bg-gray-50 py-12 px-4">
@@ -490,9 +488,7 @@ const Home = () => (
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`px-6 py-3 rounded-full font-semibold transition-all ${
-                  selectedCategory === cat.id 
-                    ? 'bg-black text-white' 
-                    : 'bg-white text-black hover:bg-gray-200'
+                  selectedCategory === cat.id ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-200'
                 }`}
               >
                 {cat.icon} {cat.name}
@@ -540,54 +536,48 @@ const Home = () => (
   };
 
   // About Page
- const About = () => (
-  <div className="min-h-screen bg-white">
-    <div className="relative h-96 bg-gradient-to-r from-black to-red-950">
-      <div className="absolute inset-0 flex items-center justify-center">
-        <h1 className="text-6xl font-playfair font-bold text-white">Sobre Nosotros</h1>
+  const About = () => (
+    <div className="min-h-screen bg-white">
+      <div className="relative h-96 bg-gradient-to-r from-black to-red-950">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <h1 className="text-6xl font-playfair font-bold text-white">Sobre Nosotros</h1>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 py-20">
+        <div className="prose prose-lg mx-auto">
+          <p className="text-xl text-gray-700 leading-relaxed mb-8">
+            <strong>Gaia Six</strong> empezó con tres hermanas que querían ropa que acompañe su día a día. Nada complicado, solo prendas cómodas, con onda y fáciles de combinar.
+          </p>
+          
+          <h2 className="text-3xl font-playfair font-bold mt-12 mb-6">Nuestra filosofía</h2>
+          <p className="text-gray-700 leading-relaxed mb-6">
+            La moda no tiene que ser difícil. Aquí vas a encontrar prendas que se sienten bien y se adaptan a vos, sin reglas ni poses.
+          </p>
+
+          <h2 className="text-3xl font-playfair font-bold mt-12 mb-6">Nuestros valores</h2>
+          <ul className="space-y-4 text-gray-700">
+            <li className="flex items-start">
+              <span className="text-red-600 mr-3 text-2xl">✦</span>
+              <span><strong>Autenticidad:</strong> Ropa que refleja quién sos, sin filtros.</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-red-600 mr-3 text-2xl">✦</span>
+              <span><strong>Calidad:</strong> Materiales que se sienten bien y duran.</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-red-600 mr-3 text-2xl">✦</span>
+              <span><strong>Estilo:</strong> Diseños simples, con onda, que marcan la diferencia sin exagerar.</span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-
-    <div className="max-w-4xl mx-auto px-4 py-20">
-      <div className="prose prose-lg mx-auto">
-        <p className="text-xl text-gray-700 leading-relaxed mb-8">
-          <strong>Gaia Six</strong> empezó con tres hermanas que querían ropa que acompañe su día a día. Nada complicado, solo prendas cómodas, con onda y fáciles de combinar.
-        </p>
-        
-        <h2 className="text-3xl font-playfair font-bold mt-12 mb-6">Nuestra filosofía</h2>
-        <p className="text-gray-700 leading-relaxed mb-6">
-          La moda no tiene que ser difícil. Aquí vas a encontrar prendas que se sienten bien y se adaptan a vos, sin reglas ni poses.
-        </p>
-
-        <h2 className="text-3xl font-playfair font-bold mt-12 mb-6">Nuestros valores</h2>
-        <ul className="space-y-4 text-gray-700">
-          <li className="flex items-start">
-            <span className="text-red-600 mr-3 text-2xl">✦</span>
-            <span><strong>Autenticidad:</strong> Ropa que refleja quién sos, sin filtros.</span>
-          </li>
-          <li className="flex items-start">
-            <span className="text-red-600 mr-3 text-2xl">✦</span>
-            <span><strong>Calidad:</strong> Materiales que se sienten bien y duran.</span>
-          </li>
-          <li className="flex items-start">
-            <span className="text-red-600 mr-3 text-2xl">✦</span>
-            <span><strong>Estilo:</strong> Diseños simples, con onda, que marcan la diferencia sin exagerar.</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-);
-
+  );
 
   // Auth Page
   const AuthPage = () => {
-    const [formData, setFormData] = useState({
-      email: '',
-      password: '',
-      name: '',
-      phone: ''
-    });
+    const [formData, setFormData] = useState({ email: '', password: '', name: '', phone: '' });
 
     const handleSubmit = (e) => {
       e.preventDefault();
@@ -867,7 +857,7 @@ const Home = () => (
         <div>
           <h4 className="font-semibold mb-4">Mirá los looks en IG</h4>
           <div className="flex gap-4">
-            <a href="#" className="hover:text-red-600 transition-colors">
+            <a href="https://instagram.com/gaiasix" target="_blank" rel="noopener noreferrer" className="hover:text-red-600 transition-colors">
               <Instagram size={24} />
             </a>
             <a href="#" className="hover:text-red-600 transition-colors">
@@ -878,7 +868,7 @@ const Home = () => (
       </div>
       
       <div className="max-w-7xl mx-auto mt-8 pt-8 border-t border-gray-800 text-center text-gray-400">
-        <p>&copy; 2025 Gaia Six. Todos los derechos reservados </p>
+        <p>&copy; 2025 Gaia Six. Todos los derechos reservados</p>
       </div>
     </footer>
   );
@@ -912,6 +902,48 @@ const Home = () => (
         
         .font-playfair {
           font-family: 'Playfair Display', serif;
+        }
+        
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .animate-fade-in {
+          animation: fadeIn 0.8s ease-out forwards;
+          opacity: 0;
+        }
+        
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.5;
+          }
+        }
+        
+        .animate-pulse {
+          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes bounce {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+        
+        .animate-bounce {
+          animation: bounce 2s infinite;
         }
       `}</style>
       
