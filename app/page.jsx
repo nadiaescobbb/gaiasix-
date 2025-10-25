@@ -333,9 +333,7 @@ export default function GaiaSix() {
         
         <div className="relative z-10 text-center px-4 py-20">
           <div className="max-w-5xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-2 mb-8">
-              <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-              <span className="text-white text-sm font-medium">Nueva Colección 2025</span>
+            <div className="">
             </div>
             
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-playfair font-bold text-white mb-6 tracking-tight leading-tight">
@@ -356,7 +354,7 @@ export default function GaiaSix() {
                 className="group bg-red-600 text-white px-10 py-4 text-lg font-semibold hover:bg-red-700 transition-all transform hover:scale-105 shadow-2xl rounded-sm relative overflow-hidden"
               >
                 <span className="relative z-10 flex items-center gap-2">
-                  Explorar colección
+                  Ver Looks
                   <span className="group-hover:translate-x-1 transition-transform">→</span>
                 </span>
               </button>
@@ -374,11 +372,11 @@ export default function GaiaSix() {
             
             <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto border-t border-white/20 pt-8">
               <div className="text-center">
-                <p className="text-3xl md:text-4xl font-bold text-red-400">6</p>
+                <p className="text-3xl md:text-4xl font-bold text-red-400">3 y 6</p>
                 <p className="text-sm text-gray-300 mt-1">Cuotas sin interés</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl md:text-4xl font-bold text-white">24/48hs</p>
+                <p className="text-3xl md:text-4xl font-bold text-white">24hs</p>
                 <p className="text-sm text-gray-300 mt-1">Envío gratis</p>
               </div>
               <div className="text-center">
@@ -389,12 +387,7 @@ export default function GaiaSix() {
           </div>
         </div>
         
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="flex flex-col items-center gap-2 text-white/60">
-            <span className="text-xs uppercase tracking-widest">Scroll</span>
-            <div className="w-px h-12 bg-white/40"></div>
-          </div>
-        </div>
+
       </div>
 
       <section className="py-20 px-4 bg-gray-50">
