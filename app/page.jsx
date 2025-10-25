@@ -755,7 +755,7 @@ export default function GaiaSix() {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
           <h3 className="text-2xl font-playfair font-bold mb-4">GAIA SIX</h3>
-          <p className="text-gray-400">Tu estilo, tu libertad, tu momento.</p>
+          <p className="text-gray-400">Cada prenda vibra con libertad, confianza y presencia.</p>
         </div>
         
         <div>
@@ -768,19 +768,19 @@ export default function GaiaSix() {
         </div>
         
         <div>
-          <h4 className="font-semibold mb-4">Contacto</h4>
+          <h4 className="font-semibold mb-4">Vení a vernos</h4>
           <ul className="space-y-2 text-gray-400">
             <li className="flex items-center gap-2">
               <Mail size={16} />
-              <span>contacto@gaiasix.com</span>
+              <span>Estamos en Río Grande, Tierra del Fuego. Pasá y probá tus favoritos</span>
             </li>
             <li className="flex items-center gap-2">
               <Phone size={16} />
-              <span>+54 9 11 1234-5678</span>
+              <span>Chateá con nosotras</span>
             </li>
             <li className="flex items-center gap-2">
               <MapPin size={16} />
-              <span>Tierra del fuego, Argentina</span>
+              <span>Mirá los looks en IG</span>
             </li>
           </ul>
         </div>
