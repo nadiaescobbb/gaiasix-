@@ -308,92 +308,95 @@ export default function GaiaSix() {
 
   // Home Page
   const Home = () => (
-    <div className="min-h-screen">
-      <div className="relative h-screen bg-gradient-to-br from-black via-gray-900 to-red-950">
-        <div className="absolute inset-0 bg-black opacity-40"></div>
-        <div className="relative z-10 h-full flex items-center justify-center text-center px-4">
-          <div className="max-w-4xl">
-            <h1 className="text-6xl md:text-8xl font-playfair font-bold text-white mb-6 tracking-wide">
-              Lo que quieras ponerte, sin reglas
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-200 mb-12">
-             Prendas que se sienten naturales y con presencia, pensadas para vos
-            </p>
-            <button 
-              onClick={() => setCurrentPage('shop')}
-              className="bg-red-600 text-white px-12 py-4 text-lg font-semibold hover:bg-red-700 transition-all transform hover:scale-105 shadow-lg"
-            >
-             Ver looks
-            </button>
-          </div>
+  <div className="min-h-screen">
+    <div className="relative h-screen bg-gradient-to-br from-black via-gray-900 to-red-950">
+      <div className="absolute inset-0 bg-black opacity-40"></div>
+      <div className="relative z-10 h-full flex items-center justify-center text-center px-4">
+        <div className="max-w-4xl">
+          <h1 className="text-6xl md:text-8xl font-playfair font-bold text-white mb-6 tracking-wide">
+            Lo que quieras ponerte, sin reglas
+          </h1>
+          <p className="text-xl md:text-2xl text-gray-200 mb-12">
+            Prendas cómodas y con onda, pensadas para vos y tu día a día.
+          </p>
+          <button 
+            onClick={() => setCurrentPage('shop')}
+            className="bg-red-600 text-white px-12 py-4 text-lg font-semibold hover:bg-red-700 transition-all transform hover:scale-105 shadow-lg"
+          >
+            Ver looks
+          </button>
         </div>
       </div>
+    </div>
 
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-playfair font-bold text-center mb-16">LOS MAS VIRALES ACA EN GAIA SIX 6 CUOTAS SIN INTERES</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {products.slice(0, 3).map(product => (
-              <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow group">
-                <div className="relative overflow-hidden">
-                  <img 
-                    src={product.image} 
-                    alt={product.name}
-                    className="w-full h-96 object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute top-4 right-4">
-                    <button className="bg-white p-2 rounded-full shadow-lg hover:bg-red-600 hover:text-white transition-colors">
-                      <Heart size={20} />
-                    </button>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
-                  <p className="text-gray-600 mb-4">{product.description}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-red-600">{formatPrice(product.price)}</span>
-                    <button 
-                      onClick={() => { setSelectedProduct(product); setCurrentPage('shop'); }}
-                      className="bg-black text-white px-6 py-2 hover:bg-red-600 transition-colors"
-                    >
-                      Ver más
-                    </button>
-                  </div>
+    <section className="py-20 px-4 bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-4xl font-playfair font-bold text-center mb-16">
+          Nuestros favoritos, siempre en 6 cuotas
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {products.slice(0, 3).map(product => (
+            <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow group">
+              <div className="relative overflow-hidden">
+                <img 
+                  src={product.image} 
+                  alt={product.name}
+                  className="w-full h-96 object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute top-4 right-4">
+                  <button className="bg-white p-2 rounded-full shadow-lg hover:bg-red-600 hover:text-white transition-colors">
+                    <Heart size={20} />
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
+                <p className="text-gray-600 mb-4">{product.description}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-2xl font-bold text-red-600">{formatPrice(product.price)}</span>
+                  <button 
+                    onClick={() => { setSelectedProduct(product); setCurrentPage('shop'); }}
+                    className="bg-black text-white px-6 py-2 hover:bg-red-600 transition-colors"
+                  >
+                    Ver más
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section className="py-20 px-4 bg-black text-white">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 className="text-4xl font-playfair font-bold mb-6">Sobre Gaia Six</h2>
-            <p className="text-lg text-gray-300 mb-6">
-             Cada prenda está pensada para que te sientas vos misma: con libertad, confianza y onda propia.
-            </p>
-            <p className="text-lg text-gray-300 mb-8">
-              Looks que se combinan fácil, que acompañan tu día a día y que hacen que te sientas bien sin esfuerzo.
-            </p>
-            <button 
-              onClick={() => setCurrentPage('about')}
-              className="border-2 border-white text-white px-8 py-3 hover:bg-white hover:text-black transition-all"
-            >
-              Conocer más
-            </button>
-          </div>
-          <div className="relative h-96">
-            <img 
-              src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=800&fit=crop"
-              alt="About Gaia Six"
-              className="w-full h-full object-cover rounded-lg shadow-2xl"
-            />
-          </div>
+    <section className="py-20 px-4 bg-black text-white">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 className="text-4xl font-playfair font-bold mb-6">Sobre Gaia Six</h2>
+          <p className="text-lg text-gray-300 mb-6">
+            Cada prenda está pensada para que te sientas vos misma: con libertad, confianza y tu propia onda.
+          </p>
+          <p className="text-lg text-gray-300 mb-8">
+            Ropa que se combina fácil, que acompaña tu día a día y te hace sentir bien sin complicaciones.
+          </p>
+          <button 
+            onClick={() => setCurrentPage('about')}
+            className="border-2 border-white text-white px-8 py-3 hover:bg-white hover:text-black transition-all"
+          >
+            Conocer más
+          </button>
         </div>
-      </section>
-    </div>
-  );
+        <div className="relative h-96">
+          <img 
+            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=800&fit=crop"
+            alt="About Gaia Six"
+            className="w-full h-full object-cover rounded-lg shadow-2xl"
+          />
+        </div>
+      </div>
+    </section>
+  </div>
+);
+
 
   // Shop Page
   const Shop = () => {
@@ -462,44 +465,45 @@ export default function GaiaSix() {
   };
 
   // About Page
-  const About = () => (
-    <div className="min-h-screen bg-white">
-      <div className="relative h-96 bg-gradient-to-r from-black to-red-950">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="text-6xl font-playfair font-bold text-white">Sobre Nosotros</h1>
-        </div>
-      </div>
-
-      <div className="max-w-4xl mx-auto px-4 py-20">
-        <div className="prose prose-lg mx-auto">
-          <p className="text-xl text-gray-700 leading-relaxed mb-8">
-            <strong>Gaia Six</strong> nace de tres hermanas que buscaban ropa que acompañe su forma de ser. Cada seleccion combina comodidad, actitud y estilo, sin complicaciones.
-          </p>
-          
-          <h2 className="text-3xl font-playfair font-bold mt-12 mb-6">Nuestra Filosofía</h2>
-          <p className="text-gray-700 leading-relaxed mb-6">
-            La moda es una forma de expresarte. Aquí no hay reglas, solo prendas que se sienten bien y se adaptan a vos.
-          </p>
-
-          <h2 className="text-3xl font-playfair font-bold mt-12 mb-6">Nuestros Valores</h2>
-          <ul className="space-y-4 text-gray-700">
-            <li className="flex items-start">
-              <span className="text-red-600 mr-3 text-2xl">✦</span>
-              <span><strong>Autenticidad:</strong>Ropa que refleja tu estilo sin filtros</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-red-600 mr-3 text-2xl">✦</span>
-              <span><strong>Calidad:</strong> Seleccionamos los mejores materiales</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-red-600 mr-3 text-2xl">✦</span>
-              <span><strong>Estilo:</strong> Diseños únicos que marcan diferencia</span>
-            </li>
-          </ul>
-        </div>
+ const About = () => (
+  <div className="min-h-screen bg-white">
+    <div className="relative h-96 bg-gradient-to-r from-black to-red-950">
+      <div className="absolute inset-0 flex items-center justify-center">
+        <h1 className="text-6xl font-playfair font-bold text-white">Sobre Nosotros</h1>
       </div>
     </div>
-  );
+
+    <div className="max-w-4xl mx-auto px-4 py-20">
+      <div className="prose prose-lg mx-auto">
+        <p className="text-xl text-gray-700 leading-relaxed mb-8">
+          <strong>Gaia Six</strong> empezó con tres hermanas que querían ropa que acompañe su día a día. Nada complicado, solo prendas cómodas, con onda y fáciles de combinar.
+        </p>
+        
+        <h2 className="text-3xl font-playfair font-bold mt-12 mb-6">Nuestra filosofía</h2>
+        <p className="text-gray-700 leading-relaxed mb-6">
+          La moda no tiene que ser difícil. Aquí vas a encontrar prendas que se sienten bien y se adaptan a vos, sin reglas ni poses.
+        </p>
+
+        <h2 className="text-3xl font-playfair font-bold mt-12 mb-6">Nuestros valores</h2>
+        <ul className="space-y-4 text-gray-700">
+          <li className="flex items-start">
+            <span className="text-red-600 mr-3 text-2xl">✦</span>
+            <span><strong>Autenticidad:</strong> Ropa que refleja quién sos, sin filtros.</span>
+          </li>
+          <li className="flex items-start">
+            <span className="text-red-600 mr-3 text-2xl">✦</span>
+            <span><strong>Calidad:</strong> Materiales que se sienten bien y duran.</span>
+          </li>
+          <li className="flex items-start">
+            <span className="text-red-600 mr-3 text-2xl">✦</span>
+            <span><strong>Estilo:</strong> Diseños simples, con onda, que marcan la diferencia sin exagerar.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+);
+
 
   // Auth Page
   const AuthPage = () => {
