@@ -768,25 +768,25 @@ export default function GaiaSix() {
         </div>
         
         <div>
-          <h4 className="font-semibold mb-4">Vení a vernos</h4>
+          <h4 className="font-semibold mb-4">Vení a vernos”</h4>
           <ul className="space-y-2 text-gray-400">
             <li className="flex items-center gap-2">
               <Mail size={16} />
-              <span>Estamos en Río Grande, Tierra del Fuego. Pasá y probá tus favoritos</span>
+              <span>gaiashowrrom@gmail.com</span>
             </li>
             <li className="flex items-center gap-2">
               <Phone size={16} />
-              <span>Chateá con nosotras</span>
+              <span>+54 9 2964479923</span>
             </li>
             <li className="flex items-center gap-2">
               <MapPin size={16} />
-              <span>Mirá los looks en IG</span>
+              <span>Tierra del fuego, Argentina</span>
             </li>
           </ul>
         </div>
         
         <div>
-          <h4 className="font-semibold mb-4">Síguenos</h4>
+          <h4 className="font-semibold mb-4">Mirá los looks en IG</h4>
           <div className="flex gap-4">
             <a href="#" className="hover:text-red-600 transition-colors">
               <Instagram size={24} />
