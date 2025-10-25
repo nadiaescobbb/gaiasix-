@@ -314,10 +314,10 @@ export default function GaiaSix() {
         <div className="relative z-10 h-full flex items-center justify-center text-center px-4">
           <div className="max-w-4xl">
             <h1 className="text-6xl md:text-8xl font-playfair font-bold text-white mb-6 tracking-wide">
-              Tu estilo, tu libertad
+              Lo que quieras ponerte, sin reglas
             </h1>
             <p className="text-xl md:text-2xl text-gray-200 mb-12">
-              Descubre la elegancia que define tu momento
+             Prendas que se sienten naturales y con presencia, pensadas para vos
             </p>
             <button 
               onClick={() => setCurrentPage('shop')}
@@ -331,7 +331,7 @@ export default function GaiaSix() {
 
       <section className="py-20 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-playfair font-bold text-center mb-16">Productos Destacados</h2>
+          <h2 className="text-4xl font-playfair font-bold text-center mb-16">LOS MAS VIRALES ACA EN GAIA SIX 6 CUOTAS SIN INTERES</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {products.slice(0, 3).map(product => (
               <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow group">
@@ -371,11 +371,10 @@ export default function GaiaSix() {
           <div>
             <h2 className="text-4xl font-playfair font-bold mb-6">Sobre Gaia Six</h2>
             <p className="text-lg text-gray-300 mb-6">
-              Más que moda, somos un estilo de vida. En Gaia Six creemos que cada mujer merece sentirse única, 
-              poderosa y auténtica en cada momento.
+             Cada prenda está pensada para que te sientas vos misma: con libertad, confianza y onda propia.
             </p>
             <p className="text-lg text-gray-300 mb-8">
-              Nuestra colección está diseñada para mujeres que saben lo que quieren y no temen mostrarlo.
+              Looks que se combinan fácil, que acompañan tu día a día y que hacen que te sientas bien sin esfuerzo.
             </p>
             <button 
               onClick={() => setCurrentPage('about')}
@@ -474,21 +473,19 @@ export default function GaiaSix() {
       <div className="max-w-4xl mx-auto px-4 py-20">
         <div className="prose prose-lg mx-auto">
           <p className="text-xl text-gray-700 leading-relaxed mb-8">
-            <strong>Gaia Six</strong> nace del deseo de crear un espacio donde cada mujer pueda expresar su 
-            autenticidad a través de la moda. No seguimos tendencias, las creamos.
+            <strong>Gaia Six</strong> nace de tres hermanas que buscaban ropa que acompañe su forma de ser. Cada seleccion combina comodidad, actitud y estilo, sin complicaciones.
           </p>
           
           <h2 className="text-3xl font-playfair font-bold mt-12 mb-6">Nuestra Filosofía</h2>
           <p className="text-gray-700 leading-relaxed mb-6">
-            Creemos que la moda es mucho más que ropa. Es una forma de comunicar quién eres, 
-            de sentirte poderosa y de celebrar tu individualidad.
+            La moda es una forma de expresarte. Aquí no hay reglas, solo prendas que se sienten bien y se adaptan a vos.
           </p>
 
           <h2 className="text-3xl font-playfair font-bold mt-12 mb-6">Nuestros Valores</h2>
           <ul className="space-y-4 text-gray-700">
             <li className="flex items-start">
               <span className="text-red-600 mr-3 text-2xl">✦</span>
-              <span><strong>Autenticidad:</strong> Cada prenda refleja tu verdadero yo</span>
+              <span><strong>Autenticidad:</strong>Ropa que refleja tu estilo sin filtros</span>
             </li>
             <li className="flex items-start">
               <span className="text-red-600 mr-3 text-2xl">✦</span>
