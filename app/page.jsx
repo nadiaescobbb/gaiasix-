@@ -307,24 +307,87 @@ export default function GaiaSix() {
   );
 
   // Home Page
-  const Home = () => (
+ // Home Page
+const Home = () => (
   <div className="min-h-screen">
-    <div className="relative h-screen bg-gradient-to-br from-black via-gray-900 to-red-950">
-      <div className="absolute inset-0 bg-black opacity-40"></div>
+    {/* Hero Section Mejorado */}
+    <div className="relative h-screen bg-gradient-to-br from-black via-gray-900 to-red-950 overflow-hidden">
+      {/* Overlay con textura */}
+      <div className="absolute inset-0 bg-black opacity-50"></div>
+      
+      {/* Elemento decorativo animado */}
+      <div className="absolute top-20 right-20 w-96 h-96 bg-red-600 rounded-full blur-3xl opacity-20 animate-pulse"></div>
+      <div className="absolute bottom-20 left-20 w-80 h-80 bg-white rounded-full blur-3xl opacity-10 animate-pulse" style={{animationDelay: '1s'}}></div>
+      
       <div className="relative z-10 h-full flex items-center justify-center text-center px-4">
-        <div className="max-w-4xl">
-          <h1 className="text-6xl md:text-8xl font-playfair font-bold text-white mb-6 tracking-wide">
-            Lo que quieras ponerte, sin reglas
+        <div className="max-w-5xl">
+          {/* Badge superior */}
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-2 mb-8 animate-fade-in">
+            <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+            <span className="text-white text-sm font-medium">Nueva Colección 2025</span>
+          </div>
+          
+          {/* Título principal con animación */}
+          <h1 className="text-5xl md:text-8xl lg:text-9xl font-playfair font-bold text-white mb-6 tracking-tight leading-tight animate-fade-in">
+            Tu estilo,
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">
+              sin excusas
+            </span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-200 mb-12">
-            Prendas cómodas y con onda, pensadas para vos y tu día a día.
+          
+          {/* Subtítulo mejorado */}
+          <p className="text-lg md:text-2xl text-gray-200 mb-12 max-w-2xl mx-auto leading-relaxed animate-fade-in font-light" style={{animationDelay: '0.2s'}}>
+            Ropa que fluye con vos. Cómoda cuando necesitás moverte, 
+            <span className="text-white font-medium"> elegante cuando querés brillar.</span>
           </p>
-          <button 
-            onClick={() => setCurrentPage('shop')}
-            className="bg-red-600 text-white px-12 py-4 text-lg font-semibold hover:bg-red-700 transition-all transform hover:scale-105 shadow-lg"
-          >
-            Ver looks
-          </button>
+          
+          {/* Botones mejorados */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in" style={{animationDelay: '0.4s'}}>
+            <button 
+              onClick={() => setCurrentPage('shop')}
+              className="group bg-red-600 text-white px-10 py-4 text-lg font-semibold hover:bg-red-700 transition-all transform hover:scale-105 shadow-2xl rounded-sm relative overflow-hidden"
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                Explorar colección
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+            </button>
+            
+            <button 
+              onClick={() => setCurrentPage('about')}
+              className="group border-2 border-white text-white px-10 py-4 text-lg font-semibold hover:bg-white hover:text-black transition-all rounded-sm"
+            >
+              <span className="flex items-center gap-2">
+                Nuestra historia
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+            </button>
+          </div>
+          
+          {/* Stats rápidos */}
+          <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto border-t border-white/20 pt-8 animate-fade-in" style={{animationDelay: '0.6s'}}>
+            <div className="text-center">
+              <p className="text-3xl md:text-4xl font-bold text-red-400">6</p>
+              <p className="text-sm text-gray-300 mt-1">Cuotas sin interés</p>
+            </div>
+            <div className="text-center">
+              <p className="text-3xl md:text-4xl font-bold text-white">24/48hs</p>
+              <p className="text-sm text-gray-300 mt-1">Envío gratis</p>
+            </div>
+            <div className="text-center">
+              <p className="text-3xl md:text-4xl font-bold text-red-400">500+</p>
+              <p className="text-sm text-gray-300 mt-1">Clientas felices</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <div className="flex flex-col items-center gap-2 text-white/60">
+          <span className="text-xs uppercase tracking-widest">Scroll</span>
+          <div className="w-px h-12 bg-white/40"></div>
         </div>
       </div>
     </div>
