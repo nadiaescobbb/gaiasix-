@@ -5,36 +5,36 @@ import { ShoppingBag, User, Heart, Menu, X, Instagram, Facebook, Mail, Phone, Ma
 
 // Mock Data
 const products = [
-  {
+ {
     id: 1,
-    name: 'Vestido Elegante Negro',
+    name: 'top adara',
     category: 'vestidos',
-    price: 45000,
-    image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500&h=700&fit=crop',
-    description: 'Vestido elegante perfecto para ocasiones especiales',
-    sizes: ['S', 'M', 'L'],
-    rating: 4.8
+    price: 7500,
+    image: '/images/products/top-adara-.jpg', 
+    description: 'Modelo traslúcido.',
+    sizes: ['S'],
   },
-  {
+
+ {
     id: 2,
-    name: 'Blusa Seda Roja',
+    name: 'blusa albany',
     category: 'blusas',
-    price: 28000,
-    image: 'https://images.unsplash.com/photo-1564257577802-99f7f7f048a3?w=500&h=700&fit=crop',
-    description: 'Blusa de seda con caída perfecta',
-    sizes: ['S', 'M', 'L', 'XL'],
-    rating: 4.6
+    price: 20550,
+    image: '/images/products/blusa-albany.jpeg', 
+    description: 'Blusa de encaje elastizado manga larga con  manga larga con detalle de volados para atar a gusto en el frente. ideal para usar con una musculosa o con un corpiño.',
+    sizes: ['S'],
   },
+
   {
     id: 3,
-    name: 'Pantalón Palazzo',
-    category: 'pantalones',
-    price: 35000,
-    image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=500&h=700&fit=crop',
-    description: 'Pantalón palazzo de corte amplio',
-    sizes: ['S', 'M', 'L'],
-    rating: 4.7
+    name: 'Conjunto total black',
+    category: 'faldas',
+    price: 15670,
+    image: '/images/products/conjunto-negro.jpg',
+    description: 'conjunto basico',
+    sizes: ['S'],
   },
+
   {
     id: 4,
     name: 'Falda Midi Plisada',
@@ -43,7 +43,6 @@ const products = [
     image: 'https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?w=500&h=700&fit=crop',
     description: 'Falda midi con pliegues elegantes',
     sizes: ['S', 'M', 'L'],
-    rating: 4.9
   },
   {
     id: 5,
@@ -372,7 +371,7 @@ export default function GaiaSix() {
             
             <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto border-t border-white/20 pt-8">
               <div className="text-center">
-                <p className="text-3xl md:text-4xl font-bold text-red-400">3 y 6</p>
+                <p className="text-3xl md:text-4xl font-bold text-red-400">3</p>
                 <p className="text-sm text-gray-300 mt-1">Cuotas sin interés</p>
               </div>
               <div className="text-center">
