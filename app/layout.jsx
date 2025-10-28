@@ -1,12 +1,12 @@
 import './globals.css'
 
 export const metadata = {
-  title: 'Gaia Six - Tu estilo, tu libertad',
+  title: 'Gaia Six',
   description: 'Ropa femenina con estilo. Cómoda, con onda y lista para salir. Descubrí nuestra colección de looks casuales y de salir.',
   keywords: 'ropa femenina, moda, estilo, casual, elegante, argentina',
   authors: [{ name: 'Gaia Six' }],
   openGraph: {
-    title: 'Gaia Six - Tu estilo, tu libertad',
+    title: 'Gaia Six',
     description: 'Ropa femenina con estilo. Cómoda, con onda y lista para salir.',
     type: 'website',
     locale: 'es_AR',
@@ -14,7 +14,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Gaia Six - Tu estilo, tu libertad',
+    title: 'Gaia Six',
     description: 'Ropa femenina con estilo. Cómoda, con onda y lista para salir.',
   },
 }

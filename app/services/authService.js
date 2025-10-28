@@ -1,16 +1,14 @@
 export const authService = {
-  /**
-   * Registrar nuevo usuario
-   */
+
   async register(userData) {
     try {
-      // Verificar si el usuario ya existe
+    
       const existingUser = await window.storage.get(`user_${userData.email}`);
       if (existingUser) {
         throw new Error('Este email ya está registrado');
       }
 
-      // Guardar usuario
+      
       const userWithDate = {
         ...userData,
         createdAt: new Date().toISOString()
@@ -18,7 +16,7 @@ export const authService = {
       
       await window.storage.set(`user_${userData.email}`, JSON.stringify(userWithDate));
       
-      // Establecer sesión
+      
       await window.storage.set('current_user', JSON.stringify(userWithDate));
       
       return { success: true, user: userWithDate };
@@ -27,9 +25,7 @@ export const authService = {
     }
   },
 
-  /**
-   * Iniciar sesión
-   */
+ 
   async login(email, password) {
     try {
       const result = await window.storage.get(`user_${email}`);
@@ -44,7 +40,7 @@ export const authService = {
         throw new Error('Contraseña incorrecta');
       }
 
-      // Establecer sesión
+      
       await window.storage.set('current_user', JSON.stringify(userData));
       
       return { success: true, user: userData };
@@ -53,9 +49,7 @@ export const authService = {
     }
   },
 
-  /**
-   * Cerrar sesión
-   */
+ 
   async logout() {
     try {
       await window.storage.delete('current_user');
@@ -65,9 +59,7 @@ export const authService = {
     }
   },
 
-  /**
-   * Obtener usuario actual
-   */
+  
   async getCurrentUser() {
     try {
       const result = await window.storage.get('current_user');
@@ -80,9 +72,7 @@ export const authService = {
     }
   },
 
-  /**
-   * Actualizar información de usuario
-   */
+  
   async updateUser(email, updatedData) {
     try {
       const result = await window.storage.get(`user_${email}`);

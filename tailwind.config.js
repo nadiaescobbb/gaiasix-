@@ -7,13 +7,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        'gaia-red': '#741717',
+        'bordo': '#8B0000',
+        'gaia-red': '#8B0000',
         'gaia-black': '#000000',
         'gaia-gray': '#f9fafb',
       },
       fontFamily: {
         heading: ['Playfair Display', 'serif'],
         body: ['Inter', 'sans-serif'],
+        playfair: ['Playfair Display', 'serif'],
       },
     },
   },
