@@ -7,11 +7,21 @@ const products = [
   {
     id: 1,
     name: 'top adara',
-    category: 'vestidos',
+    category: 'tops',
     price: 7500,
     image: '/images/products/top-adara-.jpg', 
     sizes: ['S'],
   },
+
+  {
+    id: 1,
+    name: 'mini adara',
+    category: 'faldas',
+    price: 12300,
+    image: '/images/products/top-adara-.jpg', 
+    sizes: ['S'],
+  },
+
   {
     id: 2,
     name: 'blusa albany',
@@ -22,8 +32,8 @@ const products = [
   },
   {
     id: 3,
-    name: 'conjunto total black',
-    category: 'faldas',
+    name: 'set total black',
+    category: 'set',
     price: 15670,
     image: '/images/products/conjunto-negro.jpg',
     sizes: ['S'],
@@ -31,7 +41,7 @@ const products = [
   {
     id: 4,
     name: 'top borgo',
-    category: 'faldas',
+    category: 'tops',
     price: 12450,
     image: '/images/products/top-borgo.jpg',
     sizes: ['S', 'M'],
@@ -43,7 +53,8 @@ const categories = [
   { id: 'blusas', name: 'Blusas' },
   { id: 'pantalones', name: 'Pantalones' },
   { id: 'faldas', name: 'Faldas' },
-  { id: 'conjuntos', name: 'Conjuntos' }
+  { id: 'set', name: 'Set' },
+  { id: 'tops', name: 'Tops' },
 ];
 
 const authService = {
@@ -291,7 +302,7 @@ export default function GaiaSix() {
               onClick={() => setCurrentPage('shop')}
               className="border border-black px-12 py-4 text-sm uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300"
             >
-              Ver Colección
+              Ver looks
             </button>
             
             <div className="flex justify-center gap-16 pt-12 text-xs uppercase tracking-widest text-gray-600">
@@ -302,6 +313,10 @@ export default function GaiaSix() {
               <div className="text-center">
                 <p className="text-2xl font-light text-black">24hs</p>
                 <p className="mt-1">Envío</p>
+              </div>
+                <div className="text-center">
+                <p className="text-2xl font-light text-black">+500</p>
+                <p className="mt-1">clientas felices</p>
               </div>
             </div>
           </div>
