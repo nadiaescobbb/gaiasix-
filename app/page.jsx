@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingBag, User, Menu, X, Instagram, Mail, Phone, MapPin } from 'lucide-react';
 
+
 const products = [
   {
     id: 1,
@@ -229,78 +230,129 @@ export default function GaiaSix() {
   }
 
   // Header ComponenT
-  const Header = () => (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex items-center justify-between h-16">
+const Header = () => (
+  <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div className="max-w-7xl mx-auto px-6">
+      <div className="flex items-center justify-between h-16">
+        {/* Solo el logo */}
+        <button 
+          onClick={() => setCurrentPage('home')}
+          className="transition-opacity hover:opacity-80"
+        >
+          <img 
+            src="/logo.png" 
+            alt="GAIA SIX Logo"
+            className="h-20 w-auto"
+          />
+        </button>
+
+        <nav className="hidden md:flex items-center space-x-12">
           <button 
-            onClick={() => setCurrentPage('home')}
-            className="text-xl font-playfair font-bold tracking-widest hover:text-bordo transition-colors"
+            onClick={() => setCurrentPage('shop')} 
+            className="text-sm uppercase tracking-wide transition-colors"
+            style={{ color: '#000' }}
+            onMouseEnter={(e) => e.target.style.color = '#af161f'}
+            onMouseLeave={(e) => e.target.style.color = '#000'}
           >
-            GAIA SIX
+            Tienda
+          </button>
+          <button 
+            onClick={() => setCurrentPage('about')} 
+            className="text-sm uppercase tracking-wide transition-colors"
+            style={{ color: '#000' }}
+            onMouseEnter={(e) => e.target.style.color = '#af161f'}
+            onMouseLeave={(e) => e.target.style.color = '#000'}
+          >
+            Nosotros
+          </button>
+        </nav>
+
+        <div className="flex items-center space-x-6">
+          {currentUser ? (
+            <button onClick={() => setCurrentPage('profile')} className="hidden md:block">
+              <User 
+                size={20} 
+                className="transition-colors" 
+                style={{ color: '#000' }}
+                onMouseEnter={(e) => e.target.style.color = '#af161f'}
+                onMouseLeave={(e) => e.target.style.color = '#000'}
+              />
+            </button>
+          ) : (
+            <button onClick={() => setCurrentPage('auth')} className="hidden md:block">
+              <User 
+                size={20} 
+                className="transition-colors"
+                style={{ color: '#000' }}
+                onMouseEnter={(e) => e.target.style.color = '#af161f'}
+                onMouseLeave={(e) => e.target.style.color = '#000'}
+              />
+            </button>
+          )}
+          
+          <button onClick={() => setCartOpen(true)} className="relative">
+            <ShoppingBag 
+              size={20} 
+              className="transition-colors"
+              style={{ color: '#000' }}
+              onMouseEnter={(e) => e.target.style.color = '#af161f'}
+              onMouseLeave={(e) => e.target.style.color = '#000'}
+            />
+            {countCartItems(cart) > 0 && (
+              <span 
+                className="absolute -top-2 -right-2 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-[10px]"
+                style={{ backgroundColor: '#af161f' }}
+              >
+                {countCartItems(cart)}
+              </span>
+            )}
           </button>
 
-          <nav className="hidden md:flex items-center space-x-12">
-            <button onClick={() => setCurrentPage('shop')} className="text-sm uppercase tracking-wide hover:text-bordo transition-colors">Tienda</button>
-            <button onClick={() => setCurrentPage('about')} className="text-sm uppercase tracking-wide hover:text-bordo transition-colors">Nosotros</button>
-          </nav>
-
-          <div className="flex items-center space-x-6">
-            {currentUser ? (
-              <button onClick={() => setCurrentPage('profile')} className="hidden md:block">
-                <User size={20} className="hover:text-bordo transition-colors" />
-              </button>
-            ) : (
-              <button onClick={() => setCurrentPage('auth')} className="hidden md:block">
-                <User size={20} className="hover:text-bordo transition-colors" />
-              </button>
-            )}
-            
-            <button onClick={() => setCartOpen(true)} className="relative">
-              <ShoppingBag size={20} className="hover:text-bordo transition-colors" />
-              {countCartItems(cart) > 0 && (
-                <span className="absolute -top-2 -right-2 bg-bordo text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
-                  {countCartItems(cart)}
-                </span>
-              )}
-            </button>
-
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden">
-              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden">
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
-
-        {mobileMenuOpen && (
-          <nav className="md:hidden py-4 border-t border-gray-200 space-y-3">
-            <button onClick={() => { setCurrentPage('shop'); setMobileMenuOpen(false); }} className="block w-full text-left py-2 text-sm">Tienda</button>
-            <button onClick={() => { setCurrentPage('about'); setMobileMenuOpen(false); }} className="block w-full text-left py-2 text-sm">Nosotros</button>
-            {currentUser ? (
-              <button onClick={() => { setCurrentPage('profile'); setMobileMenuOpen(false); }} className="block w-full text-left py-2 text-sm">Mi Perfil</button>
-            ) : (
-              <button onClick={() => { setCurrentPage('auth'); setMobileMenuOpen(false); }} className="block w-full text-left py-2 text-sm">Ingresar</button>
-            )}
-          </nav>
-        )}
       </div>
-    </header>
-  );
+
+      {mobileMenuOpen && (
+        <nav className="md:hidden py-4 border-t border-gray-200 space-y-3">
+          <button onClick={() => { setCurrentPage('shop'); setMobileMenuOpen(false); }} className="block w-full text-left py-2 text-sm">Showroom</button>
+          <button onClick={() => { setCurrentPage('about'); setMobileMenuOpen(false); }} className="block w-full text-left py-2 text-sm">Nosotros</button>
+          {currentUser ? (
+            <button onClick={() => { setCurrentPage('profile'); setMobileMenuOpen(false); }} className="block w-full text-left py-2 text-sm">Mi Perfil</button>
+          ) : (
+            <button onClick={() => { setCurrentPage('auth'); setMobileMenuOpen(false); }} className="block w-full text-left py-2 text-sm">Ingresar</button>
+          )}
+        </nav>
+      )}
+    </div>
+  </header>
+);
 
   // Home Page 
   const Home = () => (
-    <div className="min-h-screen">
+   <div className="min-h-screen">
       <div className="relative min-h-screen bg-white flex items-center justify-center">
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white"></div>
         
         <div className="relative z-10 text-center px-4">
           <div className="max-w-4xl mx-auto space-y-12">
-            <h1 className="text-6xl md:text-8xl font-playfair font-light text-black tracking-tight">
-              Tu estilo
+            <h1 className="text-6xl md:text-8xl font-light text-black tracking-tight">
+              Tu <span style={{ color: '#af161f' }}>estilo</span>
             </h1>
             
             <button 
               onClick={() => setCurrentPage('shop')}
-              className="border border-black px-12 py-4 text-sm uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300"
+              className="border px-12 py-4 text-sm uppercase tracking-widest transition-all duration-300"
+              style={{ borderColor: '#af161f', color: '#af161f' }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#af161f';
+                e.target.style.color = '#fff';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'transparent';
+                e.target.style.color = '#af161f';
+              }}
             >
               Ver looks
             </button>
@@ -314,7 +366,7 @@ export default function GaiaSix() {
                 <p className="text-2xl font-light text-black">24hs</p>
                 <p className="mt-1">Envío</p>
               </div>
-                <div className="text-center">
+              <div className="text-center">
                 <p className="text-2xl font-light text-black">+500</p>
                 <p className="mt-1">clientas felices</p>
               </div>
@@ -322,7 +374,7 @@ export default function GaiaSix() {
           </div>
         </div>
       </div>
-
+      
       <section className="py-24 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
