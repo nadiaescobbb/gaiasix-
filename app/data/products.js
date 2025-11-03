@@ -6,18 +6,16 @@ export const products = [
   // === TOPS ===
   {
     id: 1,
-    name: 'top adara',
+    name: 'Top Adara',
     slug: 'top-adara',
     category: 'tops',
     price: 7500,
     image: '/images/products/top-adara.avif',
-    images: [
-      '/images/products/top-adara.avif',
-  ],
+    images: ['/images/products/top-adara.avif'],
     description: 'Top moderno y versátil, perfecto para cualquier ocasión. Diseño cómodo que se adapta a tu estilo.',
-    sizes: ['talle unico'],
-    colors: ['marron'],
-    material: 'tul',
+    sizes: ['Talle único'],
+    colors: ['Marrón'],
+    material: 'Tul',
     care: 'Lavar a máquina en ciclo suave',
     stock: 1,
     featured: true,
@@ -31,12 +29,10 @@ export const products = [
     category: 'tops',
     price: 12450,
     image: '/images/products/top-borgo.avif',
-    images: [
-      '/images/products/top-borgo.avif',
-    ],
+    images: ['/images/products/top-borgo.avif'],
     description: 'Top elegante con diseño único. Ideal para destacar en cualquier ocasión.',
-    sizes: ['S', 'M',],
-    colors: ['Negro', 'Bordo'],
+    sizes: ['S', 'M'],
+    colors: ['Negro', 'Bordeaux'],
     material: 'Algodón premium',
     care: 'Lavar a máquina en ciclo suave',
     stock: 2,
@@ -45,16 +41,14 @@ export const products = [
   },
   {
     id: 13,
-    name: 'Top black',
+    name: 'Top Black',
     slug: 'top-black',
     category: 'tops',
     price: 12500,
     image: '/images/products/top-black.avif',
-    images: [
-      '/images/products/top-black.avif',
-    ],
+    images: ['/images/products/top-black.avif'],
     description: 'Este top combina con todo y se siente increíble. Perfecto para esa salida que no planeaste pero terminó siendo épica.',
-    sizes: [ 'S'],
+    sizes: ['S'],
     colors: ['Negro'],
     material: 'Algodón premium',
     care: 'Lavar a máquina en ciclo suave',
@@ -68,9 +62,7 @@ export const products = [
     category: 'tops',
     price: 11200,
     image: '/images/products/top-halter.avif',
-    images: [
-      '/images/products/top-halter.avif',
-    ],
+    images: ['/images/products/top-halter.avif'],
     description: 'Fresco, simple y con ese toque que te diferencia. Para días de sol y noches de verano.',
     sizes: ['S'],
     colors: ['Blanco'],
@@ -87,14 +79,12 @@ export const products = [
     slug: 'blusa-albany',
     category: 'blusas',
     price: 20550,
-    image:  '/images/products/blusa-albany.avif',
-    images: [
-       '/images/products/blusa-albany.avif',
-    ],
+    image: '/images/products/blusa-albany.avif',
+    images: ['/images/products/blusa-albany.avif'],
     description: 'Blusa sofisticada con detalles únicos. Perfecta para ocasiones especiales o un look casual elegante.',
-    sizes: ['S', 'M',],
-    colors: ['Blanco', 'negro'],
-    material: 'encaje',
+    sizes: ['S', 'M'],
+    colors: ['Blanco', 'Negro'],
+    material: 'Encaje',
     care: 'Lavar a máquina en ciclo suave',
     stock: 1,
     featured: true,
@@ -109,10 +99,8 @@ export const products = [
     category: 'camisas',
     price: 15800,
     image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500',
-    images: [
-      'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500',
-    ],
-    description: 'La camisa que necesitás en tu vida. Relajada, con onda y súper versátil. De día con jeans, de noche con una falda.',
+    images: ['https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500'],
+    description: 'La camisa que necesitás en tu vida. Relajada, con onda y súper versátil.',
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     colors: ['Blanco'],
     material: 'Algodón premium',
@@ -127,9 +115,7 @@ export const products = [
     category: 'camisas',
     price: 19800,
     image: 'https://images.unsplash.com/photo-1578932750294-f5075e85f44a?w=500',
-    images: [
-      'https://images.unsplash.com/photo-1578932750294-f5075e85f44a?w=500',
-    ],
+    images: ['https://images.unsplash.com/photo-1578932750294-f5075e85f44a?w=500'],
     description: 'Lujo que se siente. Esa camisa que te hace caminar diferente.',
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     colors: ['Negro'],
@@ -142,17 +128,15 @@ export const products = [
   // === FALDAS ===
   {
     id: 3,
-    name: 'falda mos',
+    name: 'Falda Mos',
     slug: 'falda-mos',
     category: 'faldas',
     price: 12300,
-    image: '/images/products/falda-mos.avif', 
-    images: [
-      '/images/products/falda-mos.avif',
-    ],
+    image: '/images/products/falda-mos.avif',
+    images: ['/images/products/falda-mos.avif'],
     description: 'Falda mini con estilo moderno. Perfecta para combinar con cualquier top.',
     sizes: ['S'],
-    colors: ['beige'],
+    colors: ['Beige'],
     material: 'Algodón premium',
     care: 'Lavar a máquina en ciclo suave',
     stock: 1,
@@ -160,14 +144,12 @@ export const products = [
   },
   {
     id: 17,
-    name: 'Falda tania',
+    name: 'Falda Tania',
     slug: 'falda-tania',
     category: 'faldas',
     price: 18900,
-    image:'/images/products/falda-tania.avif',
-    images: [
-      '/images/products/falda-tania.avif',
-    ],
+    image: '/images/products/falda-tania.avif',
+    images: ['/images/products/falda-tania.avif'],
     description: 'Esa falda que te hace sentir poderosa. Elegante sin ser formal, cómoda sin perder estilo.',
     sizes: ['S'],
     colors: ['Negro'],
@@ -178,17 +160,15 @@ export const products = [
   },
   {
     id: 18,
-    name: 'mini globo',
+    name: 'Mini Globo',
     slug: 'mini-globo',
     category: 'faldas',
     price: 16900,
     image: '/images/products/mini-globo.avif',
-    images: [
-      '/images/products/mini-globo.avif',
-    ],
+    images: ['/images/products/mini-globo.avif'],
     description: 'Movimiento y elegancia. Perfecta para sentirte femenina sin perder tu esencia.',
     sizes: ['S'],
-    colors: ['rojo'],
+    colors: ['Rojo'],
     material: 'Algodón premium',
     care: 'Lavar a máquina en ciclo suave',
     stock: 1,
@@ -203,10 +183,8 @@ export const products = [
     category: 'pantalones',
     price: 22500,
     image: 'https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=500',
-    images: [
-      'https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=500',
-    ],
-    description: 'Comodidad nivel experto. Te mueves libre y te ves increíble. ¿Qué más querés?',
+    images: ['https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=500'],
+    description: 'Comodidad nivel experto. Te mueves libre y te ves increíble.',
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     colors: ['Gris'],
     material: 'Algodón premium',
@@ -221,9 +199,7 @@ export const products = [
     category: 'pantalones',
     price: 24500,
     image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500',
-    images: [
-      'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500',
-    ],
+    images: ['https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500'],
     description: 'Funcional con estilo. Para esos días que necesitás comodidad pero no querés sacrificar la onda.',
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     colors: ['Negro'],
@@ -236,36 +212,15 @@ export const products = [
   // === CAMPERAS ===
   {
     id: 21,
-    name: 'Camperas',
-    slug: 'camperas',
+    name: 'Campera Sale',
+    slug: 'campera-sale',
     category: 'camperas',
     price: 45000,
     image: '/images/products/campera-sale.avif',
-    images: [
-      '/images/products/campera-sale.avif',
-    ],
+    images: ['/images/products/campera-sale.avif'],
     description: 'La pieza que transforma cualquier outfit. Actitud pura en formato campera.',
-    sizes: ['S', 'M', ],
-    colors: ['negro'],
-    material: 'Cuero sintético premium',
-    care: 'Limpieza profesional recomendada',
-    stock: 1,
-    featured: true,
-    active: true,
-  },
-  {
-    id: 22,
-    name: 'Camperas',
-    slug: 'camperas',
-    category: 'camperas',
-    price: 45000,
-    image: '/images/products/campera-sale.avif',
-    images: [
-      '/images/products/campera-sale.avif',
-    ],
-    description: 'La pieza que transforma cualquier outfit. Actitud pura en formato campera.',
-    sizes: ['S', 'M', ],
-    colors: ['negro'],
+    sizes: ['S', 'M'],
+    colors: ['Negro'],
     material: 'Cuero sintético premium',
     care: 'Limpieza profesional recomendada',
     stock: 1,
@@ -276,14 +231,12 @@ export const products = [
   // === VESTIDOS ===
   {
     id: 23,
-    name: 'Vestido ciel',
+    name: 'Vestido Ciel',
     slug: 'vestido-ciel',
     category: 'vestidos',
     price: 28500,
     image: '/images/products/vestido-ciel.avif',
-    images: [
-      '/images/products/vestido-ciel.avif',
-    ],
+    images: ['/images/products/vestido-ciel.avif'],
     description: 'Elegancia sin esfuerzo. Ese vestido que te salva en cualquier ocasión y siempre te hace sentir especial.',
     sizes: ['S'],
     colors: ['Negro'],
@@ -300,12 +253,10 @@ export const products = [
     category: 'vestidos',
     price: 32500,
     image: '/images/products/vestido-ursula.avif',
-    images: [
-      '/images/products/vestido-ursula.avif',
-    ],
+    images: ['/images/products/vestido-ursula.avif'],
     description: 'Para esos momentos que pedían algo especial. Te vas a sentir increíble, te lo garantizo.',
     sizes: ['XS'],
-    colors: ['negro'],
+    colors: ['Negro'],
     material: 'Algodón premium',
     care: 'Lavar a máquina en ciclo suave',
     stock: 1,
@@ -313,17 +264,15 @@ export const products = [
     active: true,
   },
 
-  // === SET ===
+  // === SETS ===
   {
     id: 4,
     name: 'Set Total Black',
     slug: 'set-total-black',
-    category: 'set',
+    category: 'sets', 
     price: 15670,
     image: '/images/products/set-totalblack.avif',
-    images: [
-    '/images/products/set-totalblack.avif',
-    ],
+    images: ['/images/products/set-totalblack.avif'],
     description: 'Conjunto completo para un look coordinado. Elegante y versátil.',
     sizes: ['S'],
     colors: ['Negro'],
@@ -333,20 +282,16 @@ export const products = [
     featured: true,
     active: true,
   },
-
   {
     id: 5,
-    name: 'Set kiss',
+    name: 'Set Kiss',
     slug: 'set-kiss',
-    category: 'set',
-    price: 15670,
+    category: 'sets', 
     image: '/images/products/set-kiss.avif',
-    images: [
-    '/images/products/set-kiss.avif',
-    ],
+    images: ['/images/products/set-kiss.avif'],
     description: 'Conjunto completo para un look coordinado. Elegante y versátil.',
     sizes: ['S'],
-    colors: ['tul'],
+    colors: ['Tul'],
     material: 'Algodón premium',
     care: 'Lavar a máquina en ciclo suave',
     stock: 1,
@@ -356,7 +301,7 @@ export const products = [
 ];
 
 // ============================================
-// CATEGORÍAS
+// CATEGORÍAS (CORREGIDAS)
 // ============================================
 
 export const categories = [
@@ -417,7 +362,7 @@ export const categories = [
     order: 6
   },
   { 
-    id: 'sets', 
+    id: 'sets', // ✅ Plural para consistencia
     name: 'Sets',
     slug: 'sets',
     description: 'Conjuntos coordinados',
@@ -440,7 +385,7 @@ export const categories = [
 
 export const heroImages = [
   '/images/products/vestidos-main.jpg',
-  '/images/products/campera-sale.jpg',
+  '/images/products/campera-sale.avif', // ✅ Cambié a .avif
 ];
 
 // ============================================
@@ -475,7 +420,7 @@ export const getProductsByCategory = (categoryId) => {
  * Buscar producto por ID
  */
 export const getProductById = (id) => {
-  return products.find(p => p.id === id);
+  return products.find(p => p.id === parseInt(id));
 };
 
 /**
@@ -597,17 +542,16 @@ export const sortProducts = (productsArray, sortBy = 'default') => {
  * Obtener estadísticas del catálogo
  */
 export const getCatalogStats = () => {
+  const activeProducts = products.filter(p => p.active);
+  
   return {
-    totalProducts: products.filter(p => p.active).length,
-    totalCategories: categories.length - 1, // -1 porque 'all' no cuenta
+    totalProducts: activeProducts.length,
+    totalCategories: categories.length - 1,
     featuredProducts: products.filter(p => p.featured && p.active).length,
     newProducts: products.filter(p => p.new && p.active).length,
-    averagePrice: Math.round(
-      products
-        .filter(p => p.active)
-        .reduce((sum, p) => sum + p.price, 0) / 
-      products.filter(p => p.active).length
-    ),
+    averagePrice: activeProducts.length > 0 
+      ? Math.round(activeProducts.reduce((sum, p) => sum + p.price, 0) / activeProducts.length)
+      : 0,
     priceRange: getPriceRange(),
     productsByCategory: categories
       .filter(c => c.id !== 'all')
@@ -616,39 +560,6 @@ export const getCatalogStats = () => {
         count: products.filter(p => p.category === c.id && p.active).length
       }))
   };
-};
-
-// ============================================
-// MOCK DATA PARA DESARROLLO
-// ============================================
-
-/**
- * Generar productos de prueba (útil para testing)
- */
-export const generateMockProducts = (count = 10) => {
-  const mockProducts = [];
-  const categories = ['tops', 'vestidos', 'pantalones', 'faldas'];
-  
-  for (let i = 0; i < count; i++) {
-    mockProducts.push({
-      id: 1000 + i,
-      name: `Producto Mock ${i + 1}`,
-      slug: `producto-mock-${i + 1}`,
-      category: categories[Math.floor(Math.random() * categories.length)],
-      price: Math.floor(Math.random() * 30000) + 5000,
-      image: `https://picsum.photos/500/500?random=${i}`,
-      images: [`https://picsum.photos/500/500?random=${i}`],
-      description: 'Producto de prueba para desarrollo',
-      sizes: ['S', 'M', 'L'],
-      colors: ['Negro', 'Blanco'],
-      material: 'Algodón',
-      care: 'Lavar a máquina',
-      stock: Math.floor(Math.random() * 20) + 1,
-      active: true,
-    });
-  }
-  
-  return mockProducts;
 };
 
 // ============================================
@@ -673,5 +584,4 @@ export default {
   filterByColor,
   sortProducts,
   getCatalogStats,
-  generateMockProducts,
 };
