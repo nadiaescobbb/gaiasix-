@@ -416,23 +416,16 @@ export const getProductsByCategory = (categoryId) => {
   return products.filter(p => p.category === categoryId && p.active);
 };
 
-/**
- * Buscar producto por ID
- */
+
 export const getProductById = (id) => {
   return products.find(p => p.id === parseInt(id));
 };
 
-/**
- * Buscar producto por slug
- */
 export const getProductBySlug = (slug) => {
   return products.find(p => p.slug === slug);
 };
 
-/**
- * Buscar productos
- */
+
 export const searchProducts = (query) => {
   const lowerQuery = query.toLowerCase();
   return products.filter(p => 
@@ -444,9 +437,7 @@ export const searchProducts = (query) => {
   );
 };
 
-/**
- * Obtener productos relacionados
- */
+
 export const getRelatedProducts = (productId, limit = 4) => {
   const product = getProductById(productId);
   if (!product) return [];
@@ -460,9 +451,7 @@ export const getRelatedProducts = (productId, limit = 4) => {
     .slice(0, limit);
 };
 
-/**
- * Verificar disponibilidad de talla
- */
+
 export const isSizeAvailable = (productId, size) => {
   const product = getProductById(productId);
   if (!product) return false;
@@ -470,9 +459,7 @@ export const isSizeAvailable = (productId, size) => {
   return product.sizes.includes(size) && product.stock > 0;
 };
 
-/**
- * Obtener rango de precios
- */
+
 export const getPriceRange = () => {
   const prices = products.filter(p => p.active).map(p => p.price);
   return {
@@ -481,9 +468,7 @@ export const getPriceRange = () => {
   };
 };
 
-/**
- * Filtrar productos por rango de precio
- */
+
 export const filterByPriceRange = (minPrice, maxPrice) => {
   return products.filter(p => 
     p.active && 
@@ -492,9 +477,7 @@ export const filterByPriceRange = (minPrice, maxPrice) => {
   );
 };
 
-/**
- * Obtener colores disponibles
- */
+
 export const getAvailableColors = () => {
   const colorsSet = new Set();
   products.forEach(p => {
@@ -505,9 +488,7 @@ export const getAvailableColors = () => {
   return Array.from(colorsSet);
 };
 
-/**
- * Filtrar por color
- */
+
 export const filterByColor = (color) => {
   return products.filter(p => 
     p.active && 
@@ -516,9 +497,7 @@ export const filterByColor = (color) => {
   );
 };
 
-/**
- * Ordenar productos
- */
+
 export const sortProducts = (productsArray, sortBy = 'default') => {
   const sorted = [...productsArray];
   
@@ -538,9 +517,7 @@ export const sortProducts = (productsArray, sortBy = 'default') => {
   }
 };
 
-/**
- * Obtener estadísticas del catálogo
- */
+
 export const getCatalogStats = () => {
   const activeProducts = products.filter(p => p.active);
   
@@ -562,9 +539,6 @@ export const getCatalogStats = () => {
   };
 };
 
-// ============================================
-// EXPORTS
-// ============================================
 
 export default {
   products,
