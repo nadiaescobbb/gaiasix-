@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ShoppingBag, User, Menu, X } from 'lucide-react';
+import Image from "next/image";
 
 export default function Header({ 
   currentUser, 
@@ -16,13 +17,19 @@ export default function Header({
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <button 
-            onClick={() => onNavigate('home')}
-            className="transition-opacity hover:opacity-80"
-          >
-            <div className="text-2xl font-bold tracking-wider">GAIA SIX</div>
-          </button>
+    {/* Logo */}
+    <button 
+      onClick={() => onNavigate('home')}
+      className="transition-opacity hover:opacity-80"
+      >
+      <Image 
+          src="/logo.avif"
+          alt="GAIA SIX logo"
+          width={120}
+          height={40}
+          priority     
+          />
+       </button>
 
           {/* Navegación Desktop */}
           <nav className="hidden md:flex items-center space-x-12">

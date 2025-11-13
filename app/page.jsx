@@ -15,6 +15,8 @@ import AboutPage from './components/pages/AboutPage';
 import AuthPage from './components/pages/AuthPage';
 import ProfilePage from './components/pages/ProfilePage';
 
+
+
 // Componente interno que usa el contexto
 function AppContent() {
   // Estado de navegación
