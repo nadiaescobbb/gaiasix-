@@ -1,19 +1,19 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { AppProvider, useAppContext } from '../context/AppContext';
+import { useState } from 'react';
+import { AppProvider, useAppContext } from './context/AppContext';
 
 // Layout Components
-import Header from '../components/layout/Header';
-import Footer from '../components/layout/Footer';
-import CartSidebar from '../components/layout/CartSidebar';
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
+import CartSidebar from './components/layout/CartSidebar';
 
 // Page Components
-import HomePage from '../components/pages/HomePage';
-import ShopPage from '../components/pages/ShopPage';
-import AboutPage from '../components/pages/AboutPage';
-import AuthPage from '../components/pages/AuthPage';
-import ProfilePage from '../components/pages/ProfilePage';
+import HomePage from './components/pages/HomePage';
+import ShopPage from './components/pages/ShopPage';
+import AboutPage from './components/pages/AboutPage';
+import AuthPage from './components/pages/AuthPage';
+import ProfilePage from './components/pages/ProfilePage';
 
 // Componente interno que usa el contexto
 function AppContent() {
