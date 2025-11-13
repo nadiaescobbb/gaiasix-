@@ -3,20 +3,20 @@
 import { useState } from 'react';
 
 // Hooks
-import { useAuth } from './hooks/useAuth';
-import { useCart } from './hooks/useCart';
+import { useAuth } from '../hooks/useAuth';
+import { useCart } from '../hooks/useCart';
 
 // Layout Components
-import Header from './components/layout/Header';
-import Footer from './components/layout/Footer';
-import CartSidebar from './components/layout/CartSidebar';
+import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
+import CartSidebar from '../components/layout/CartSidebar';
 
 // Page Components
-import HomePage from './components/pages/HomePage';
-import ShopPage from './components/pages/ShopPage';
-import AboutPage from './components/pages/AboutPage';
-import AuthPage from './components/pages/AuthPage';
-import ProfilePage from './components/pages/ProfilePage';
+import HomePage from '../components/pages/HomePage';
+import ShopPage from '../components/pages/ShopPage';
+import AboutPage from '../components/pages/AboutPage';
+import AuthPage from '../components/pages/AuthPage';
+import ProfilePage from '../components/pages/ProfilePage';
 
 export default function GaiaSix() {
   // Estado de navegación
