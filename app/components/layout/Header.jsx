@@ -24,12 +24,12 @@ export default function Header({
       >
       <Image 
           src="/logo.avif"
-          alt="GAIA SIX logo"
+          alt="GAIA SIX"
           width={120}
           height={40}
           priority     
           />
-       </button>
+    </button>
 
           {/* Navegación Desktop */}
           <nav className="hidden md:flex items-center space-x-12">
