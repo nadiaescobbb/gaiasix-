@@ -1,10 +1,7 @@
 "use client";
 
-import { useState } from 'react';
-
-// Hooks
-import { useAuth } from '../hooks/useAuth';
-import { useCart } from '../hooks/useCart';
+import { useState, useEffect } from 'react';
+import { AppProvider, useAppContext } from '../context/AppContext';
 
 // Layout Components
 import Header from '../components/layout/Header';
@@ -18,24 +15,29 @@ import AboutPage from '../components/pages/AboutPage';
 import AuthPage from '../components/pages/AuthPage';
 import ProfilePage from '../components/pages/ProfilePage';
 
-export default function GaiaSix() {
+// Componente interno que usa el contexto
+function AppContent() {
   // Estado de navegación
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [cartOpen, setCartOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login');
 
-  // Hooks personalizados
-  const { currentUser, login, register, logout, updateUserOrders } = useAuth();
+  // Usar el contexto
   const { 
+    currentUser, 
     cart, 
     cartTotal, 
-    cartItemsCount, 
-    addToCart, 
-    removeFromCart, 
-    updateQuantity, 
-    clearCart 
-  } = useCart();
+    cartItemsCount,
+    login,
+    register,
+    logout,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    updateUserOrders
+  } = useAppContext();
 
   // Handlers
   const handleCheckout = () => {
@@ -54,9 +56,7 @@ export default function GaiaSix() {
       status: 'pending'
     };
     
-    // Actualizar órdenes del usuario
     updateUserOrders(order.id, order);
-    
     clearCart();
     setCartOpen(false);
     alert('¡Pedido realizado! Te contactaremos pronto.');
@@ -161,5 +161,14 @@ export default function GaiaSix() {
       
       <Footer />
     </div>
+  );
+}
+
+// Componente principal que envuelve todo con el Provider
+export default function GaiaSix() {
+  return (
+    <AppProvider>
+      <AppContent />
+    </AppProvider>
   );
 }
