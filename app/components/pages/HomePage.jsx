@@ -15,10 +15,17 @@ export default function HomePage({ onNavigate }) {
         <div className="relative z-10 text-center px-4">
           <div className="max-w-4xl mx-auto space-y-12">
             <h1 className="text-6xl md:text-8xl font-light text-black tracking-tight">
-              Tu <span className="text-red-800">estilo</span>
+              Looks de noche <span className="text-red-800">sin vueltas</span>
             </h1>
             
             <button 
+              onClick={() => onNavigate('shop')}
+              className="border border-red-800 text-red-800 px-12 py-4 text-sm uppercase tracking-widest hover:bg-red-800 hover:text-white transition-all duration-300"
+            >
+              Ver prendas
+            </button>
+
+              <button 
               onClick={() => onNavigate('shop')}
               className="border border-red-800 text-red-800 px-12 py-4 text-sm uppercase tracking-widest hover:bg-red-800 hover:text-white transition-all duration-300"
             >
@@ -28,8 +35,8 @@ export default function HomePage({ onNavigate }) {
             {/* Stats */}
             <div className="flex justify-center gap-16 pt-12 text-xs uppercase tracking-widest text-gray-600">
               <div className="text-center">
-                <p className="text-2xl font-light text-black">3</p>
-                <p className="mt-1">Cuotas</p>
+                <p className="text-2xl font-light text-black">6</p>
+                <p className="mt-1">Cuotas sin interes</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-light text-black">24hs</p>
@@ -47,7 +54,7 @@ export default function HomePage({ onNavigate }) {
       {/* Featured Products Section */}
       <section className="py-24 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-light text-center mb-12">Destacados</h2>
+          <h2 className="text-3xl font-light text-center mb-12">recien llegados</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {featuredProducts.map(product => (
               <div 

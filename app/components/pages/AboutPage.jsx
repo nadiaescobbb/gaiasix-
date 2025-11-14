@@ -8,15 +8,11 @@ export default function AboutPage() {
         
         <div className="space-y-8 text-gray-700 leading-relaxed">
           <p className="text-xl">
-            Tres hermanas. Ropa que acompaña tu día a día.
+            seleccionamos piezas que realmente funcionan:
           </p>
           
           <p>
-            Sin reglas. Sin poses. Solo prendas que se sienten bien.
-          </p>
-          
-          <p>
-            Creemos en la elegancia sin pretensiones, en la comodidad sin sacrificar el estilo.
+           para salir, para fiestas y para no complicarte
           </p>
         </div>
       </div>

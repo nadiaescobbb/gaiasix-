@@ -37,13 +37,19 @@ export default function Header({
               onClick={() => onNavigate('shop')} 
               className="text-sm uppercase tracking-wide hover:text-red-800 transition"
             >
-              Tienda
+              Prendas
+            </button>
+            <button 
+              onClick={() => onNavigate('shop')} 
+              className="text-sm uppercase tracking-wide hover:text-red-800 transition"
+            >
+              Looks
             </button>
             <button 
               onClick={() => onNavigate('about')} 
               className="text-sm uppercase tracking-wide hover:text-red-800 transition"
             >
-              Nosotros
+              Contacto
             </button>
           </nav>
 

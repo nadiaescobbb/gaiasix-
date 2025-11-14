@@ -39,6 +39,11 @@ export default function Footer() {
             <MapPin size={14} />
             Tierra del Fuego
           </p>
+
+          <p className="flex items-center gap-2">
+            <MapPin size={14} />
+            Cambios
+          </p>
         </div>
 
         {/* Columna 3: Redes */}
