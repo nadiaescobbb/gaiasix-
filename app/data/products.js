@@ -9,7 +9,7 @@ export const products = [
     image: '/images/products/top-trick.avif',
     images: ['/images/products/top-trick.avif'],
     description: 'top tul manga larga liso',
-    sizes: ['s'],
+    sizes: ['S'],
     colors: ['Marrón'],
     material: 'Tul',
     care: "Lavar con cuidado, preferiblemente a mano o ciclo suave. Evitar secadora.",
@@ -20,7 +20,7 @@ export const products = [
   },
 
   {
-    id: 9,
+    id: 2,
     name: 'Top tini',
     slug: 'top-tini',
     category: 'tops',
@@ -37,7 +37,7 @@ export const products = [
   },
   
   {
-    id: 7,
+    id: 3,
     name: 'Top anja',
     slug: 'top-anja',
     category: 'tops',
@@ -46,7 +46,7 @@ export const products = [
     images: ['/images/products/top-anja.avif'],
     description: 'top micro asim pico con cuello manga larga',
     sizes: ['S', 'M'],
-    colors: ['gris'],
+    colors: ['Gris'],
     care: 'Lavar a máquina en ciclo suave',
     stock: 2,
     featured: true,
@@ -54,7 +54,7 @@ export const products = [
   },
 
   {
-    id: 8,
+    id: 4,
     name: 'Top drape',
     slug: 'top-drape',
     category: 'tops',
@@ -63,15 +63,15 @@ export const products = [
     images: ['/images/products/top-drape.avif'],
     description: 'top micro corpiño para atar',
     sizes: ['S', 'M'],
-    colors: ['Negro', 'bordo'],
+    colors: ['Negro', 'Bordo'],
     care: 'Lavar a máquina en ciclo suave',
     stock: 2,
     featured: true,
     active: true,
   },
 
-   {
-    id: 9,
+  {
+    id: 5,
     name: 'Top fylo',
     slug: 'top-fylo',
     category: 'tops',
@@ -89,9 +89,9 @@ export const products = [
 
   // === FALDAS ===
   {
-    id: 10,
-    name: 'mini trace',
-    slug: 'mini trace',
+    id: 6, 
+    name: 'Mini trace',
+    slug: 'mini-trace',
     category: 'faldas',
     price: 11375,
     image: '/images/products/mini-trace.avif',
@@ -105,10 +105,10 @@ export const products = [
     active: true,
   },
 
-    {
-    id: 10,
-    name: 'mini lark',
-    slug: 'mini lark',
+  {
+    id: 7,
+    name: 'Mini lark',
+    slug: 'mini-lark',
     category: 'faldas',
     price: 11125,
     image: '/images/products/mini-lark.avif',
@@ -124,14 +124,14 @@ export const products = [
 
   // === SETS ===
   {
-    id: 4,
+    id: 8, 
     name: 'Set feral',
     slug: 'set-feral',
     category: 'sets', 
     price: 15670,
     image: '/images/products/set-feral.avif',
     images: ['/images/products/set-feral.avif'],
-    description: 'Conjunto completo para un look coordinado.',
+    description: 'Conjunto completo para un look coordinado',
     sizes: ['S'],
     colors: ['Negro'],
     material: 'Algodón premium',
@@ -140,15 +140,16 @@ export const products = [
     featured: true,
     active: true,
   },
+  
   {
-    id: 5,
+    id: 9, 
     name: 'Set seline',
     slug: 'set-seline',
     category: 'sets',
     price: 12250, 
     image: '/images/products/set-seline.avif',
     images: ['/images/products/set-seline.avif'],
-    description: 'Conjunto elegante en tul, perfecto para ocasiones especiales.',
+    description: 'Conjunto elegante en tul, perfecto para ocasiones especiales',
     sizes: ['S'],
     colors: ['Tul'],
     material: 'Tul premium',
@@ -160,15 +161,15 @@ export const products = [
 
   // === VESTIDOS ===
   {
-    id: 24,
+    id: 10,
     name: 'Vestido platt',
-    slug: 'vestido-miel',
+    slug: 'vestido-platt',
     category: 'vestidos',
     price: 23500,
     image: '/images/products/vestido-platt.avif',
     images: ['/images/products/vestido-platt.avif'],
-    description: 'Vestido micro cuello bote falda volado ',
-    sizes: ['s','m'],
+    description: 'Vestido micro cuello bote falda volado',
+    sizes: ['S','M'],
     colors: ['Negro'],
     care: 'Lavar a mano con agua fría',
     stock: 2,
@@ -177,7 +178,7 @@ export const products = [
   },
 
   {
-    id: 25,
+    id: 11, // ✅ CORREGIDO: era 25
     name: 'Vestido inessia',
     slug: 'vestido-inessia',
     category: 'vestidos',
@@ -185,7 +186,7 @@ export const products = [
     image: '/images/products/vestido-inessia.avif',
     images: ['/images/products/vestido-inessia.avif'],
     description: 'Vestido micro falda para atar',
-    sizes: ['s', 'm'],
+    sizes: ['S', 'M'],
     colors: ['Negro'],
     stock: 2,
     featured: true,
@@ -193,7 +194,7 @@ export const products = [
   },
 
   {
-    id: 26,
+    id: 12, 
     name: 'Vestido stun',
     slug: 'vestido-stun',
     category: 'vestidos',
@@ -201,23 +202,22 @@ export const products = [
     image: '/images/products/vestido-stun.avif',
     images: ['/images/products/vestido-stun.avif'],
     description: 'Vestido micro strapless para atar',
-    sizes: ['s', 'm'],
-    colors: ['Negro', 'chocolate'],
+    sizes: ['S', 'M'],
+    colors: ['Negro', 'Chocolate'],
     stock: 3,
     featured: true,
     active: true,
   },
 
-
-   {
-    id: 27,
+  {
+    id: 13, 
     name: 'Vestido zetra',
     slug: 'vestido-zetra',
     category: 'vestidos',
     price: 13230,
     image: '/images/products/vestido-zetra.avif',
     images: ['/images/products/vestido-zetra.avif'],
-    description: 'Elegancia sin esfuerzo.',
+    description: 'Elegancia sin esfuerzo',
     sizes: ['S'],
     colors: ['Negro'],
     material: 'Seda sintética',
@@ -226,7 +226,6 @@ export const products = [
     featured: true,
     active: true,
   },
-
 ];
 
 // ============================================
@@ -245,34 +244,85 @@ export const categories = [
 ];
 
 // ============================================
-// VALIDACIONES
+// VALIDACIONES MEJORADAS
 // ============================================
 
 export const validateProducts = () => {
   const errors = [];
+  const ids = new Set();
   
-  products.forEach(product => {
+  products.forEach((product, index) => {
+    // Validar ID único
+    if (ids.has(product.id)) {
+      errors.push(`❌ ID duplicado: ${product.id} en producto "${product.name}" (índice ${index})`);
+    }
+    ids.add(product.id);
+
+    // Validar precio
     if (!product.price || product.price <= 0) {
-      errors.push(`Producto "${product.name}" sin precio válido`);
+      errors.push(`❌ Producto "${product.name}" sin precio válido`);
     }
+    
+    // Validar tallas
     if (!product.sizes || product.sizes.length === 0) {
-      errors.push(`Producto "${product.name}" sin tallas`);
+      errors.push(`❌ Producto "${product.name}" sin tallas`);
     }
+    
+    // Validar stock
     if (product.stock < 0) {
-      errors.push(`Producto "${product.name}" con stock negativo`);
+      errors.push(`❌ Producto "${product.name}" con stock negativo`);
+    }
+
+    // Validar imagen
+    if (!product.image) {
+      errors.push(`⚠️ Producto "${product.name}" sin imagen`);
+    }
+
+    // Validar slug único
+    const duplicateSlugs = products.filter(p => p.slug === product.slug);
+    if (duplicateSlugs.length > 1) {
+      errors.push(`⚠️ Slug duplicado: "${product.slug}"`);
     }
   });
   
   if (errors.length > 0) {
-    console.error('❌ Errores en productos:', errors);
+    console.error('🔴 ERRORES EN PRODUCTOS:');
+    errors.forEach(error => console.error(error));
+    return false;
   } else {
     console.log('✅ Todos los productos validados correctamente');
+    console.log(`📦 Total de productos: ${products.length}`);
+    console.log(`🏷️ IDs: ${Array.from(ids).sort((a, b) => a - b).join(', ')}`);
+    return true;
   }
-  
-  return errors;
 };
 
-// Ejecutar validación al importar
+// Ejecutar validación en desarrollo
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
   validateProducts();
 }
+
+// ============================================
+// HELPERS
+// ============================================
+
+export const getProductById = (id) => {
+  return products.find(p => p.id === parseInt(id));
+};
+
+export const getProductBySlug = (slug) => {
+  return products.find(p => p.slug === slug);
+};
+
+export const getProductsByCategory = (categoryId) => {
+  if (categoryId === 'all') {
+    return products.filter(p => p.active);
+  }
+  return products.filter(p => p.category === categoryId && p.active);
+};
+
+export const getFeaturedProducts = (limit = 3) => {
+  return products
+    .filter(p => p.featured && p.active)
+    .slice(0, limit);
+};

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { AppProvider, useAppContext } from './context/AppContext';
 import { ToastProvider, useToast } from './context/ToastContext';
+import ProductPage from './components/pages/ProductPage';
 
 // Layout Components
 import Header from './components/layout/Header';
@@ -45,6 +46,8 @@ function AppContent() {
     clearCart,
     updateUserOrders
   } = useAppContext();
+
+  
 
   // ==========================================
   // HANDLERS CON TOAST FEEDBACK
