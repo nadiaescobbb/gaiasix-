@@ -1,41 +1,123 @@
-// ============================================
-// PRODUCTOS PRINCIPALES - ACTUALIZADO
-// ============================================
-
 export const products = [
   // === TOPS ===
   {
     id: 1,
-    name: 'Top Adara',
-    slug: 'top-adara',
+    name: 'Top trick',
+    slug: 'top-trick',
     category: 'tops',
-    price: 7500,
-    image: '/images/products/top-adara.avif',
-    images: ['/images/products/top-adara.avif'],
-    description: 'Top moderno y versátil, perfecto para cualquier ocasión.',
-    sizes: ['Talle único'],
+    price: 7350,
+    image: '/images/products/top-trick.avif',
+    images: ['/images/products/top-trick.avif'],
+    description: 'top tul manga larga liso',
+    sizes: ['s'],
     colors: ['Marrón'],
     material: 'Tul',
-    care: 'Lavar a máquina en ciclo suave',
+    care: "Lavar con cuidado, preferiblemente a mano o ciclo suave. Evitar secadora.",
     stock: 1,
     featured: true,
     new: true,
     active: true,
   },
+
   {
-    id: 7,
-    name: 'Top Borgo',
-    slug: 'top-borgo',
+    id: 9,
+    name: 'Top tini',
+    slug: 'top-tini',
     category: 'tops',
-    price: 12450,
-    image: '/images/products/top-borgo.avif',
-    images: ['/images/products/top-borgo.avif'],
-    description: 'Top elegante con diseño único.',
+    price: 11700,
+    image: '/images/products/top-tini.avif',
+    images: ['/images/products/top-tini.avif'],
+    description: 'top micro buche bufanda',
     sizes: ['S', 'M'],
-    colors: ['Negro', 'Bordeaux'],
-    material: 'Algodón premium',
+    colors: ['Negro'],
     care: 'Lavar a máquina en ciclo suave',
     stock: 2,
+    featured: true,
+    active: true,
+  },
+  
+  {
+    id: 7,
+    name: 'Top anja',
+    slug: 'top-anja',
+    category: 'tops',
+    price: 13500,
+    image: '/images/products/top-anja.avif',
+    images: ['/images/products/top-anja.avif'],
+    description: 'top micro asim pico con cuello manga larga',
+    sizes: ['S', 'M'],
+    colors: ['gris'],
+    care: 'Lavar a máquina en ciclo suave',
+    stock: 2,
+    featured: true,
+    active: true,
+  },
+
+  {
+    id: 8,
+    name: 'Top drape',
+    slug: 'top-drape',
+    category: 'tops',
+    price: 13550,
+    image: '/images/products/top-drape.avif',
+    images: ['/images/products/top-drape.avif'],
+    description: 'top micro corpiño para atar',
+    sizes: ['S', 'M'],
+    colors: ['Negro', 'bordo'],
+    care: 'Lavar a máquina en ciclo suave',
+    stock: 2,
+    featured: true,
+    active: true,
+  },
+
+   {
+    id: 9,
+    name: 'Top fylo',
+    slug: 'top-fylo',
+    category: 'tops',
+    price: 13550,
+    image: '/images/products/top-fylo.avif',
+    images: ['/images/products/top-fylo.avif'],
+    description: 'Top micro escote cavado',
+    sizes: ['S', 'M'],
+    colors: ['Negro'],
+    care: 'Lavar a máquina en ciclo suave',
+    stock: 2,
+    featured: true,
+    active: true,
+  },
+
+  // === FALDAS ===
+  {
+    id: 10,
+    name: 'mini trace',
+    slug: 'mini trace',
+    category: 'faldas',
+    price: 11375,
+    image: '/images/products/mini-trace.avif',
+    images: ['/images/products/mini-trace.avif'],
+    description: 'Pollera micro nudo',
+    sizes: ['S','M'],
+    colors: ['Negro'],
+    care: 'Lavar a mano con agua fría',
+    stock: 1,
+    featured: true,
+    active: true,
+  },
+
+    {
+    id: 10,
+    name: 'mini lark',
+    slug: 'mini lark',
+    category: 'faldas',
+    price: 11125,
+    image: '/images/products/mini-lark.avif',
+    images: ['/images/products/mini-lark.avif'],
+    description: 'Pollera micro volado frunce',
+    sizes: ['S','M'],
+    colors: ['Negro'],
+    care: 'Lavar a mano con agua fría',
+    stock: 1,
     featured: true,
     active: true,
   },
@@ -43,12 +125,12 @@ export const products = [
   // === SETS ===
   {
     id: 4,
-    name: 'Set Total Black',
-    slug: 'set-total-black',
+    name: 'Set feral',
+    slug: 'set-feral',
     category: 'sets', 
     price: 15670,
-    image: '/images/products/set-totalblack.avif',
-    images: ['/images/products/set-totalblack.avif'],
+    image: '/images/products/set-feral.avif',
+    images: ['/images/products/set-feral.avif'],
     description: 'Conjunto completo para un look coordinado.',
     sizes: ['S'],
     colors: ['Negro'],
@@ -60,12 +142,12 @@ export const products = [
   },
   {
     id: 5,
-    name: 'Set Kiss',
-    slug: 'set-kiss',
+    name: 'Set seline',
+    slug: 'set-seline',
     category: 'sets',
-    price: 14500, // ⚡ PRECIO AGREGADO
-    image: '/images/products/set-kiss.avif',
-    images: ['/images/products/set-kiss.avif'],
+    price: 12250, 
+    image: '/images/products/set-seline.avif',
+    images: ['/images/products/set-seline.avif'],
     description: 'Conjunto elegante en tul, perfecto para ocasiones especiales.',
     sizes: ['S'],
     colors: ['Tul'],
@@ -78,13 +160,63 @@ export const products = [
 
   // === VESTIDOS ===
   {
-    id: 23,
-    name: 'Vestido Ciel',
-    slug: 'vestido-ciel',
+    id: 24,
+    name: 'Vestido platt',
+    slug: 'vestido-miel',
     category: 'vestidos',
-    price: 28500,
-    image: '/images/products/vestido-ciel.avif',
-    images: ['/images/products/vestido-ciel.avif'],
+    price: 23500,
+    image: '/images/products/vestido-platt.avif',
+    images: ['/images/products/vestido-platt.avif'],
+    description: 'Vestido micro cuello bote falda volado ',
+    sizes: ['s','m'],
+    colors: ['Negro'],
+    care: 'Lavar a mano con agua fría',
+    stock: 2,
+    featured: true,
+    active: true,
+  },
+
+  {
+    id: 25,
+    name: 'Vestido inessia',
+    slug: 'vestido-inessia',
+    category: 'vestidos',
+    price: 21500,
+    image: '/images/products/vestido-inessia.avif',
+    images: ['/images/products/vestido-inessia.avif'],
+    description: 'Vestido micro falda para atar',
+    sizes: ['s', 'm'],
+    colors: ['Negro'],
+    stock: 2,
+    featured: true,
+    active: true,
+  },
+
+  {
+    id: 26,
+    name: 'Vestido stun',
+    slug: 'vestido-stun',
+    category: 'vestidos',
+    price: 21500,
+    image: '/images/products/vestido-stun.avif',
+    images: ['/images/products/vestido-stun.avif'],
+    description: 'Vestido micro strapless para atar',
+    sizes: ['s', 'm'],
+    colors: ['Negro', 'chocolate'],
+    stock: 3,
+    featured: true,
+    active: true,
+  },
+
+
+   {
+    id: 27,
+    name: 'Vestido zetra',
+    slug: 'vestido-zetra',
+    category: 'vestidos',
+    price: 13230,
+    image: '/images/products/vestido-zetra.avif',
+    images: ['/images/products/vestido-zetra.avif'],
     description: 'Elegancia sin esfuerzo.',
     sizes: ['S'],
     colors: ['Negro'],
@@ -94,6 +226,7 @@ export const products = [
     featured: true,
     active: true,
   },
+
 ];
 
 // ============================================
@@ -115,9 +248,6 @@ export const categories = [
 // VALIDACIONES
 // ============================================
 
-/**
- * ⚡ NUEVO: Validar integridad de productos
- */
 export const validateProducts = () => {
   const errors = [];
   

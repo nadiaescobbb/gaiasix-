@@ -17,12 +17,8 @@ export default function HomePage({ onNavigate }) {
           <div className="max-w-3xl mx-auto space-y-8">
             {/* Mensaje simple y potente */}
             <h1 className="text-5xl md:text-7xl font-light text-white tracking-tight leading-tight">
-              Lista para salir.
+              ¿Lista para salir?
             </h1>
-            
-            <p className="text-gray-400 text-sm md:text-base tracking-wide">
-              Simple. Elegante. Sin vueltas.
-            </p>
             
             {/* CTA minimalista */}
             <button 
@@ -34,10 +30,7 @@ export default function HomePage({ onNavigate }) {
           </div>
         </div>
 
-        {/* Scroll indicator sutil */}
-        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2">
-          <div className="w-px h-16 bg-gradient-to-b from-transparent via-gray-600 to-transparent"></div>
-        </div>
+       
       </div>
       
       {/* Featured minimalista */}
