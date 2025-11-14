@@ -1,6 +1,7 @@
 "use client";
 
 import { X, Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
+import Image from 'next/image';
 import { formatPrice } from '../../utils/formatters';
 import { useEffect, useState } from 'react';
 import { LoadingButton } from '../ui/LoadingStates';
@@ -140,7 +141,7 @@ export default function CartSidebar({
 }
 
 // ==========================================
-// CART ITEM MINIMALISTA
+// CART ITEM - OPTIMIZADO
 // ==========================================
 
 function CartItem({ item, onUpdateQuantity, onRemoveItem }) {
@@ -150,19 +151,24 @@ function CartItem({ item, onUpdateQuantity, onRemoveItem }) {
 
   return (
     <div className="flex gap-4">
-      {/* Imagen */}
+      {/* Imagen optimizada */}
       <div className="relative w-20 h-20 flex-shrink-0 bg-gray-50 overflow-hidden">
-        {!imageLoaded && (
-          <div className="absolute inset-0 bg-gray-100 animate-pulse" />
-        )}
-        <img 
-          src={item.image} 
+        <Image
+          src={item.image}
           alt={item.name}
-          className={`w-full h-full object-cover transition-opacity duration-500 ${
+          fill
+          sizes="80px"
+          className={`object-cover transition-opacity duration-500 ${
             imageLoaded ? 'opacity-100' : 'opacity-0'
           }`}
           onLoad={() => setImageLoaded(true)}
+          quality={80}
         />
+        
+        {/* Skeleton mientras carga */}
+        {!imageLoaded && (
+          <div className="absolute inset-0 bg-gray-100 animate-pulse" />
+        )}
       </div>
 
       {/* Info */}

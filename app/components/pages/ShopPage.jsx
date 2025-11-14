@@ -1,34 +1,19 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { formatPrice } from '../../utils/formatters';
 import { products, categories } from '../../data/products';
 import { ProductCardSkeleton, Skeleton } from '../ui/LoadingStates';
 
 export default function ShopPage({ selectedCategory, onSelectCategory, onAddToCart }) {
   const [isLoading, setIsLoading] = useState(true);
-  const [imageLoadingStates, setImageLoadingStates] = useState({});
 
   useEffect(() => {
     setIsLoading(true);
     const timer = setTimeout(() => setIsLoading(false), 600);
     return () => clearTimeout(timer);
   }, [selectedCategory]);
-
-  useEffect(() => {
-    const initialLoadingStates = {};
-    products.forEach(product => {
-      initialLoadingStates[product.id] = true;
-    });
-    setImageLoadingStates(initialLoadingStates);
-  }, []);
-
-  const handleImageLoad = (productId) => {
-    setImageLoadingStates(prev => ({
-      ...prev,
-      [productId]: false
-    }));
-  };
 
   const filteredProducts = selectedCategory === 'all' 
     ? products.filter(p => p.active)
@@ -89,8 +74,6 @@ export default function ShopPage({ selectedCategory, onSelectCategory, onAddToCa
                     key={product.id}
                     product={product}
                     onAddToCart={onAddToCart}
-                    imageLoading={imageLoadingStates[product.id]}
-                    onImageLoad={() => handleImageLoad(product.id)}
                   />
                 ))}
               </div>
@@ -105,11 +88,12 @@ export default function ShopPage({ selectedCategory, onSelectCategory, onAddToCa
 }
 
 // ==========================================
-// PRODUCT CARD - MINIMALISTA
+// PRODUCT CARD - OPTIMIZADO
 // ==========================================
 
-function ProductCard({ product, onAddToCart, imageLoading, onImageLoad }) {
+function ProductCard({ product, onAddToCart }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
     <div 
@@ -118,21 +102,24 @@ function ProductCard({ product, onAddToCart, imageLoading, onImageLoad }) {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative overflow-hidden bg-gray-50 aspect-[3/4] mb-4">
-        {/* Skeleton sutil */}
-        {imageLoading && (
+        {/* Next.js Image optimizada */}
+        <Image
+          src={product.image}
+          alt={product.name}
+          fill
+          sizes="(max-width: 768px) 50vw, 25vw"
+          className={`object-cover transition-all duration-700 ${
+            imageLoaded ? 'opacity-100' : 'opacity-0'
+          } ${isHovered ? 'scale-102' : 'scale-100'}`}
+          onLoad={() => setImageLoaded(true)}
+          quality={85}
+          priority={product.featured}
+        />
+        
+        {/* Skeleton mientras carga */}
+        {!imageLoaded && (
           <div className="absolute inset-0 bg-gray-100 animate-pulse" />
         )}
-        
-        {/* Imagen limpia */}
-        <img 
-          src={product.image} 
-          alt={product.name}
-          className={`w-full h-full object-cover transition-all duration-700 ${
-            imageLoading ? 'opacity-0' : 'opacity-100'
-          } ${isHovered ? 'scale-102' : 'scale-100'}`}
-          onLoad={onImageLoad}
-          loading="lazy"
-        />
         
         {/* Overlay sutil al hover */}
         <div 

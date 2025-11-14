@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from 'react';
+import Image from 'next/image';
 import { formatPrice } from '../../utils/formatters';
 import { products } from '../../data/products';
 
@@ -17,8 +19,12 @@ export default function HomePage({ onNavigate }) {
           <div className="max-w-3xl mx-auto space-y-8">
             {/* Mensaje simple y potente */}
             <h1 className="text-5xl md:text-7xl font-light text-white tracking-tight leading-tight">
-              ¿Lista para salir?
+              Lista para salir.
             </h1>
+            
+            <p className="text-gray-400 text-sm md:text-base tracking-wide">
+              Simple. Elegante. Sin vueltas.
+            </p>
             
             {/* CTA minimalista */}
             <button 
@@ -30,7 +36,10 @@ export default function HomePage({ onNavigate }) {
           </div>
         </div>
 
-       
+        {/* Scroll indicator sutil */}
+        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2">
+          <div className="w-px h-16 bg-gradient-to-b from-transparent via-gray-600 to-transparent"></div>
+        </div>
       </div>
       
       {/* Featured minimalista */}
@@ -48,29 +57,13 @@ export default function HomePage({ onNavigate }) {
           
           {/* Grid limpio */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {featuredProducts.map(product => (
-              <div 
+            {featuredProducts.map((product, index) => (
+              <FeaturedProduct 
                 key={product.id} 
-                className="group cursor-pointer" 
-                onClick={() => onNavigate('shop')}
-              >
-                <div className="relative overflow-hidden bg-gray-50 aspect-[3/4] mb-4">
-                  <img 
-                    src={product.image} 
-                    alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-700"
-                  />
-                  
-                  {/* Overlay minimalista */}
-                  <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
-                </div>
-                
-                {/* Info limpia */}
-                <div className="text-center space-y-1">
-                  <h3 className="text-xs uppercase tracking-widest text-gray-600">{product.name}</h3>
-                  <p className="text-sm font-light text-gray-900">{formatPrice(product.price)}</p>
-                </div>
-              </div>
+                product={product}
+                priority={index === 0}
+                onNavigate={onNavigate}
+              />
             ))}
           </div>
 
@@ -113,6 +106,55 @@ export default function HomePage({ onNavigate }) {
           </div>
         </div>
       </section>
+    </div>
+  );
+}
+
+// ==========================================
+// FEATURED PRODUCT - OPTIMIZADO
+// ==========================================
+
+function FeaturedProduct({ product, priority, onNavigate }) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  return (
+    <div 
+      className="group cursor-pointer" 
+      onClick={() => onNavigate('shop')}
+    >
+      <div className="relative overflow-hidden bg-gray-50 aspect-[3/4] mb-4">
+        {/* Next.js Image optimizada */}
+        <Image
+          src={product.image}
+          alt={product.name}
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
+          className={`object-cover group-hover:scale-102 transition-transform duration-700 ${
+            imageLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
+          onLoad={() => setImageLoaded(true)}
+          quality={85}
+          priority={priority}
+        />
+        
+        {/* Skeleton mientras carga */}
+        {!imageLoaded && (
+          <div className="absolute inset-0 bg-gray-100 animate-pulse" />
+        )}
+        
+        {/* Overlay minimalista */}
+        <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
+      </div>
+      
+      {/* Info limpia */}
+      <div className="text-center space-y-1">
+        <h3 className="text-xs uppercase tracking-widest text-gray-600">
+          {product.name}
+        </h3>
+        <p className="text-sm font-light text-gray-900">
+          {formatPrice(product.price)}
+        </p>
+      </div>
     </div>
   );
 }

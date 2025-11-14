@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Image from 'next/image';
 import { Instagram, Mail, Phone, MapPin, Package, CreditCard, Repeat } from 'lucide-react';
 
 export default function Footer() {
@@ -20,7 +20,7 @@ export default function Footer() {
               aria-label="Ir al inicio"
             >
               <Image 
-                src="/logo.avif"
+                src="/gaialogo.avif"
                 alt="GAIA SIX"
                 width={120}
                 height={40}
@@ -28,7 +28,7 @@ export default function Footer() {
               />
             </button>
             <p className="text-sm text-gray-600 leading-relaxed">
-              Looks de noche sin vueltas. Ropa pensada para que te sientas cómoda y hermosa 
+              Looks de noche sin vueltas. Ropa pensada para que te sientas cómoda y con onda.
             </p>
           </div>
 

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ShoppingBag, User, Menu, X } from 'lucide-react';
-import Image from "next/image";
+import Image from 'next/image';
 
 export default function Header({ 
   currentUser, 
@@ -10,11 +10,9 @@ export default function Header({
   onNavigate, 
   onCartToggle, 
   onLogout,
-  currentPage = 'home' // ✅ NUEVO: para saber qué página está activa
+  currentPage = 'home' 
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
-
-  // ✅ NUEVO: Función para verificar si una ruta está activa
   const isActive = (page) => currentPage === page;
 
   return (
@@ -28,7 +26,7 @@ export default function Header({
             aria-label="Ir al inicio"
           >
             <Image 
-              src="/logo.avif"
+              src="/gaialogo.avif"
               alt="GAIA SIX"
               width={120}
               height={40}
