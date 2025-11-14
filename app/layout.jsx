@@ -1,7 +1,7 @@
 import './globals.css'
 
 export const metadata = {
-  title: 'Gaia Six',
+  title: 'Gaia Six - Shop online',
   description: 'Ropa femenina con estilo. Cómoda, con onda y lista para salir. Descubrí nuestra colección de looks casuales y de salir.',
   keywords: 'ropa femenina, moda, estilo, casual, elegante, argentina',
   authors: [{ name: 'Gaia Six' }],

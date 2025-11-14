@@ -2,6 +2,44 @@
 
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
+
+const isBrowser = typeof window !== 'undefined';
+const getStorageItem = (key, defaultValue = null) => {
+  if (!isBrowser) return defaultValue;
+  
+  try {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : defaultValue;
+  } catch (error) {
+    console.error(`Error reading ${key} from localStorage:`, error);
+    return defaultValue;
+  }
+};
+
+const setStorageItem = (key, value) => {
+  if (!isBrowser) return false;
+  
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch (error) {
+    console.error(`Error saving ${key} to localStorage:`, error);
+    return false;
+  }
+};
+
+const removeStorageItem = (key) => {
+  if (!isBrowser) return false;
+  
+  try {
+    localStorage.removeItem(key);
+    return true;
+  } catch (error) {
+    console.error(`Error removing ${key} from localStorage:`, error);
+    return false;
+  }
+};
+
 // ==========================================
 // CONTEXT CREATION
 // ==========================================
@@ -31,16 +69,38 @@ export function AppProvider({ children }) {
   // ==========================================
   
   useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem('gaia-current-user');
-      const storedUsers = localStorage.getItem('gaia-users');
-      const storedCart = localStorage.getItem('gaia-cart');
+    // Solo ejecutar en el cliente
+    if (!isBrowser) {
+      setIsInitialized(true);
+      return;
+    }
 
-      if (storedUser) setCurrentUser(JSON.parse(storedUser));
-      if (storedUsers) setUsers(JSON.parse(storedUsers));
-      if (storedCart) setCart(JSON.parse(storedCart));
+    try {
+      // Cargar datos con valores por defecto
+      const storedUser = getStorageItem('gaia-current-user', null);
+      const storedUsers = getStorageItem('gaia-users', []);
+      const storedCart = getStorageItem('gaia-cart', []);
+
+      // Validar que los datos tengan el formato correcto
+      if (storedUser && typeof storedUser === 'object') {
+        setCurrentUser(storedUser);
+      }
+
+      if (Array.isArray(storedUsers)) {
+        setUsers(storedUsers);
+      }
+
+      if (Array.isArray(storedCart)) {
+        setCart(storedCart);
+      }
+
+      console.log('✅ Datos cargados desde localStorage');
     } catch (error) {
-      console.error('Error loading from localStorage:', error);
+      console.error('❌ Error cargando datos:', error);
+      // En caso de error, usar valores por defecto
+      setCurrentUser(null);
+      setUsers([]);
+      setCart([]);
     } finally {
       setIsInitialized(true);
     }
@@ -50,34 +110,27 @@ export function AppProvider({ children }) {
   // PERSISTENCIA - Guardar en localStorage
   // ==========================================
   
+  // Guardar usuario actual
   useEffect(() => {
     if (!isInitialized) return;
     
-    try {
-      localStorage.setItem('gaia-current-user', JSON.stringify(currentUser));
-    } catch (error) {
-      console.error('Error saving user:', error);
+    if (currentUser) {
+      setStorageItem('gaia-current-user', currentUser);
+    } else {
+      removeStorageItem('gaia-current-user');
     }
   }, [currentUser, isInitialized]);
 
+  // Guardar lista de usuarios
   useEffect(() => {
     if (!isInitialized) return;
-    
-    try {
-      localStorage.setItem('gaia-users', JSON.stringify(users));
-    } catch (error) {
-      console.error('Error saving users:', error);
-    }
+    setStorageItem('gaia-users', users);
   }, [users, isInitialized]);
 
+  // Guardar carrito
   useEffect(() => {
     if (!isInitialized) return;
-    
-    try {
-      localStorage.setItem('gaia-cart', JSON.stringify(cart));
-    } catch (error) {
-      console.error('Error saving cart:', error);
-    }
+    setStorageItem('gaia-cart', cart);
   }, [cart, isInitialized]);
 
   // ==========================================
@@ -113,6 +166,7 @@ export function AppProvider({ children }) {
 
   const logout = useCallback(() => {
     setCurrentUser(null);
+    removeStorageItem('gaia-current-user');
   }, []);
 
   const updateUserOrders = useCallback((orderId, orderData) => {
@@ -171,6 +225,16 @@ export function AppProvider({ children }) {
 
   const clearCart = useCallback(() => {
     setCart([]);
+    removeStorageItem('gaia-cart');
+  }, []);
+
+  const clearAllStorage = useCallback(() => {
+    removeStorageItem('gaia-current-user');
+    removeStorageItem('gaia-users');
+    removeStorageItem('gaia-cart');
+    setCurrentUser(null);
+    setUsers([]);
+    setCart([]);
   }, []);
 
   // ==========================================
@@ -184,6 +248,21 @@ export function AppProvider({ children }) {
   const cartItemsCount = cart.reduce((total, item) => 
     total + item.quantity, 0
   );
+
+  // ==========================================
+  // LOADING STATE
+  // ==========================================
+  
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-gray-200 border-t-black rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="text-xl font-light text-gray-600">GAIA SIX</div>
+        </div>
+      </div>
+    );
+  }
 
   // ==========================================
   // CONTEXT VALUE
@@ -208,18 +287,10 @@ export function AppProvider({ children }) {
     clearCart,
     cartTotal,
     cartItemsCount,
-  };
 
-  if (!isInitialized) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-2xl font-light mb-4">GAIA SIX</div>
-          <div className="animate-pulse">Cargando...</div>
-        </div>
-      </div>
-    );
-  }
+    // Utils
+    clearAllStorage,
+  };
 
   return (
     <AppContext.Provider value={value}>

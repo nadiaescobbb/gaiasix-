@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { AppProvider, useAppContext } from './context/AppContext';
+import { ToastProvider, useToast } from './context/ToastContext';
 
 // Layout Components
 import Header from './components/layout/Header';
@@ -15,17 +16,21 @@ import AboutPage from './components/pages/AboutPage';
 import AuthPage from './components/pages/AuthPage';
 import ProfilePage from './components/pages/ProfilePage';
 
+// ==========================================
+// APP CONTENT - Componente interno con Toast
+// ==========================================
 
-
-// Componente interno que usa el contexto
 function AppContent() {
+  // Toast hook
+  const { success, error, warning } = useToast();
+  
   // Estado de navegación
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [cartOpen, setCartOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login');
 
-  // Usar el contexto
+  // Context
   const { 
     currentUser, 
     cart, 
@@ -41,12 +46,21 @@ function AppContent() {
     updateUserOrders
   } = useAppContext();
 
-  // Handlers
+  // ==========================================
+  // HANDLERS CON TOAST FEEDBACK
+  // ==========================================
+
   const handleCheckout = () => {
     if (!currentUser) {
+      warning('Necesitás iniciar sesión para continuar');
       setCurrentPage('auth');
       setAuthMode('login');
       setCartOpen(false);
+      return;
+    }
+    
+    if (cart.length === 0) {
+      warning('Tu carrito está vacío');
       return;
     }
     
@@ -61,13 +75,22 @@ function AppContent() {
     updateUserOrders(order.id, order);
     clearCart();
     setCartOpen(false);
-    alert('¡Pedido realizado! Te contactaremos pronto.');
+    
+    success('¡Pedido realizado! Te contactaremos pronto 🎉');
+    
+    // Navegar al perfil después de 1 segundo
+    setTimeout(() => {
+      setCurrentPage('profile');
+    }, 1000);
   };
 
   const handleLogin = (email, password) => {
     const result = login(email, password);
     if (result.success) {
+      success('¡Bienvenida de nuevo! 👋');
       setCurrentPage('home');
+    } else {
+      error(result.error);
     }
     return result;
   };
@@ -75,26 +98,82 @@ function AppContent() {
   const handleRegister = (userData) => {
     const result = register(userData);
     if (result.success) {
+      success('¡Cuenta creada exitosamente! 🎊');
       setCurrentPage('home');
+    } else {
+      error(result.error);
     }
     return result;
   };
 
   const handleLogout = () => {
     logout();
+    success('Sesión cerrada correctamente');
     setCurrentPage('home');
   };
 
   const handleAddToCart = (product, size) => {
+    // Verificar stock
+    if (!product.stock || product.stock <= 0) {
+      error('Producto sin stock disponible');
+      return;
+    }
+
+    // Verificar si ya existe en el carrito
+    const existingItem = cart.find(item => 
+      item.id === product.id && item.size === size
+    );
+
+    if (existingItem && existingItem.quantity >= product.stock) {
+      warning('No hay más stock disponible de este producto');
+      return;
+    }
+
     addToCart(product, size);
+    success(`${product.name} agregado al carrito`);
     setCartOpen(true);
   };
 
-  // Renderizado condicional de páginas
+  const handleUpdateQuantity = (productId, size, newQuantity) => {
+    const item = cart.find(i => i.id === productId && i.size === size);
+    
+    if (item && newQuantity > item.stock) {
+      warning('Stock máximo alcanzado');
+      return;
+    }
+
+    updateQuantity(productId, size, newQuantity);
+  };
+
+  const handleRemoveFromCart = (productId, size) => {
+    removeFromCart(productId, size);
+    success('Producto eliminado del carrito');
+  };
+
+  // ==========================================
+  // NAVEGACIÓN CON PROTECCIÓN
+  // ==========================================
+
+  const handleNavigate = (page) => {
+    // Proteger página de perfil
+    if (page === 'profile' && !currentUser) {
+      warning('Necesitás iniciar sesión');
+      setCurrentPage('auth');
+      setAuthMode('login');
+      return;
+    }
+
+    setCurrentPage(page);
+  };
+
+  // ==========================================
+  // RENDERIZADO DE PÁGINAS
+  // ==========================================
+
   const renderPage = () => {
     switch(currentPage) {
       case 'home':
-        return <HomePage onNavigate={setCurrentPage} />;
+        return <HomePage onNavigate={handleNavigate} />;
       
       case 'shop':
         return (
@@ -134,7 +213,7 @@ function AppContent() {
         );
       
       default:
-        return <HomePage onNavigate={setCurrentPage} />;
+        return <HomePage onNavigate={handleNavigate} />;
     }
   };
 
@@ -143,9 +222,10 @@ function AppContent() {
       <Header 
         currentUser={currentUser}
         cartItemsCount={cartItemsCount}
-        onNavigate={setCurrentPage}
+        onNavigate={handleNavigate}
         onCartToggle={() => setCartOpen(true)}
         onLogout={handleLogout}
+        currentPage={currentPage}
       />
       
       {renderPage()}
@@ -155,22 +235,45 @@ function AppContent() {
         onClose={() => setCartOpen(false)}
         cart={cart}
         cartTotal={cartTotal}
-        onUpdateQuantity={updateQuantity}
-        onRemoveItem={removeFromCart}
+        onUpdateQuantity={handleUpdateQuantity}
+        onRemoveItem={handleRemoveFromCart}
         onCheckout={handleCheckout}
         currentUser={currentUser}
       />
       
       <Footer />
+
+      {/* Estilos para animación de Toast */}
+      <style jsx global>{`
+        @keyframes slide-in-right {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+
+        .animate-slide-in-right {
+          animation: slide-in-right 0.3s ease-out;
+        }
+      `}</style>
     </div>
   );
 }
 
-// Componente principal que envuelve todo con el Provider
+// ==========================================
+// COMPONENTE PRINCIPAL CON PROVIDERS
+// ==========================================
+
 export default function GaiaSix() {
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+    <ToastProvider>
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
+    </ToastProvider>
   );
 }
