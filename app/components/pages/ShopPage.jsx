@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { formatPrice } from '../../utils/formatters';
+import { formatPrice } from '../../../utils/formatters';
 import { products, categories } from '../../data/products';
 import { ProductCardSkeleton, Skeleton } from '../ui/LoadingStates';
 

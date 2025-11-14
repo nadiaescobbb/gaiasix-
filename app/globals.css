@@ -20,3 +20,18 @@
     font-family: 'Playfair Display', serif;
   }
 }
+
+
+.embla {
+  overflow: hidden;
+}
+
+.embla__container {
+  display: flex;
+}
+
+.embla__slide {
+  position: relative;
+  min-width: 100%;
+  height: 100vh;
+}
