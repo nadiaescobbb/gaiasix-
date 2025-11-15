@@ -105,7 +105,7 @@ export default function Footer() {
                 <CreditCard size={16} className="flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium text-gray-800">Cuotas</p>
-                  <p className="text-xs">Hasta 6 cuotas sin interés</p>
+                  <p className="text-xs">Hasta 3 cuotas sin interés</p>
                 </div>
               </div>
               
@@ -113,7 +113,7 @@ export default function Footer() {
                 <Repeat size={16} className="flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium text-gray-800">Cambios</p>
-                  <p className="text-xs">Dentro de los 15 días</p>
+                  <p className="text-xs">Dentro de los 7 días</p>
                 </div>
               </div>
             </div>

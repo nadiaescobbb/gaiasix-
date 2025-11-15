@@ -21,7 +21,7 @@
   }
 }
 
-/* Embla Carousel */
+/* Embla Carousel - ESTILOS ORIGINALES */
 .embla {
   overflow: hidden;
 }
@@ -34,4 +34,90 @@
   position: relative;
   min-width: 100%;
   height: 100vh;
+}
+
+
+.embla {
+  overflow: hidden;
+}
+
+.embla__container {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+}
+
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  position: relative;
+}
+
+/* Mejora la experiencia de arrastre */
+.embla__slide {
+  user-select: none;
+}
+
+/* Efecto hover sutil en las imágenes */
+.embla__slide img {
+  transition: transform 0.4s ease;
+}
+
+.embla:hover .embla__slide:not(.is-dragging) img {
+  transform: scale(1.02);
+}
+
+/* Mejora la accesibilidad de los botones */
+.embla__prev:focus,
+.embla__next:focus,
+.embla__dot:focus {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+/* Estilos para el cursor de arrastre */
+.embla__slide {
+  cursor: grab;
+}
+
+.embla__slide:active {
+  cursor: grabbing;
+}
+
+/* Transiciones suaves para los indicadores */
+.embla__dot {
+  transition: all 0.3s ease;
+}
+
+
+.embla__slide img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+/* ============================
+   ESTILOS PARA SHOP THE LOOK
+   ============================ */
+
+.shop-the-look-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .shop-the-look-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.shop-the-look-card {
+  background: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.shop-the-look-card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
