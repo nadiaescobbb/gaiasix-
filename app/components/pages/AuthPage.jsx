@@ -14,7 +14,6 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
- 
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -60,6 +59,7 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
     setSuccessMessage('');
     
     if (!validateForm()) return;
@@ -67,26 +67,38 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode }) {
     setIsSubmitting(true);
 
     try {
-      // Simular delay de red
-      await new Promise(resolve => setTimeout(resolve, 500));
+      let result;
 
       if (mode === 'login') {
-        const result = onLogin(formData.email, formData.password);
-        if (!result.success) {
-          setErrors({ submit: result.error });
+        // ✅ Ahora onLogin es async y devuelve una Promise
+        result = await onLogin(formData.email, formData.password);
+        if (result.success) {
+          setSuccessMessage('¡Bienvenida de nuevo! 👋');
+          // Limpiar formulario
+          setFormData({ email: '', password: '', name: '', phone: '' });
         } else {
-          setSuccessMessage('¡Bienvenida de nuevo!');
+          setErrors({ submit: result.error });
         }
       } else {
-        const result = onRegister(formData);
-        if (!result.success) {
-          setErrors({ submit: result.error });
+        // ✅ onRegister también es async ahora
+        result = await onRegister({
+          email: formData.email,
+          password: formData.password,
+          name: formData.name,
+          phone: formData.phone
+        });
+        
+        if (result.success) {
+          setSuccessMessage('¡Cuenta creada exitosamente! 🎊');
+          // Limpiar formulario
+          setFormData({ email: '', password: '', name: '', phone: '' });
         } else {
-          setSuccessMessage('¡Cuenta creada exitosamente!');
+          setErrors({ submit: result.error });
         }
       }
     } catch (error) {
-      setErrors({ submit: 'Ocurrió un error inesperado' });
+      console.error('Auth error:', error);
+      setErrors({ submit: 'Error de conexión. Intenta nuevamente.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -98,6 +110,18 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode }) {
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
+    // Limpiar error general al modificar cualquier campo
+    if (errors.submit) {
+      setErrors(prev => ({ ...prev, submit: '' }));
+    }
+  };
+
+  // Limpiar mensajes al cambiar modo
+  const handleToggleMode = () => {
+    setErrors({});
+    setSuccessMessage('');
+    setFormData({ email: '', password: '', name: '', phone: '' });
+    onToggleMode();
   };
 
   return (
@@ -109,7 +133,7 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode }) {
         
         {/* Mensaje de error general */}
         {errors.submit && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded flex items-start gap-3">
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded flex items-start gap-3 animate-fade-in">
             <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
             <p className="text-sm text-red-800">{errors.submit}</p>
           </div>
@@ -117,7 +141,7 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode }) {
 
         {/* Mensaje de éxito */}
         {successMessage && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded flex items-start gap-3">
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded flex items-start gap-3 animate-fade-in">
             <CheckCircle className="text-green-600 flex-shrink-0 mt-0.5" size={20} />
             <p className="text-sm text-green-800">{successMessage}</p>
           </div>
@@ -142,7 +166,7 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode }) {
                   />
                 </div>
                 {errors.name && (
-                  <p className="mt-1 text-xs text-red-600">{errors.name}</p>
+                  <p className="mt-1 text-xs text-red-600 animate-fade-in">{errors.name}</p>
                 )}
               </div>
 
@@ -162,7 +186,7 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode }) {
                   />
                 </div>
                 {errors.phone && (
-                  <p className="mt-1 text-xs text-red-600">{errors.phone}</p>
+                  <p className="mt-1 text-xs text-red-600 animate-fade-in">{errors.phone}</p>
                 )}
               </div>
             </>
@@ -184,7 +208,7 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode }) {
               />
             </div>
             {errors.email && (
-              <p className="mt-1 text-xs text-red-600">{errors.email}</p>
+              <p className="mt-1 text-xs text-red-600 animate-fade-in">{errors.email}</p>
             )}
           </div>
           
@@ -204,28 +228,52 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode }) {
               />
             </div>
             {errors.password && (
-              <p className="mt-1 text-xs text-red-600">{errors.password}</p>
+              <p className="mt-1 text-xs text-red-600 animate-fade-in">{errors.password}</p>
             )}
           </div>
           
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full border border-black py-4 text-sm uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300 mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full border border-black py-4 text-sm uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300 mt-8 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            {isSubmitting ? 'Procesando...' : (mode === 'login' ? 'Ingresar' : 'Registrarse')}
+            {isSubmitting ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Procesando...
+              </>
+            ) : (
+              mode === 'login' ? 'Ingresar' : 'Registrarse'
+            )}
           </button>
         </form>
         
         <div className="mt-8 text-center">
           <button
-            onClick={onToggleMode}
+            onClick={handleToggleMode}
             disabled={isSubmitting}
             className="text-sm text-gray-600 hover:text-black transition-colors disabled:opacity-50"
           >
             {mode === 'login' ? '¿No tenés cuenta? Crear una' : '¿Ya tenés cuenta? Ingresar'}
           </button>
         </div>
+
+        {/* Estilos para animaciones */}
+        <style jsx global>{`
+          @keyframes fade-in {
+            from {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          .animate-fade-in {
+            animation: fade-in 0.3s ease-out;
+          }
+        `}</style>
       </div>
     </div>
   );

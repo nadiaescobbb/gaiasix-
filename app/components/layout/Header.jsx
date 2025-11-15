@@ -20,19 +20,23 @@ export default function Header({
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <button 
-            onClick={() => onNavigate('home')}
-            className="transition-opacity hover:opacity-80"
-            aria-label="Ir al inicio"
-          >
-            <Image 
-              src="/gaialogo.avif"
-              alt="GAIA SIX"
-              width={120}
-              height={40}
-              priority     
-            />
-          </button>
+        <button 
+          onClick={() => onNavigate('home')}
+          className="transition-opacity hover:opacity-80"
+          aria-label="Ir al inicio"
+        >
+          <Image 
+            src="/gaialogo-header.png" 
+            alt="GAIA SIX"
+            width={120}
+            height={40}
+            priority
+            style={{ 
+              width: 'auto', 
+              height: 'auto' 
+            }}
+          />
+        </button>
 
           {/* Navegación Desktop */}
           <nav className="hidden md:flex items-center space-x-12">

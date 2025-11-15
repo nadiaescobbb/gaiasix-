@@ -41,9 +41,11 @@ export default function CartSidebar({
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    onCheckout();
-    setIsCheckingOut(false);
+    try {
+      await onCheckout(); // Usar el timing real, no artificial
+    } finally {
+      setIsCheckingOut(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -63,7 +65,7 @@ export default function CartSidebar({
       
       {/* Sidebar elegante */}
       <div 
-        className={`fixed right-0 top-0 h-full w-full md:w-96 bg-white z-50 flex flex-col transform transition-transform duration-500 ease-out ${
+        className={`fixed right-0 top-0 h-full w-full sm:w-96 bg-white z-50 flex flex-col transform transition-transform duration-500 ease-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         role="dialog"
@@ -78,14 +80,17 @@ export default function CartSidebar({
           <button 
             onClick={onClose}
             className="p-2 hover:bg-gray-50 transition-colors"
-            aria-label="Cerrar"
+            aria-label="Cerrar carrito"
           >
             <X size={18} className="text-gray-400" />
           </button>
         </div>
 
         {/* Items */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div 
+          className="flex-1 overflow-y-auto p-6"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
           {cart.length === 0 ? (
             <EmptyCartState onClose={onClose} />
           ) : (
@@ -116,7 +121,7 @@ export default function CartSidebar({
               loading={isCheckingOut}
               onClick={handleCheckout}
               disabled={cart.length === 0}
-              className="w-full bg-black text-white py-4 text-xs uppercase tracking-widest hover:bg-gray-900 transition-all duration-300"
+              className="w-full bg-black text-white py-4 text-xs uppercase tracking-widest hover:bg-gray-900 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {currentUser ? 'Finalizar' : 'Ingresar'}
             </LoadingButton>
@@ -141,20 +146,23 @@ export default function CartSidebar({
 }
 
 // ==========================================
-// CART ITEM - OPTIMIZADO
+// CART ITEM 
 // ==========================================
 
 function CartItem({ item, onUpdateQuantity, onRemoveItem }) {
   const [imageLoaded, setImageLoaded] = useState(false);
-  const maxStock = item.stock || 10;
+  const [imageError, setImageError] = useState(false);
+  
+  // ✅ USAR STOCK REAL - sin fallback hardcodeado
+  const maxStock = item.stock;
   const isAtMaxStock = item.quantity >= maxStock;
 
   return (
     <div className="flex gap-4">
-      {/* Imagen optimizada */}
+      {/* Imagen optimizada con fallback */}
       <div className="relative w-20 h-20 flex-shrink-0 bg-gray-50 overflow-hidden">
         <Image
-          src={item.image}
+          src={imageError ? '/fallback-product.jpg' : item.image}
           alt={item.name}
           fill
           sizes="80px"
@@ -162,11 +170,12 @@ function CartItem({ item, onUpdateQuantity, onRemoveItem }) {
             imageLoaded ? 'opacity-100' : 'opacity-0'
           }`}
           onLoad={() => setImageLoaded(true)}
+          onError={() => setImageError(true)}
           quality={80}
         />
         
         {/* Skeleton mientras carga */}
-        {!imageLoaded && (
+        {!imageLoaded && !imageError && (
           <div className="absolute inset-0 bg-gray-100 animate-pulse" />
         )}
       </div>
@@ -179,13 +188,13 @@ function CartItem({ item, onUpdateQuantity, onRemoveItem }) {
         <p className="text-xs text-gray-400 mb-2">Talla {item.size}</p>
         <p className="text-sm font-light mb-4">{formatPrice(item.price)}</p>
         
-        {/* Controles sutiles */}
+        {/* Controles sutiles con mejor feedback */}
         <div className="flex items-center gap-3">
           <button
             onClick={() => onUpdateQuantity(item.id, item.size, item.quantity - 1)}
             className="w-6 h-6 border border-gray-200 flex items-center justify-center text-xs hover:border-gray-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             disabled={item.quantity <= 1}
-            aria-label="Menos"
+            aria-label="Reducir cantidad"
           >
             <Minus size={12} />
           </button>
@@ -198,26 +207,34 @@ function CartItem({ item, onUpdateQuantity, onRemoveItem }) {
             onClick={() => onUpdateQuantity(item.id, item.size, item.quantity + 1)}
             className="w-6 h-6 border border-gray-200 flex items-center justify-center text-xs hover:border-gray-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             disabled={isAtMaxStock}
-            aria-label="Más"
+            aria-label={isAtMaxStock ? `Stock máximo: ${maxStock}` : 'Aumentar cantidad'}
+            title={isAtMaxStock ? `Stock máximo: ${maxStock}` : 'Agregar uno más'}
           >
             <Plus size={12} />
           </button>
           
           <button
             onClick={() => onRemoveItem(item.id, item.size)}
-            className="ml-auto p-1 text-gray-300 hover:text-gray-600 transition-colors"
-            aria-label="Eliminar"
+            className="ml-auto p-1 text-gray-300 hover:text-red-600 transition-colors"
+            aria-label={`Eliminar ${item.name} talla ${item.size}`}
           >
             <Trash2 size={14} />
           </button>
         </div>
+
+        {/* Feedback de stock limitado */}
+        {isAtMaxStock && maxStock > 0 && (
+          <p className="text-xs text-amber-600 mt-2">
+            Stock máximo: {maxStock}
+          </p>
+        )}
       </div>
     </div>
   );
 }
 
 // ==========================================
-// EMPTY STATE MINIMALISTA
+// EMPTY STATE 
 // ==========================================
 
 function EmptyCartState({ onClose }) {
@@ -232,6 +249,7 @@ function EmptyCartState({ onClose }) {
       <button 
         onClick={onClose}
         className="border border-gray-200 text-gray-600 px-8 py-3 text-xs uppercase tracking-widest hover:border-black hover:text-black transition-all"
+        aria-label="Explorar productos"
       >
         Explorar
       </button>
