@@ -4,7 +4,7 @@ import { Inter, Playfair_Display } from 'next/font/google'
 // Fuente base del sitio
 const inter = Inter({
   subsets: ['latin'],
-  weight: ['300', '400', '500'],
+  weight: ['400', '500'],
 })
 
 // Fuente para títulos, expuesta como variable CSS

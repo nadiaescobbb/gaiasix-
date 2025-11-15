@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { ArrowLeft, ShoppingCart, Package, Truck, RefreshCw } from 'lucide-react';
-import { formatPrice } from '../../utils/formatters';
+import { formatPrice } from "@/utils/formatters";
+
 
 export default function ProductPage({ product, onAddToCart, onBack }) {
   const [selectedSize, setSelectedSize] = useState(null);
