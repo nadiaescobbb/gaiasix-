@@ -3,17 +3,19 @@
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import { useEffect, useState, useRef, useCallback } from "react";
-import { formatPrice } from "@/utils/formatters";
+import { formatPrice } from "@/app/utils/formatters";
 import { products } from "@/app/data/products";
 
 
 export default function HomePage({ onNavigate }) {
-  // Reemplazá estas rutas por tus banners reales
+ 
   const heroImages = [
-    "/images/banner1.avif",
-    "/images/banner2.avif",
-    "/images/banner3.avif",
+    "/images/banner/banner-web.avif",
+    "/images/banner/banner-web.avif",
+    "/images/banner/banner-web.avif",
   ];
+
+  
 
   // Embla
   const [emblaRef, emblaApi] = useEmblaCarousel({

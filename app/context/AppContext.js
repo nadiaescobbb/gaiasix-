@@ -104,7 +104,7 @@ export function AppProvider({ children }) {
   }, 600);
 
   // ==========================================
-  // INICIALIZACIÓN - CON WISHLIST
+  // INICIALIZACIÓN 
   // ==========================================
   
   useEffect(() => {
@@ -409,7 +409,7 @@ export function AppProvider({ children }) {
   }, []);
 
   // ==========================================
-  // ✅ WISHLIST ACTIONS
+  // WISHLIST ACTIONS
   // ==========================================
   
   const addToWishlist = useCallback((product) => {

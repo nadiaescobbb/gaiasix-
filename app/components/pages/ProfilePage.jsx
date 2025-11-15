@@ -1,6 +1,6 @@
 "use client";
 
-import { formatPrice, formatDate } from '../../../utils/formatters';
+import { formatPrice, formatDate } from '../../utils/formatters';
 
 export default function ProfilePage({ user, onLogout }) {
   const orders = user?.orders || [];

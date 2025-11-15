@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { AppProvider, useAppContext } from './context/AppContext';
 import { ToastProvider, useToast } from './context/ToastContext';
 import ProductPage from './components/pages/ProductPage';
+import WishlistPage from './components/pages/WishlistPage';
 
 // Layout Components
 import Header from './components/layout/Header';
@@ -204,7 +205,16 @@ function AppContent() {
           />
         );
       
-      // ✅ NUEVO CASE: Product Page
+
+    
+      case 'wishlist':
+        return (
+        <WishlistPage 
+        onNavigate={handleNavigate}
+        onAddToCart={handleAddToCart}
+        />
+      );
+      
       case 'product':
         return (
           <ProductPage 

@@ -2,7 +2,7 @@
 
 import { X, Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
-import { formatPrice } from '../../../utils/formatters';
+import { formatPrice } from '../../utils/formatters';
 import { useEffect, useState } from 'react';
 import { LoadingButton } from '../ui/LoadingStates';
 
