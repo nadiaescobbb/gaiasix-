@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ShoppingBag, User, Menu, X, Heart } from 'lucide-react';
 import Image from 'next/image';
-import { useAppContext } from '../../context/AppContext'; 
+import { useAppContext } from '../../context/AppContext';
 
 export default function Header({ 
   currentUser, 
@@ -40,7 +40,7 @@ export default function Header({
             />
           </button>
 
-          {/* Navegación Desktop */}
+          {/* Navegación Desktop - ACTUALIZADO */}
           <nav className="hidden md:flex items-center space-x-12">
             <button 
               onClick={() => onNavigate('shop')} 
@@ -50,7 +50,7 @@ export default function Header({
                   : 'text-gray-700 hover:text-black'
               }`}
             >
-              Tienda
+              Prendas
             </button>
             
             <button 
@@ -61,7 +61,7 @@ export default function Header({
                   : 'text-gray-700 hover:text-black'
               }`}
             >
-              Nosotros
+              La Marca
             </button>
             
             <button 
@@ -72,15 +72,15 @@ export default function Header({
             </button>
           </nav>
 
-          {/* Iconos de Wishlist, Usuario y Carrito */}
+          {/* Iconos de Wishlist, Usuario y Carrito - ACTUALIZADO */}
           <div className="flex items-center space-x-4">
-            {/* Wishlist */}
+            {/* Wishlist - ACTUALIZADO */}
             <button 
               onClick={() => onNavigate('wishlist')} 
               className={`hidden md:block transition relative ${
                 isActive('wishlist') ? 'text-red-600' : 'text-gray-600 hover:text-red-600'
               }`}
-              aria-label="Mis favoritos"
+              aria-label="Tus favoritos"
             >
               <Heart size={20} />
               {wishlistItemsCount > 0 && (
@@ -97,7 +97,7 @@ export default function Header({
                 className={`hidden md:block transition ${
                   isActive('profile') ? 'text-black' : 'text-gray-600 hover:text-black'
                 }`}
-                aria-label="Mi perfil"
+                aria-label="Mi cuenta"
               >
                 <User size={20} />
               </button>
@@ -107,17 +107,17 @@ export default function Header({
                 className={`hidden md:block transition ${
                   isActive('auth') ? 'text-black' : 'text-gray-600 hover:text-black'
                 }`}
-                aria-label="Iniciar sesión"
+                aria-label="Entrar a tu cuenta"
               >
                 <User size={20} />
               </button>
             )}
             
-            {/* Carrito */}
+            {/* Carrito - ACTUALIZADO */}
             <button 
               onClick={onCartToggle} 
               className="relative text-gray-600 hover:text-black transition"
-              aria-label={`Carrito de compras, ${cartItemsCount} ${cartItemsCount === 1 ? 'item' : 'items'}`}
+              aria-label={`Tu bolsa, ${cartItemsCount} ${cartItemsCount === 1 ? 'item' : 'items'}`}
             >
               <ShoppingBag size={20} />
               {cartItemsCount > 0 && (
@@ -139,7 +139,7 @@ export default function Header({
           </div>
         </div>
 
-        {/* Menú móvil */}
+        {/* Menú móvil - ACTUALIZADO */}
         {menuOpen && (
           <nav className="md:hidden py-4 border-t border-gray-200 space-y-1" role="navigation">
             <button 
@@ -153,7 +153,7 @@ export default function Header({
                   : 'text-gray-700 hover:bg-gray-50'
               }`}
             >
-              Tienda
+              Prendas
             </button>
             
             <button 
@@ -167,7 +167,7 @@ export default function Header({
                   : 'text-gray-700 hover:bg-gray-50'
               }`}
             >
-              Nosotros
+              La Marca
             </button>
 
             <button 
@@ -183,7 +183,7 @@ export default function Header({
             {/* Separador */}
             <div className="border-t border-gray-200 my-2"></div>
 
-            {/* Wishlist Mobile */}
+            {/* Wishlist Mobile - ACTUALIZADO */}
             <button 
               onClick={() => { 
                 onNavigate('wishlist'); 
@@ -197,7 +197,7 @@ export default function Header({
             >
               <div className="flex items-center gap-2">
                 <Heart size={16} />
-                <span>Favoritos</span>
+                <span>Tus Favoritos</span>
                 {wishlistItemsCount > 0 && (
                   <span className="ml-auto bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                     {wishlistItemsCount}
@@ -206,7 +206,7 @@ export default function Header({
               </div>
             </button>
 
-            {/* Usuario Mobile */}
+            {/* Usuario Mobile - ACTUALIZADO */}
             {currentUser ? (
               <>
                 <button 
@@ -222,7 +222,7 @@ export default function Header({
                 >
                   <div className="flex items-center gap-2">
                     <User size={16} />
-                    <span>Mi Perfil</span>
+                    <span>Mi Cuenta</span>
                   </div>
                 </button>
                 
@@ -250,7 +250,7 @@ export default function Header({
               >
                 <div className="flex items-center gap-2">
                   <User size={16} />
-                  <span>Ingresar</span>
+                  <span>Entrar</span>
                 </div>
               </button>
             )}

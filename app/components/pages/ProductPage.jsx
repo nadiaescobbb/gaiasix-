@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { ArrowLeft, ShoppingCart, Package, Truck, RefreshCw, Heart } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Package, Truck, RefreshCw } from 'lucide-react';
 import { formatPrice } from "@/utils/formatters";
 import WishlistButton from '../ui/WishlistButton';
 
@@ -17,13 +17,13 @@ export default function ProductPage({ product, onAddToCart, onBack }) {
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-400 text-sm uppercase tracking-widest">
-            Producto no encontrado
+            Prenda no encontrada
           </p>
           <button
             onClick={onBack}
             className="mt-6 border border-gray-300 text-gray-600 px-8 py-3 text-xs uppercase tracking-widest hover:border-black hover:text-black transition-all duration-300"
           >
-            Volver a la tienda
+            Volver a prendas
           </button>
         </div>
       </div>
@@ -45,14 +45,14 @@ export default function ProductPage({ product, onAddToCart, onBack }) {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Back Button */}
+      {/* Back Button - ACTUALIZADO */}
       <div className="max-w-7xl mx-auto px-6 py-8">
         <button
           onClick={onBack}
           className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors text-sm"
         >
           <ArrowLeft size={18} />
-          <span className="uppercase tracking-widest">Volver</span>
+          <span className="uppercase tracking-widest">Volver a prendas</span>
         </button>
       </div>
 
@@ -81,10 +81,11 @@ export default function ProductPage({ product, onAddToCart, onBack }) {
                 <div className="absolute inset-0 bg-gray-100 animate-pulse" />
               )}
 
+              {/* Sin stock - ACTUALIZADO */}
               {isOutOfStock && (
                 <div className="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center">
                   <span className="text-gray-400 text-sm uppercase tracking-widest">
-                    Agotado
+                    No disponible
                   </span>
                 </div>
               )}
@@ -122,7 +123,7 @@ export default function ProductPage({ product, onAddToCart, onBack }) {
 
           {/* RIGHT: Product Info */}
           <div className="space-y-8">
-            {/* Header */}
+            {/* Header con Wishlist */}
             <div className="flex items-start justify-between">
               <div>
                 <h1 className="text-3xl md:text-4xl font-light mb-3 tracking-tight">
@@ -133,7 +134,6 @@ export default function ProductPage({ product, onAddToCart, onBack }) {
                 </p>
               </div>
               
-              {/* Wishlist Button en header */}
               <WishlistButton 
                 product={product}
                 variant="compact"
@@ -150,11 +150,11 @@ export default function ProductPage({ product, onAddToCart, onBack }) {
               </div>
             )}
 
-            {/* Size Selector */}
+            {/* Size Selector - ACTUALIZADO */}
             {!isOutOfStock && product.sizes && product.sizes.length > 0 && (
               <div className="space-y-3">
                 <label className="text-xs uppercase tracking-widest text-gray-500">
-                  Seleccionar talla
+                  Elegí tu talla
                 </label>
                 <div className="flex gap-3">
                   {product.sizes.map((size) => (
@@ -174,7 +174,7 @@ export default function ProductPage({ product, onAddToCart, onBack }) {
               </div>
             )}
 
-            {/* Add to Cart Button + Wishlist */}
+            {/* Add to Cart Button + Wishlist - ACTUALIZADO */}
             <div className="flex gap-3">
               <button
                 onClick={handleAddToCart}
@@ -186,10 +186,9 @@ export default function ProductPage({ product, onAddToCart, onBack }) {
                 }`}
               >
                 <ShoppingCart size={18} />
-                {isAdding ? 'Agregando...' : isOutOfStock ? 'Agotado' : 'Agregar al carrito'}
+                {isAdding ? 'Agregando...' : isOutOfStock ? 'No disponible' : 'Agregar a tu bolsa'}
               </button>
               
-              {/* Wishlist Button al lado del carrito */}
               <WishlistButton 
                 product={product}
                 variant="text"
@@ -198,9 +197,10 @@ export default function ProductPage({ product, onAddToCart, onBack }) {
               />
             </div>
 
+            {/* Size Error - ACTUALIZADO */}
             {!selectedSize && !isOutOfStock && (
               <p className="text-xs text-gray-400 text-center -mt-4">
-                Por favor selecciona una talla
+                Elegí una talla para continuar
               </p>
             )}
 

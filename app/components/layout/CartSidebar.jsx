@@ -42,7 +42,7 @@ export default function CartSidebar({
   const handleCheckout = async () => {
     setIsCheckingOut(true);
     try {
-      await onCheckout(); // Usar el timing real, no artificial
+      await onCheckout();
     } finally {
       setIsCheckingOut(false);
     }
@@ -72,15 +72,15 @@ export default function CartSidebar({
         aria-modal="true"
         aria-labelledby="cart-title"
       >
-        {/* Header minimalista */}
+        {/* Header minimalista - ACTUALIZADO */}
         <div className="flex items-center justify-between p-6 border-b border-gray-100">
           <h2 id="cart-title" className="text-sm uppercase tracking-widest text-gray-600">
-            Carrito {itemCount > 0 && `(${itemCount})`}
+            Tu Bolsa {itemCount > 0 && `(${itemCount})`}
           </h2>
           <button 
             onClick={onClose}
             className="p-2 hover:bg-gray-50 transition-colors"
-            aria-label="Cerrar carrito"
+            aria-label="Cerrar"
           >
             <X size={18} className="text-gray-400" />
           </button>
@@ -116,26 +116,26 @@ export default function CartSidebar({
               <span className="text-2xl font-light">{formatPrice(cartTotal)}</span>
             </div>
             
-            {/* Botón elegante */}
+            {/* Botón elegante - ACTUALIZADO */}
             <LoadingButton
               loading={isCheckingOut}
               onClick={handleCheckout}
               disabled={cart.length === 0}
               className="w-full bg-black text-white py-4 text-xs uppercase tracking-widest hover:bg-gray-900 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {currentUser ? 'Finalizar' : 'Ingresar'}
+              {currentUser ? 'Confirmar' : 'Ingresá a tu cuenta'}
             </LoadingButton>
             
             {!currentUser && (
               <p className="text-xs text-center text-gray-400 mt-4 tracking-wide">
-                Ingresá para continuar
+                Ingresá a tu cuenta para continuar
               </p>
             )}
 
-            {/* Info sutil */}
+            {/* Info sutil - ACTUALIZADO */}
             <div className="mt-6 pt-6 border-t border-gray-100">
               <p className="text-xs text-gray-400 text-center tracking-wide">
-                Envío incluido · 6 cuotas sin interés
+                Envío incluido · Pagá en 6 cuotas
               </p>
             </div>
           </div>
@@ -153,7 +153,6 @@ function CartItem({ item, onUpdateQuantity, onRemoveItem }) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   
-  // ✅ USAR STOCK REAL - sin fallback hardcodeado
   const maxStock = item.stock;
   const isAtMaxStock = item.quantity >= maxStock;
 
@@ -188,7 +187,7 @@ function CartItem({ item, onUpdateQuantity, onRemoveItem }) {
         <p className="text-xs text-gray-400 mb-2">Talla {item.size}</p>
         <p className="text-sm font-light mb-4">{formatPrice(item.price)}</p>
         
-        {/* Controles sutiles con mejor feedback */}
+        {/* Controles sutiles */}
         <div className="flex items-center gap-3">
           <button
             onClick={() => onUpdateQuantity(item.id, item.size, item.quantity - 1)}
@@ -244,14 +243,14 @@ function EmptyCartState({ onClose }) {
         <ShoppingBag size={32} className="text-gray-200 mx-auto" strokeWidth={1} />
       </div>
       <p className="text-xs uppercase tracking-widest text-gray-400 mb-8">
-        Sin prendas
+        Tu bolsa está vacía
       </p>
       <button 
         onClick={onClose}
         className="border border-gray-200 text-gray-600 px-8 py-3 text-xs uppercase tracking-widest hover:border-black hover:text-black transition-all"
-        aria-label="Explorar productos"
+        aria-label="Seguir explorando"
       >
-        Explorar
+        Seguir explorando
       </button>
     </div>
   );
