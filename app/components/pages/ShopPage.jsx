@@ -5,8 +5,9 @@ import Image from 'next/image';
 import { formatPrice } from '../../../utils/formatters';
 import { products, categories } from '../../data/products';
 import { ProductCardSkeleton, Skeleton } from '../ui/LoadingStates';
+import WishlistButton from '../ui/WishlistButton';
 
-export default function ShopPage({ selectedCategory, onSelectCategory, onAddToCart }) {
+export default function ShopPage({ selectedCategory, onSelectCategory, onAddToCart, onProductSelect }) { // ✅ Agregar onProductSelect
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -74,6 +75,7 @@ export default function ShopPage({ selectedCategory, onSelectCategory, onAddToCa
                     key={product.id}
                     product={product}
                     onAddToCart={onAddToCart}
+                    onProductSelect={onProductSelect} // ✅ Pasar nuevo handler
                   />
                 ))}
               </div>
@@ -88,18 +90,28 @@ export default function ShopPage({ selectedCategory, onSelectCategory, onAddToCa
 }
 
 // ==========================================
-// PRODUCT CARD - OPTIMIZADO
+// PRODUCT CARD - CON NAVEGACIÓN A PRODUCTPAGE
 // ==========================================
 
-function ProductCard({ product, onAddToCart }) {
+function ProductCard({ product, onAddToCart, onProductSelect }) { // ✅ Agregar onProductSelect
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
+  const handleCardClick = () => {
+    onProductSelect(product); // ✅ Navegar al hacer click en la card
+  };
+
+  const handleAddToCartClick = (e, size) => {
+    e.stopPropagation(); // ✅ Evitar que el click se propague a la card
+    onAddToCart(product, size);
+  };
+
   return (
     <div 
-      className="group cursor-pointer"
+      className="group cursor-pointer relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleCardClick} // ✅ Hacer toda la card clickeable
     >
       <div className="relative overflow-hidden bg-gray-50 aspect-[3/4] mb-4">
         {/* Next.js Image optimizada */}
@@ -121,6 +133,18 @@ function ProductCard({ product, onAddToCart }) {
           <div className="absolute inset-0 bg-gray-100 animate-pulse" />
         )}
         
+        {/* Wishlist Button - Integrado sutilmente */}
+        <div className={`absolute top-3 right-3 z-20 transition-opacity duration-300 ${
+          isHovered ? 'opacity-100' : 'opacity-70'
+        }`}>
+          <WishlistButton 
+            product={product}
+            variant="icon"
+            className="bg-white/80 backdrop-blur-sm hover:bg-white hover:shadow-sm"
+            onClick={(e) => e.stopPropagation()} // ✅ Evitar navegación al hacer wishlist
+          />
+        </div>
+        
         {/* Overlay sutil al hover */}
         <div 
           className={`absolute inset-0 bg-black transition-opacity duration-500 ${
@@ -139,10 +163,7 @@ function ProductCard({ product, onAddToCart }) {
               {product.sizes.map(size => (
                 <button
                   key={size}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onAddToCart(product, size);
-                  }}
+                  onClick={(e) => handleAddToCartClick(e, size)} // ✅ Usar nuevo handler
                   className="bg-white text-black px-4 py-2 text-xs uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300"
                 >
                   {size}

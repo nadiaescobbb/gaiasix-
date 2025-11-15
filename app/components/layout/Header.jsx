@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from 'react';
-import { ShoppingBag, User, Menu, X } from 'lucide-react';
+import { ShoppingBag, User, Menu, X, Heart } from 'lucide-react';
 import Image from 'next/image';
+import { useAppContext } from '../../context/AppContext'; 
 
 export default function Header({ 
   currentUser, 
@@ -13,6 +14,7 @@ export default function Header({
   currentPage = 'home' 
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { wishlistItemsCount } = useAppContext();
   const isActive = (page) => currentPage === page;
 
   return (
@@ -20,23 +22,23 @@ export default function Header({
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-        <button 
-          onClick={() => onNavigate('home')}
-          className="transition-opacity hover:opacity-80"
-          aria-label="Ir al inicio"
-        >
-          <Image 
-            src="/gaialogo-header.png" 
-            alt="GAIA SIX"
-            width={120}
-            height={40}
-            priority
-            style={{ 
-              width: 'auto', 
-              height: 'auto' 
-            }}
-          />
-        </button>
+          <button 
+            onClick={() => onNavigate('home')}
+            className="transition-opacity hover:opacity-80"
+            aria-label="Ir al inicio"
+          >
+            <Image 
+              src="/gaialogo-header.png" 
+              alt="GAIA SIX"
+              width={120}
+              height={40}
+              priority
+              style={{ 
+                width: 'auto', 
+                height: 'auto' 
+              }}
+            />
+          </button>
 
           {/* Navegación Desktop */}
           <nav className="hidden md:flex items-center space-x-12">
@@ -44,8 +46,8 @@ export default function Header({
               onClick={() => onNavigate('shop')} 
               className={`text-sm uppercase tracking-wide transition ${
                 isActive('shop') 
-                  ? 'text-red-800 font-medium' 
-                  : 'text-gray-700 hover:text-red-800'
+                  ? 'text-black font-medium' 
+                  : 'text-gray-700 hover:text-black'
               }`}
             >
               Tienda
@@ -55,8 +57,8 @@ export default function Header({
               onClick={() => onNavigate('about')} 
               className={`text-sm uppercase tracking-wide transition ${
                 isActive('about') 
-                  ? 'text-red-800 font-medium' 
-                  : 'text-gray-700 hover:text-red-800'
+                  ? 'text-black font-medium' 
+                  : 'text-gray-700 hover:text-black'
               }`}
             >
               Nosotros
@@ -64,20 +66,36 @@ export default function Header({
             
             <button 
               onClick={() => onNavigate('about')} 
-              className="text-sm uppercase tracking-wide text-gray-700 hover:text-red-800 transition"
+              className="text-sm uppercase tracking-wide text-gray-700 hover:text-black transition"
             >
               Contacto
             </button>
           </nav>
 
-          {/* Iconos de Usuario y Carrito */}
-          <div className="flex items-center space-x-6">
+          {/* Iconos de Wishlist, Usuario y Carrito */}
+          <div className="flex items-center space-x-4">
+            {/* Wishlist */}
+            <button 
+              onClick={() => onNavigate('wishlist')} 
+              className={`hidden md:block transition relative ${
+                isActive('wishlist') ? 'text-red-600' : 'text-gray-600 hover:text-red-600'
+              }`}
+              aria-label="Mis favoritos"
+            >
+              <Heart size={20} />
+              {wishlistItemsCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
+                  {wishlistItemsCount > 9 ? '9+' : wishlistItemsCount}
+                </span>
+              )}
+            </button>
+            
             {/* Usuario Desktop */}
             {currentUser ? (
               <button 
                 onClick={() => onNavigate('profile')} 
                 className={`hidden md:block transition ${
-                  isActive('profile') ? 'text-red-800' : 'hover:text-red-800'
+                  isActive('profile') ? 'text-black' : 'text-gray-600 hover:text-black'
                 }`}
                 aria-label="Mi perfil"
               >
@@ -87,7 +105,7 @@ export default function Header({
               <button 
                 onClick={() => onNavigate('auth')} 
                 className={`hidden md:block transition ${
-                  isActive('auth') ? 'text-red-800' : 'hover:text-red-800'
+                  isActive('auth') ? 'text-black' : 'text-gray-600 hover:text-black'
                 }`}
                 aria-label="Iniciar sesión"
               >
@@ -98,12 +116,12 @@ export default function Header({
             {/* Carrito */}
             <button 
               onClick={onCartToggle} 
-              className="relative hover:text-red-800 transition"
+              className="relative text-gray-600 hover:text-black transition"
               aria-label={`Carrito de compras, ${cartItemsCount} ${cartItemsCount === 1 ? 'item' : 'items'}`}
             >
               <ShoppingBag size={20} />
               {cartItemsCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-800 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
+                <span className="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
                   {cartItemsCount > 9 ? '9+' : cartItemsCount}
                 </span>
               )}
@@ -112,7 +130,7 @@ export default function Header({
             {/* Botón de menú móvil */}
             <button 
               onClick={() => setMenuOpen(!menuOpen)} 
-              className="md:hidden hover:text-red-800 transition"
+              className="md:hidden text-gray-600 hover:text-black transition"
               aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
               aria-expanded={menuOpen}
             >
@@ -131,7 +149,7 @@ export default function Header({
               }} 
               className={`block w-full text-left py-3 px-4 text-sm uppercase tracking-wide transition rounded ${
                 isActive('shop')
-                  ? 'bg-red-50 text-red-800 font-medium'
+                  ? 'bg-gray-100 text-black font-medium'
                   : 'text-gray-700 hover:bg-gray-50'
               }`}
             >
@@ -145,7 +163,7 @@ export default function Header({
               }} 
               className={`block w-full text-left py-3 px-4 text-sm uppercase tracking-wide transition rounded ${
                 isActive('about')
-                  ? 'bg-red-50 text-red-800 font-medium'
+                  ? 'bg-gray-100 text-black font-medium'
                   : 'text-gray-700 hover:bg-gray-50'
               }`}
             >
@@ -165,6 +183,29 @@ export default function Header({
             {/* Separador */}
             <div className="border-t border-gray-200 my-2"></div>
 
+            {/* Wishlist Mobile */}
+            <button 
+              onClick={() => { 
+                onNavigate('wishlist'); 
+                setMenuOpen(false); 
+              }} 
+              className={`block w-full text-left py-3 px-4 text-sm transition rounded ${
+                isActive('wishlist')
+                  ? 'bg-gray-100 text-red-600 font-medium'
+                  : 'text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <Heart size={16} />
+                <span>Favoritos</span>
+                {wishlistItemsCount > 0 && (
+                  <span className="ml-auto bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {wishlistItemsCount}
+                  </span>
+                )}
+              </div>
+            </button>
+
             {/* Usuario Mobile */}
             {currentUser ? (
               <>
@@ -175,7 +216,7 @@ export default function Header({
                   }} 
                   className={`block w-full text-left py-3 px-4 text-sm transition rounded ${
                     isActive('profile')
-                      ? 'bg-red-50 text-red-800 font-medium'
+                      ? 'bg-gray-100 text-black font-medium'
                       : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
@@ -203,7 +244,7 @@ export default function Header({
                 }} 
                 className={`block w-full text-left py-3 px-4 text-sm transition rounded ${
                   isActive('auth')
-                    ? 'bg-red-50 text-red-800 font-medium'
+                    ? 'bg-gray-100 text-black font-medium'
                     : 'text-gray-700 hover:bg-gray-50'
                 }`}
               >

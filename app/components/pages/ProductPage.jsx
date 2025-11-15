@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { ArrowLeft, ShoppingCart, Package, Truck, RefreshCw } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Package, Truck, RefreshCw, Heart } from 'lucide-react';
 import { formatPrice } from "@/utils/formatters";
-
+import WishlistButton from '../ui/WishlistButton';
 
 export default function ProductPage({ product, onAddToCart, onBack }) {
   const [selectedSize, setSelectedSize] = useState(null);
@@ -123,13 +123,22 @@ export default function ProductPage({ product, onAddToCart, onBack }) {
           {/* RIGHT: Product Info */}
           <div className="space-y-8">
             {/* Header */}
-            <div>
-              <h1 className="text-3xl md:text-4xl font-light mb-3 tracking-tight">
-                {product.name}
-              </h1>
-              <p className="text-2xl font-light text-gray-900">
-                {formatPrice(product.price)}
-              </p>
+            <div className="flex items-start justify-between">
+              <div>
+                <h1 className="text-3xl md:text-4xl font-light mb-3 tracking-tight">
+                  {product.name}
+                </h1>
+                <p className="text-2xl font-light text-gray-900">
+                  {formatPrice(product.price)}
+                </p>
+              </div>
+              
+              {/* Wishlist Button en header */}
+              <WishlistButton 
+                product={product}
+                variant="compact"
+                className="mt-1"
+              />
             </div>
 
             {/* Description */}
@@ -165,19 +174,29 @@ export default function ProductPage({ product, onAddToCart, onBack }) {
               </div>
             )}
 
-            {/* Add to Cart Button */}
-            <button
-              onClick={handleAddToCart}
-              disabled={isOutOfStock || !selectedSize || isAdding}
-              className={`w-full py-4 text-sm uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${
-                isOutOfStock || !selectedSize || isAdding
-                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  : 'bg-black text-white hover:bg-gray-900'
-              }`}
-            >
-              <ShoppingCart size={18} />
-              {isAdding ? 'Agregando...' : isOutOfStock ? 'Agotado' : 'Agregar al carrito'}
-            </button>
+            {/* Add to Cart Button + Wishlist */}
+            <div className="flex gap-3">
+              <button
+                onClick={handleAddToCart}
+                disabled={isOutOfStock || !selectedSize || isAdding}
+                className={`flex-1 py-4 text-sm uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${
+                  isOutOfStock || !selectedSize || isAdding
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-black text-white hover:bg-gray-900'
+                }`}
+              >
+                <ShoppingCart size={18} />
+                {isAdding ? 'Agregando...' : isOutOfStock ? 'Agotado' : 'Agregar al carrito'}
+              </button>
+              
+              {/* Wishlist Button al lado del carrito */}
+              <WishlistButton 
+                product={product}
+                variant="text"
+                showLabel={false}
+                className="border border-gray-300 hover:border-red-600 hover:text-red-600 px-4"
+              />
+            </div>
 
             {!selectedSize && !isOutOfStock && (
               <p className="text-xs text-gray-400 text-center -mt-4">

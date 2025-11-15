@@ -7,7 +7,7 @@ import { hashPassword, verifyPassword, validatePasswordStrength, migrateUserPass
 const isBrowser = typeof window !== 'undefined';
 
 // ==========================================
-// STORAGE HELPERS CON DEBOUNCE
+// STORAGE HELPERS
 // ==========================================
 
 const getStorageItem = (key, defaultValue = null) => {
@@ -20,20 +20,6 @@ const getStorageItem = (key, defaultValue = null) => {
     console.error(`Error reading ${key} from localStorage:`, error);
     return defaultValue;
   }
-};
-
-// Crear instancias de debounce para cada key
-const createDebouncedSave = () => {
-  return useDebouncedCallback((key, value) => {
-    if (!isBrowser) return;
-    
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-      console.log(`💾 Guardado debounced: ${key}`);
-    } catch (error) {
-      console.error(`Error saving ${key} to localStorage:`, error);
-    }
-  }, 1000); // ⏱️ 1 segundo de debounce
 };
 
 const removeStorageItem = (key) => {
@@ -63,7 +49,7 @@ export const useAppContext = () => {
 };
 
 // ==========================================
-// PROVIDER COMPONENT - CON DEBOUNCE OPTIMIZADO
+// PROVIDER COMPONENT - CON WISHLIST
 // ==========================================
 
 export function AppProvider({ children }) {
@@ -71,195 +57,197 @@ export function AppProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [cart, setCart] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
 
   // ==========================================
   // DEBOUNCED SAVE FUNCTIONS
   // ==========================================
   
-  // Debounced saves para cada tipo de dato
   const debouncedSaveUser = useDebouncedCallback((user) => {
     if (!isBrowser) return;
-    
     try {
       if (user) {
         localStorage.setItem('gaia-current-user', JSON.stringify(user));
-        console.log('💾 Usuario guardado (debounced)');
       } else {
         localStorage.removeItem('gaia-current-user');
-        console.log('💾 Usuario removido (debounced)');
       }
     } catch (error) {
       console.error('Error saving user to localStorage:', error);
     }
-  }, 800); // 800ms debounce
+  }, 800);
 
   const debouncedSaveUsers = useDebouncedCallback((usersList) => {
     if (!isBrowser) return;
-    
     try {
       localStorage.setItem('gaia-users', JSON.stringify(usersList));
-      console.log('💾 Lista de usuarios guardada (debounced)');
     } catch (error) {
       console.error('Error saving users to localStorage:', error);
     }
-  }, 1000); // 1 segundo debounce
+  }, 1000);
 
   const debouncedSaveCart = useDebouncedCallback((cartItems) => {
     if (!isBrowser) return;
-    
     try {
       localStorage.setItem('gaia-cart', JSON.stringify(cartItems));
-      console.log('💾 Carrito guardado (debounced)');
     } catch (error) {
       console.error('Error saving cart to localStorage:', error);
     }
-  }, 500); 
-  
- // ==========================================
-// INICIALIZACIÓN - Cargar y validar datos de localStorage
-// ==========================================
+  }, 500);
 
-useEffect(() => {
-  if (!isBrowser) {
-    setIsInitialized(true);
-    return;
-  }
-
-  const initializeData = async () => {
+  const debouncedSaveWishlist = useDebouncedCallback((wishlistItems) => {
+    if (!isBrowser) return;
     try {
-      // Cargar datos crudos
-      const storedUser = getStorageItem('gaia-current-user', null);
-      const storedUsers = getStorageItem('gaia-users', []);
-      const storedCart = getStorageItem('gaia-cart', []);
+      localStorage.setItem('gaia-wishlist', JSON.stringify(wishlistItems));
+    } catch (error) {
+      console.error('Error saving wishlist to localStorage:', error);
+    }
+  }, 600);
 
-      console.log('🔄 Iniciando validación de datos...');
+  // ==========================================
+  // INICIALIZACIÓN - CON WISHLIST
+  // ==========================================
+  
+  useEffect(() => {
+    if (!isBrowser) {
+      setIsInitialized(true);
+      return;
+    }
 
-      // ✅ VALIDACIÓN ROBUSTA DE USUARIO ACTUAL
-      if (storedUser && 
-          typeof storedUser === 'object' && 
-          storedUser.id && 
-          storedUser.email &&
-          typeof storedUser.email === 'string' &&
-          storedUser.password) {
-        
-        console.log('✅ Usuario actual válido:', storedUser.email);
-        setCurrentUser(storedUser);
-      } else {
-        console.log('⚠️ Usuario actual inválido, limpiando...');
-        removeStorageItem('gaia-current-user');
-        setCurrentUser(null);
-      }
+    const initializeData = async () => {
+      try {
+        const storedUser = getStorageItem('gaia-current-user', null);
+        const storedUsers = getStorageItem('gaia-users', []);
+        const storedCart = getStorageItem('gaia-cart', []);
+        const storedWishlist = getStorageItem('gaia-wishlist', []);
 
-      // ✅ VALIDACIÓN ROBUSTA DE LISTA DE USUARIOS
-      if (Array.isArray(storedUsers)) {
-        const validUsers = storedUsers.filter(user => 
-          user && 
-          typeof user === 'object' &&
-          user.id && 
-          user.email &&
-          typeof user.email === 'string' &&
-          user.password &&
-          typeof user.password === 'string'
-        );
+        console.log('🔄 Iniciando validación de datos...');
 
-        console.log(`📊 Usuarios: ${storedUsers.length} total, ${validUsers.length} válidos`);
+        // Validar usuario actual
+        if (storedUser && 
+            typeof storedUser === 'object' && 
+            storedUser.id && 
+            storedUser.email &&
+            typeof storedUser.email === 'string' &&
+            storedUser.password) {
+          setCurrentUser(storedUser);
+        } else {
+          removeStorageItem('gaia-current-user');
+          setCurrentUser(null);
+        }
 
-        if (validUsers.length > 0) {
-          const migratedUsers = await Promise.all(
-            validUsers.map(user => migrateUserPassword(user))
+        // Validar lista de usuarios
+        if (Array.isArray(storedUsers)) {
+          const validUsers = storedUsers.filter(user => 
+            user && 
+            typeof user === 'object' &&
+            user.id && 
+            user.email &&
+            typeof user.email === 'string' &&
+            user.password &&
+            typeof user.password === 'string'
           );
-          setUsers(migratedUsers);
-          console.log('✅ Usuarios migrados y validados');
+
+          if (validUsers.length > 0) {
+            const migratedUsers = await Promise.all(
+              validUsers.map(user => migrateUserPassword(user))
+            );
+            setUsers(migratedUsers);
+          } else {
+            setUsers([]);
+          }
         } else {
           setUsers([]);
         }
-      } else {
-        console.log('⚠️ Lista de usuarios inválida, resetando...');
-        setUsers([]);
-      }
 
-      // ✅ VALIDACIÓN ROBUSTA DE CARRITO
-      if (Array.isArray(storedCart)) {
-        const validCart = storedCart.filter(item => 
-          item &&
-          typeof item === 'object' &&
-          item.id &&
-          typeof item.id === 'number' &&
-          item.name &&
-          typeof item.name === 'string' &&
-          typeof item.price === 'number' &&
-          item.price > 0 &&
-          typeof item.quantity === 'number' &&
-          item.quantity > 0 &&
-          item.quantity <= 99 && // Límite razonable
-          item.size &&
-          typeof item.size === 'string'
-        );
-
-        console.log(`🛒 Carrito: ${storedCart.length} items, ${validCart.length} válidos`);
-
-        // Limpiar items inválidos
-        const invalidItems = storedCart.length - validCart.length;
-        if (invalidItems > 0) {
-          console.log(`🗑️ Eliminando ${invalidItems} items inválidos del carrito`);
+        // Validar carrito
+        if (Array.isArray(storedCart)) {
+          const validCart = storedCart.filter(item => 
+            item &&
+            typeof item === 'object' &&
+            item.id &&
+            typeof item.id === 'number' &&
+            item.name &&
+            typeof item.name === 'string' &&
+            typeof item.price === 'number' &&
+            item.price > 0 &&
+            typeof item.quantity === 'number' &&
+            item.quantity > 0 &&
+            item.quantity <= 99 &&
+            item.size &&
+            typeof item.size === 'string'
+          );
+          setCart(validCart);
+        } else {
+          setCart([]);
         }
 
-        setCart(validCart);
-      } else {
-        console.log('⚠️ Carrito inválido, resetando...');
+        // ✅ VALIDAR WISHLIST
+        if (Array.isArray(storedWishlist)) {
+          const validWishlist = storedWishlist.filter(item => 
+            item &&
+            typeof item === 'object' &&
+            item.id &&
+            typeof item.id === 'number' &&
+            item.name &&
+            typeof item.name === 'string' &&
+            typeof item.price === 'number' &&
+            item.price > 0 &&
+            item.image &&
+            typeof item.image === 'string'
+          );
+          setWishlist(validWishlist);
+          console.log(`❤️ Wishlist: ${storedWishlist.length} items, ${validWishlist.length} válidos`);
+        } else {
+          setWishlist([]);
+        }
+
+        console.log('🎉 Validación de datos completada exitosamente');
+
+      } catch (error) {
+        console.error('❌ Error crítico en validación de datos:', error);
+        removeStorageItem('gaia-current-user');
+        removeStorageItem('gaia-users');
+        removeStorageItem('gaia-cart');
+        removeStorageItem('gaia-wishlist');
+        setCurrentUser(null);
+        setUsers([]);
         setCart([]);
+        setWishlist([]);
+      } finally {
+        setIsInitialized(true);
+        console.log('🚀 Aplicación inicializada y lista');
       }
+    };
 
-      console.log('🎉 Validación de datos completada exitosamente');
+    initializeData();
+  }, []);
 
-    } catch (error) {
-      console.error('❌ Error crítico en validación de datos:', error);
-      
-      // 📦 LIMPIEZA DE SEGURIDAD - Resetear todo en caso de error
-      console.log('🛡️ Ejecutando limpieza de seguridad...');
-      
-      removeStorageItem('gaia-current-user');
-      removeStorageItem('gaia-users');
-      removeStorageItem('gaia-cart');
-      
-      setCurrentUser(null);
-      setUsers([]);
-      setCart([]);
-      
-      console.log('✅ Limpieza de seguridad completada');
-    } finally {
-      setIsInitialized(true);
-      console.log('🚀 Aplicación inicializada y lista');
-    }
-  };
-
-  initializeData();
-}, []);
-
-// ==========================================
-  // PERSISTENCIA CON DEBOUNCE - NUEVA VERSIÓN
+  // ==========================================
+  // PERSISTENCIA CON DEBOUNCE
   // ==========================================
   
-  // Guardar usuario actual con debounce
   useEffect(() => {
     if (!isInitialized) return;
     debouncedSaveUser(currentUser);
   }, [currentUser, isInitialized, debouncedSaveUser]);
 
-  // Guardar lista de usuarios con debounce
   useEffect(() => {
     if (!isInitialized) return;
     debouncedSaveUsers(users);
   }, [users, isInitialized, debouncedSaveUsers]);
 
-  // Guardar carrito con debounce (más rápido para mejor UX)
   useEffect(() => {
     if (!isInitialized) return;
     debouncedSaveCart(cart);
   }, [cart, isInitialized, debouncedSaveCart]);
 
+  useEffect(() => {
+    if (!isInitialized) return;
+    debouncedSaveWishlist(wishlist);
+  }, [wishlist, isInitialized, debouncedSaveWishlist]);
+
   // ==========================================
-  // AUTH ACTIONS - VERSIÓN SEGURA
+  // AUTH ACTIONS
   // ==========================================
   
   const login = useCallback(async (email, password) => {
@@ -353,7 +341,7 @@ useEffect(() => {
   }, [currentUser]);
 
   // ==========================================
-  // CART ACTIONS - VERSIÓN CON VALIDACIÓN DE STOCK
+  // CART ACTIONS
   // ==========================================
   
   const addToCart = useCallback((product, size) => {
@@ -363,9 +351,8 @@ useEffect(() => {
       );
       
       if (existingItem) {
-        // ✅ VALIDAR STOCK ANTES DE INCREMENTAR
         if (existingItem.quantity >= product.stock) {
-          return prevCart; // No modificar si no hay stock
+          return prevCart;
         }
         
         return prevCart.map(item =>
@@ -375,21 +362,19 @@ useEffect(() => {
         );
       }
       
-      // ✅ VERIFICAR STOCK PARA NUEVO ITEM
       if (product.stock > 0) {
         return [...prevCart, { 
-          // ✅ SOLO DATOS NECESARIOS
           id: product.id,
           name: product.name,
           price: product.price,
           image: product.image,
           size,
           quantity: 1,
-          stock: product.stock // Mantener stock actual
+          stock: product.stock
         }];
       }
       
-      return prevCart; // No agregar si no hay stock
+      return prevCart;
     });
   }, []);
 
@@ -406,7 +391,6 @@ useEffect(() => {
       setCart(prevCart =>
         prevCart.map(item => {
           if (item.id === productId && item.size === size) {
-            // ✅ LIMITAR POR STOCK DISPONIBLE
             const maxQuantity = item.stock || 99;
             return { 
               ...item, 
@@ -424,17 +408,57 @@ useEffect(() => {
     removeStorageItem('gaia-cart');
   }, []);
 
-  const clearAllStorage = useCallback(() => {
-    removeStorageItem('gaia-current-user');
-    removeStorageItem('gaia-users');
-    removeStorageItem('gaia-cart');
-    setCurrentUser(null);
-    setUsers([]);
-    setCart([]);
+  // ==========================================
+  // ✅ WISHLIST ACTIONS
+  // ==========================================
+  
+  const addToWishlist = useCallback((product) => {
+    setWishlist(prevWishlist => {
+      // Evitar duplicados
+      const exists = prevWishlist.some(item => item.id === product.id);
+      if (exists) {
+        return prevWishlist;
+      }
+      
+      // Agregar producto con datos esenciales
+      return [...prevWishlist, {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        category: product.category,
+        stock: product.stock,
+        sizes: product.sizes,
+        addedAt: new Date().toISOString()
+      }];
+    });
+  }, []);
+
+  const removeFromWishlist = useCallback((productId) => {
+    setWishlist(prevWishlist => 
+      prevWishlist.filter(item => item.id !== productId)
+    );
+  }, []);
+
+  const isInWishlist = useCallback((productId) => {
+    return wishlist.some(item => item.id === productId);
+  }, [wishlist]);
+
+  const moveToCart = useCallback((productId, size) => {
+    const wishlistItem = wishlist.find(item => item.id === productId);
+    if (wishlistItem && size) {
+      addToCart(wishlistItem, size);
+      removeFromWishlist(productId);
+    }
+  }, [wishlist, addToCart, removeFromWishlist]);
+
+  const clearWishlist = useCallback(() => {
+    setWishlist([]);
+    removeStorageItem('gaia-wishlist');
   }, []);
 
   // ==========================================
-  // COMPUTED VALUES - OPTIMIZADOS CON useMemo
+  // COMPUTED VALUES
   // ==========================================
   
   const cartTotal = useMemo(() => 
@@ -446,6 +470,26 @@ useEffect(() => {
     cart.reduce((total, item) => total + item.quantity, 0), 
     [cart]
   );
+
+  const wishlistItemsCount = useMemo(() => 
+    wishlist.length, 
+    [wishlist]
+  );
+
+  // ==========================================
+  // UTILS
+  // ==========================================
+  
+  const clearAllStorage = useCallback(() => {
+    removeStorageItem('gaia-current-user');
+    removeStorageItem('gaia-users');
+    removeStorageItem('gaia-cart');
+    removeStorageItem('gaia-wishlist');
+    setCurrentUser(null);
+    setUsers([]);
+    setCart([]);
+    setWishlist([]);
+  }, []);
 
   // ==========================================
   // LOADING STATE
@@ -471,6 +515,7 @@ useEffect(() => {
     // State
     currentUser,
     cart,
+    wishlist,
     isInitialized,
     
     // Auth
@@ -486,6 +531,14 @@ useEffect(() => {
     clearCart,
     cartTotal,
     cartItemsCount,
+
+    // ✅ Wishlist
+    addToWishlist,
+    removeFromWishlist,
+    isInWishlist,
+    moveToCart,
+    clearWishlist,
+    wishlistItemsCount,
 
     // Utils
     clearAllStorage,

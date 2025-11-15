@@ -30,6 +30,7 @@ function AppContent() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [cartOpen, setCartOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login');
+  const [selectedProduct, setSelectedProduct] = useState(null); // ✅ Nuevo estado
 
   // Context
   const { 
@@ -46,8 +47,6 @@ function AppContent() {
     clearCart,
     updateUserOrders
   } = useAppContext();
-
-  
 
   // ==========================================
   // HANDLERS CON TOAST FEEDBACK
@@ -153,6 +152,18 @@ function AppContent() {
     success('Producto eliminado del carrito');
   };
 
+  // ✅ NUEVO HANDLER: Seleccionar producto
+  const handleProductSelect = (product) => {
+    setSelectedProduct(product);
+    setCurrentPage('product');
+  };
+
+  // ✅ NUEVO HANDLER: Volver desde producto
+  const handleBackFromProduct = () => {
+    setSelectedProduct(null);
+    setCurrentPage('shop');
+  };
+
   // ==========================================
   // NAVEGACIÓN CON PROTECCIÓN
   // ==========================================
@@ -164,6 +175,11 @@ function AppContent() {
       setCurrentPage('auth');
       setAuthMode('login');
       return;
+    }
+
+    // Si navegamos lejos de product, limpiar producto seleccionado
+    if (page !== 'product') {
+      setSelectedProduct(null);
     }
 
     setCurrentPage(page);
@@ -184,6 +200,17 @@ function AppContent() {
             selectedCategory={selectedCategory}
             onSelectCategory={setSelectedCategory}
             onAddToCart={handleAddToCart}
+            onProductSelect={handleProductSelect} // ✅ Pasar nuevo handler
+          />
+        );
+      
+      // ✅ NUEVO CASE: Product Page
+      case 'product':
+        return (
+          <ProductPage 
+            product={selectedProduct}
+            onAddToCart={handleAddToCart}
+            onBack={handleBackFromProduct}
           />
         );
       
