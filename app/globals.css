@@ -1,27 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500&family=Inter:wght@300;400;500&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Estilos base */
 @layer base {
   body {
     @apply bg-white text-gray-900;
-    font-family: 'Inter', sans-serif;
+    /* Inter ya se aplica desde layout.jsx */
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', serif;
+    /* Playfair viene como variable desde el layout */
+    font-family: var(--font-playfair), serif;
   }
 }
 
 @layer utilities {
   .font-playfair {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-playfair), serif;
   }
 }
 
-
+/* Embla Carousel */
 .embla {
   overflow: hidden;
 }

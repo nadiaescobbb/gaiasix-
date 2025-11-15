@@ -9,7 +9,6 @@ module.exports = {
     extend: {
       colors: {
         'bordo': '#8B0000',
-        'gaia-red': '#8B0000',
         'gaia-black': '#000000',
         'gaia-gray': '#f9fafb',
       },
