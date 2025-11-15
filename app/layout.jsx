@@ -10,7 +10,7 @@ const inter = Inter({
 // Fuente para títulos, expuesta como variable CSS
 const playfair = Playfair_Display({
   subsets: ['latin'],
-  weight: ['300', '400', '500'],
+  weight: ['400', '500'],
   variable: '--font-playfair',
 })
 
