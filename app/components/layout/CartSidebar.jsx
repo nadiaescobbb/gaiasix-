@@ -54,7 +54,7 @@ export default function CartSidebar({
 
   return (
     <>
-      {/* Overlay suave */}
+      {/* Overlay */}
       <div 
         className={`fixed inset-0 bg-black z-50 transition-opacity duration-500 ${
           isOpen ? 'bg-opacity-30' : 'bg-opacity-0'
@@ -63,7 +63,7 @@ export default function CartSidebar({
         aria-hidden="true"
       />
       
-      {/* Sidebar elegante */}
+      {/* Sidebar*/}
       <div 
         className={`fixed right-0 top-0 h-full w-full sm:w-96 bg-white z-50 flex flex-col transform transition-transform duration-500 ease-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
@@ -72,7 +72,7 @@ export default function CartSidebar({
         aria-modal="true"
         aria-labelledby="cart-title"
       >
-        {/* Header minimalista - ACTUALIZADO */}
+        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-100">
           <h2 id="cart-title" className="text-sm uppercase tracking-widest text-gray-600">
             Tu Bolsa {itemCount > 0 && `(${itemCount})`}
@@ -107,16 +107,15 @@ export default function CartSidebar({
           )}
         </div>
 
-        {/* Footer limpio */}
+        {/* Footer */}
         {cart.length > 0 && (
           <div className="border-t border-gray-100 p-6">
-            {/* Total minimalista */}
             <div className="flex justify-between items-baseline mb-8">
               <span className="text-xs uppercase tracking-widest text-gray-500">Total</span>
               <span className="text-2xl font-light">{formatPrice(cartTotal)}</span>
             </div>
             
-            {/* Botón elegante - ACTUALIZADO */}
+            {/* Botón*/}
             <LoadingButton
               loading={isCheckingOut}
               onClick={handleCheckout}
@@ -128,14 +127,14 @@ export default function CartSidebar({
             
             {!currentUser && (
               <p className="text-xs text-center text-gray-400 mt-4 tracking-wide">
-                Ingresá a tu cuenta para continuar
+                iniciar sesion
               </p>
             )}
 
-            {/* Info sutil - ACTUALIZADO */}
+            {/* Info */}
             <div className="mt-6 pt-6 border-t border-gray-100">
               <p className="text-xs text-gray-400 text-center tracking-wide">
-                Envío incluido · Pagá en 6 cuotas
+                Envío incluido · Pagá en 3 cuotas
               </p>
             </div>
           </div>
@@ -158,7 +157,6 @@ function CartItem({ item, onUpdateQuantity, onRemoveItem }) {
 
   return (
     <div className="flex gap-4">
-      {/* Imagen optimizada con fallback */}
       <div className="relative w-20 h-20 flex-shrink-0 bg-gray-50 overflow-hidden">
         <Image
           src={imageError ? '/fallback-product.jpg' : item.image}

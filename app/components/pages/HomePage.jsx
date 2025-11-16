@@ -146,7 +146,7 @@ export default function HomePage({ onNavigate }) {
     },
     {
       id: 4,
-      name: "Drape & Mini",
+      name: "Drape y Mini",
       totalPrice: 24925,
       image: "/images/products/top-drape.avif",
       products: [
@@ -164,7 +164,7 @@ export default function HomePage({ onNavigate }) {
     },
     {
       id: 5,
-      name: "Fylo & Lark",
+      name: "Fylo y Lark",
       totalPrice: 24675,
       image: "/images/products/top-fylo.avif",
       products: [
@@ -269,9 +269,6 @@ export default function HomePage({ onNavigate }) {
             <h1 className="text-5xl md:text-7xl font-light text-white tracking-tight leading-tight font-playfair">
               Lista para salir.
             </h1>
-            <p className="text-gray-300 text-sm md:text-base tracking-wide">
-              Simple. Elegante. Sin vueltas.
-            </p>
             <button
               onClick={() => onNavigate("shop")}
               className="border border-white text-white px-12 py-4 text-xs uppercase tracking-wider hover:bg-white hover:text-black transition-all duration-500 mt-12"
@@ -350,21 +347,21 @@ export default function HomePage({ onNavigate }) {
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 text-center">
             <div>
-              <p className="text-2xl font-light text-gray-900 mb-3">24hs</p>
+              <p className="text-2xl font-light text-gray-900 mb-3">Envios Gratis</p>
               <p className="text-xs uppercase tracking-widest text-gray-500">
-                Envío incluido
+                superando los $150.000
               </p>
             </div>
 
             <div>
-              <p className="text-2xl font-light text-gray-900 mb-3">6 cuotas</p>
+              <p className="text-2xl font-light text-gray-900 mb-3">3 cuotas</p>
               <p className="text-xs uppercase tracking-widest text-gray-500">
                 Sin interés
               </p>
             </div>
 
             <div>
-              <p className="text-2xl font-light text-gray-900 mb-3">15 días</p>
+              <p className="text-2xl font-light text-gray-900 mb-3">7 días</p>
               <p className="text-xs uppercase tracking-widest text-gray-500">
                 Para cambios
               </p>
