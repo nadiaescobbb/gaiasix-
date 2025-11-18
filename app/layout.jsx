@@ -1,22 +1,29 @@
 import './globals.css'
-import { Inter, Playfair_Display } from 'next/font/google'
+import localFont from 'next/font/local'
 
-// Fuente base del sitio
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500'],
+// ===============================
+// FUENTES LOCALES
+// ===============================
+
+// Fuente principal (GA-LISCKA)
+const galiscka = localFont({
+  src: './fonts/galiscka.woff2',
+  variable: '--font-galiscka',
 })
 
-// Fuente para títulos, expuesta como variable CSS
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  variable: '--font-playfair',
+// Fuente secundaria (CS Tucker)
+const cstucker = localFont({
+  src: './fonts/cstucker.woff2',
+  variable: '--font-cstucker',
 })
 
+// ===============================
+// METADATA
+// ===============================
 export const metadata = {
   title: 'Gaia Six - Shop online',
-  description: 'Ropa femenina con estilo. Cómoda, con onda y lista para salir. Descubrí nuestra colección de looks casuales y de salir.',
+  description:
+    'Ropa femenina con estilo. Cómoda, con onda y lista para salir. Descubrí nuestra colección de looks casuales y de noche.',
   keywords: 'ropa femenina, moda, estilo, casual, elegante, argentina',
   authors: [{ name: 'Gaia Six' }],
   icons: {
@@ -29,7 +36,8 @@ export const metadata = {
   },
   openGraph: {
     title: 'Gaia Six',
-    description: 'Ropa femenina con estilo. Cómoda, con onda y lista para salir.',
+    description:
+      'Ropa femenina con estilo. Cómoda, con onda y lista para salir. Descubrí nuestra colección.',
     type: 'website',
     locale: 'es_AR',
     siteName: 'Gaia Six',
@@ -44,14 +52,21 @@ export const metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Gaia Six',
-    description: 'Ropa femenina con estilo. Cómoda, con onda y lista para salir.',
+    description:
+      'Ropa femenina con estilo. Cómoda, con onda y lista para salir.',
   },
 }
 
+// ===============================
+// ROOT LAYOUT
+// ===============================
 export default function RootLayout({ children }) {
   return (
-    <html lang="es" className={playfair.variable}>
-      <body className={`${inter.className} antialiased`}>
+    <html
+      lang="es"
+      className={`${galiscka.variable} ${cstucker.variable}`}
+    >
+      <body className="antialiased">
         {children}
       </body>
     </html>

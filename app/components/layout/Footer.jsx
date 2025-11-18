@@ -43,7 +43,7 @@ export default function Footer() {
               />
             </button>
             <p className="text-sm text-gray-600 leading-relaxed">
-              Looks de noche sin vueltas. Ropa pensada para que te sientas cómoda y con onda.
+              Looks de noche sin vueltas. Ropa pensada para destacar sin esfuerzo
             </p>
           </div>
 

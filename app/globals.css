@@ -2,40 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Estilos base */
+/* ======================
+   ESTILOS BASE
+   ====================== */
 @layer base {
+
+  /* TEXTO BASE = CS TUCKER */
   body {
     @apply bg-white text-gray-900;
-    /* Inter ya se aplica desde layout.jsx */
+    font-family: var(--font-cstucker), sans-serif;
   }
 
+  /* TITULOS = GALISCKA */
   h1, h2, h3, h4, h5, h6 {
-    /* Playfair viene como variable desde el layout */
-    font-family: var(--font-playfair), serif;
+    font-family: var(--font-galiscka), serif;
   }
 }
 
+/* UTILIDADES */
 @layer utilities {
-  .font-playfair {
-    font-family: var(--font-playfair), serif;
+  .font-title {
+    font-family: var(--font-galiscka), serif;
+  }
+
+  .font-text {
+    font-family: var(--font-cstucker), sans-serif;
   }
 }
 
-/* Embla Carousel - ESTILOS ORIGINALES */
-.embla {
-  overflow: hidden;
-}
-
-.embla__container {
-  display: flex;
-}
-
-.embla__slide {
-  position: relative;
-  min-width: 100%;
-  height: 100vh;
-}
-
+/* ============================
+   EMBLA CAROUSEL
+   ============================ */
 
 .embla {
   overflow: hidden;
@@ -50,32 +47,7 @@
   flex: 0 0 100%;
   min-width: 0;
   position: relative;
-}
-
-/* Mejora la experiencia de arrastre */
-.embla__slide {
   user-select: none;
-}
-
-/* Efecto hover sutil en las imágenes */
-.embla__slide img {
-  transition: transform 0.4s ease;
-}
-
-.embla:hover .embla__slide:not(.is-dragging) img {
-  transform: scale(1.02);
-}
-
-/* Mejora la accesibilidad de los botones */
-.embla__prev:focus,
-.embla__next:focus,
-.embla__dot:focus {
-  outline: 2px solid white;
-  outline-offset: 2px;
-}
-
-/* Estilos para el cursor de arrastre */
-.embla__slide {
   cursor: grab;
 }
 
@@ -83,20 +55,30 @@
   cursor: grabbing;
 }
 
-/* Transiciones suaves para los indicadores */
-.embla__dot {
-  transition: all 0.3s ease;
-}
-
-
 .embla__slide img {
+  transition: transform 0.4s ease;
   object-fit: cover;
   width: 100%;
   height: 100%;
 }
 
+.embla:hover .embla__slide:not(.is-dragging) img {
+  transform: scale(1.02);
+}
+
+.embla__prev:focus,
+.embla__next:focus,
+.embla__dot:focus {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+.embla__dot {
+  transition: all 0.3s ease;
+}
+
 /* ============================
-   ESTILOS PARA SHOP THE LOOK
+   SHOP THE LOOK
    ============================ */
 
 .shop-the-look-grid {
@@ -114,10 +96,10 @@
   background: white;
   border-radius: 0.5rem;
   overflow: hidden;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
 }
 
 .shop-the-look-card:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
