@@ -122,6 +122,26 @@ export const products = [
     active: true,
   },
 
+    {
+    id: 16, 
+    name: 'pollera nala',
+    slug: 'pollera-nala',
+    category: 'vestidos',
+    price: 30400,
+    image: '/images/boho/pollera-nala.avif',
+    images: ['/images/boho/pollera-nala.avif'],
+    description: 'Falda Larga Encaje - Beige',
+    sizes: ['S'],
+    colors: ['beige'],
+    material: 'encaje',
+    care: 'Lavar a mano con agua fría',
+    stock: 1,
+    featured: true,
+    active: true,
+  },
+
+
+
   // === SETS ===
   {
     id: 8, 
@@ -178,7 +198,7 @@ export const products = [
   },
 
   {
-    id: 11, // ✅ CORREGIDO: era 25
+    id: 11, 
     name: 'Vestido inessia',
     slug: 'vestido-inessia',
     category: 'vestidos',
@@ -199,8 +219,8 @@ export const products = [
     slug: 'vestido-stun',
     category: 'vestidos',
     price: 21500,
-    image: '/images/products/vestido-stun.avif',
-    images: ['/images/products/vestido-stun.avif'],
+    image: '/images/noche/vestido-stun.avif',
+    images: ['/images/noche/vestido-stun.avif'],
     description: 'Vestido micro strapless para atar',
     sizes: ['S', 'M'],
     colors: ['Negro', 'Chocolate'],
@@ -221,6 +241,61 @@ export const products = [
     sizes: ['S'],
     colors: ['Negro'],
     material: 'Seda sintética',
+    care: 'Lavar a mano con agua fría',
+    stock: 1,
+    featured: true,
+    active: true,
+  },
+
+
+   {
+    id: 14, 
+    name: 'Vestido issi',
+    slug: 'vestido-issi',
+    category: 'vestidos',
+    price: 26400,
+    image: '/images/boho/vestido-issi.avif',
+    images: ['/images/boho/vestido-issi.avif'],
+    description: 'vestido largo con tajo tejido',
+    sizes: ['S'],
+    colors: ['crema'],
+    material: 'tejido',
+    care: 'Lavar a mano con agua fría',
+    stock: 1,
+    featured: true,
+    active: true,
+  },
+
+   {
+    id: 15, 
+    name: 'Vestido rio',
+    slug: 'vestido-rio',
+    category: 'vestidos',
+    price: 23980,
+    image: '/images/boho/vestido-rio.avif',
+    images: ['/images/boho/vestido-rio.avif'],
+    description: 'vestido largo tela encaje - talle unico - medidas aproximadas (las medidas son tomadas con la prenda plana: ancho de busto:25cm , cintura:31cm , cadera:40cm , largo desde el cuello: 145cm ',
+    sizes: ['S'],
+    colors: ['bordo'],
+    material: 'encaje',
+    care: 'Lavar a mano con agua fría',
+    stock: 1,
+    featured: true,
+    active: true,
+  },
+
+    {
+    id: 16, 
+    name: 'Vestido isla',
+    slug: 'vestido-isla',
+    category: 'vestidos',
+    price: 26400,
+    image: '/images/categories/vestido-isla.avif',
+    images: ['/images/categories/vestido-isla.avif'],
+    description: 'vestido de tul estampado - talle unico - medidas aproximadas (las medidas son tomadas con la prenda plana. Pecho: 34cm ',
+    sizes: ['S'],
+    colors: ['bordo'],
+    material: 'encaje',
     care: 'Lavar a mano con agua fría',
     stock: 1,
     featured: true,

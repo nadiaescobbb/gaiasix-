@@ -125,7 +125,32 @@ function FeaturedProduct({ product, priority, onNavigate }) {
 // HOME PAGE
 // ===================================================
 export default function HomePage({ onNavigate }) {
-  const heroImages = ["/images/banner/banner-web.avif"]; // Solo 1 img (evita repetición)
+  const heroImages = ["/images/banner/banner-web.avif"]; 
+
+  const categories = [
+    {
+      id: 1,
+      title: "Boho Nocturno",
+      subtitle: "PINK LOVERS",
+      image: "/images/boho/vestido-issi.avif",
+      link: "https://www.shoppcherry.com.ar/mujer/paritalones/?sort_by=created=descending"
+    },
+    {
+      id: 2,
+      title: "glam party",
+      subtitle: "BEACH WEAR", 
+      image: "/images/categories/.avif",
+      link: "/shop?category=summer"
+    },
+    {
+      id: 3,
+      title: "Rock y Silk",
+      subtitle: "EVENING DRESSES",
+      image: "/images/categories/vestido-santorini.avif",
+      link: "/shop?category=evening"
+    }
+  ];
+
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
@@ -332,6 +357,67 @@ export default function HomePage({ onNavigate }) {
           <div className="w-px h-16 bg-gradient-to-b from-transparent via-gray-500 to-transparent"></div>
         </div>
       </div>
+
+    {/* =====================================
+    COLLAGE - Layout 1 grande + 2 apiladas
+===================================== */}
+<section className="w-full">
+  <div className="grid grid-cols-1 md:grid-cols-4 h-screen md:h-[80vh]">
+    {/* Imagen grande - ocupa 2 columnas */}
+    <div className="md:col-span-2 relative group">
+      <Image
+        src={categories[0].image}
+        alt={categories[0].title}
+        fill
+        className="object-cover"
+      />
+      <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-white p-8">
+        <h3 className="text-4xl font-bold mb-3">{categories[0].title}</h3>
+        <p className="text-xl mb-8">{categories[0].subtitle}</p>
+        <button className="border-2 border-white px-10 py-3 text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+          SHOP NOW
+        </button>
+      </div>
+    </div>
+
+    {/* Contenedor de las 2 imágenes apiladas - ocupa 2 columnas */}
+    <div className="md:col-span-2 grid grid-rows-2">
+      {/* Imagen superior */}
+      <div className="relative group">
+        <Image
+          src={categories[1].image}
+          alt={categories[1].title}
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-white p-6">
+          <h3 className="text-3xl font-bold mb-2">{categories[1].title}</h3>
+          <p className="text-lg mb-6">{categories[1].subtitle}</p>
+          <button className="border border-white px-8 py-2 text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+            SHOP NOW
+          </button>
+        </div>
+      </div>
+
+      {/* Imagen inferior */}
+      <div className="relative group">
+        <Image
+          src={categories[2].image}
+          alt={categories[2].title}
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-white p-6">
+          <h3 className="text-3xl font-bold mb-2">{categories[2].title}</h3>
+          <p className="text-lg mb-6">{categories[2].subtitle}</p>
+          <button className="border border-white px-8 py-2 text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+            SHOP NOW
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* =====================================
           FEATURED

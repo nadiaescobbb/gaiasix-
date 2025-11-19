@@ -10,12 +10,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "avif": "^0.5.3",
     "bcryptjs": "^3.0.3",
     "embla-carousel-react": "^8.6.0",
     "lucide-react": "^0.263.1",
     "next": "^14.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "sharp": "^0.34.5",
     "use-debounce": "^10.0.6"
   },
   "devDependencies": {
