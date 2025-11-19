@@ -125,7 +125,8 @@ function FeaturedProduct({ product, priority, onNavigate }) {
 // HOME PAGE
 // ===================================================
 export default function HomePage({ onNavigate }) {
-  const heroImages = ["/images/banner/banner-web.avif"]; 
+  const heroImages = ["/images/banner/banner-vestido.avif"]; 
+  ["/images/boho/vestido-esme-pp.avif"]; 
 
   const categories = [
     {
@@ -139,14 +140,14 @@ export default function HomePage({ onNavigate }) {
       id: 2,
       title: "glam party",
       subtitle: "BEACH WEAR", 
-      image: "/images/categories/.avif",
+      image: "/images/boho/vestido-esme-fr.avif",
       link: "/shop?category=summer"
     },
     {
       id: 3,
-      title: "Rock y Silk",
+      title: "noche",
       subtitle: "EVENING DRESSES",
-      image: "/images/categories/vestido-santorini.avif",
+      image: "/images/boho/vestido-rio.avif",
       link: "/shop?category=evening"
     }
   ];
@@ -233,21 +234,21 @@ export default function HomePage({ onNavigate }) {
       id: 1,
       name: "Midnight Slip",
       totalPrice: 23500,
-      image: "/images/products/vestido-platt.avif",
+      image: "/images/boho/top-mili.avif",
       products: [{ name: "Vestido Platt", price: 23500 }],
     },
     {
       id: 2,
       name: "Afterglow Set",
       totalPrice: 15670,
-      image: "/images/products/set-feral.avif",
+      image: "/images/noche/top-floyd.avif",
       products: [{ name: "Set Feral", price: 15670 }],
     },
     {
       id: 3,
       name: "Crystal Mesh",
       totalPrice: 12250,
-      image: "/images/products/set-seline.avif",
+      image: "/images/boho/vestido-esme-fr.avif",
       products: [{ name: "Set Seline", price: 12250 }],
     },
     {

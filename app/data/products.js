@@ -2,6 +2,44 @@ export const products = [
   // === TOPS ===
   {
     id: 1,
+    name: 'Top floyd',
+    slug: 'top-floyd',
+    category: 'tops',
+    price: 16720,
+    image: '/images/noche/top-floyd.avif',
+    images: ['/images/noche/top-floyd.avif'],
+    description: 'Diseño con escote drapeado y espalda baja, detalle de tachtas en plateado en terminaciones de escote - Abarca talle S, m - Calce: Holgado - medidas aproximadas: contorno busto: 80cm a 95 cm, largo: 50cm.  - Las medidas estan tomadas sobre una superficie plana, no sobre el contorno de una persona.',
+    sizes: ['S', 'M'],
+    colors: ['negro'],
+    material: 'licra',
+    care: "Lavar con cuidado, preferiblemente a mano o ciclo suave. Evitar secadora.",
+    stock: 1,
+    featured: true,
+    new: true,
+    active: true,
+  },
+
+   {
+    id: 2,
+    name: 'Top mili',
+    slug: 'top-mili',
+    category: 'tops',
+    price: 10680,
+    image: '/images/noche/top-mili.avif',
+    images: ['/images/noche/top-mili.avif'],
+    description: 'Crop Top Halter Con Hebilla Microfibra - Verde, U ',
+    sizes: ['S'],
+    colors: ['verde'],
+    material: 'microfibra',
+    care: "Lavar con cuidado, preferiblemente a mano o ciclo suave. Evitar secadora.",
+    stock: 1,
+    featured: true,
+    new: true,
+    active: true,
+  },
+
+    {
+    id: 1,
     name: 'Top trick',
     slug: 'top-trick',
     category: 'tops',
@@ -87,6 +125,7 @@ export const products = [
     active: true,
   },
 
+
   // === FALDAS ===
   {
     id: 6, 
@@ -126,7 +165,7 @@ export const products = [
     id: 16, 
     name: 'pollera nala',
     slug: 'pollera-nala',
-    category: 'vestidos',
+    category: 'faldas',
     price: 30400,
     image: '/images/boho/pollera-nala.avif',
     images: ['/images/boho/pollera-nala.avif'],
@@ -180,8 +219,84 @@ export const products = [
   },
 
   // === VESTIDOS ===
+
+  
+   {
+    id: 10, 
+    name: 'Vestido issi',
+    slug: 'vestido-issi',
+    category: 'vestidos',
+    price: 30600,
+    image: '/images/boho/vestido-issi.avif',
+    images: ['/images/boho/vestido-issi.avif'],
+    description: 'vestido largo con tajo tejido',
+    sizes: ['S'],
+    colors: ['crema'],
+    material: 'tejido',
+    care: 'Lavar a mano con agua fría',
+    stock: 1,
+    featured: true,
+    active: true,
+  },
+
+   {
+    id: 11, 
+    name: 'Vestido rio',
+    slug: 'vestido-rio',
+    category: 'vestidos',
+    price: 33600,
+    image: '/images/boho/vestido-rio.avif',
+    images: ['/images/boho/vestido-rio.avif'],
+    description: 'vestido largo tela encaje - talle unico - medidas aproximadas: ancho de busto:26cm , cintura:31cm , cadera:40cm , largo desde el cuello: 145cm.  - Las medidas estan tomadas sobre una superficie plana, no sobre el contorno de una persona. ',
+    sizes: ['S'],
+    colors: ['bordo'],
+    material: 'encaje',
+    care: 'Lavar a mano con agua fría',
+    stock: 1,
+    featured: true,
+    active: true,
+  },
+
+    {
+    id: 12, 
+    name: 'Vestido isla',
+    slug: 'vestido-isla',
+    category: 'vestidos',
+    price: 28400,
+    image: '/images/categories/vestido-isla.avif',
+    images: ['/images/categories/vestido-isla.avif'],
+    description: 'vestido de tul estampado - Calce: Al cuerpo / abarca talle s y M  - medidas aproximadas: Busto: 83cm a 95cm , cintura:60cm a 70cm, largo total: 80cm. El largo total no incluye los lazos de la falda. - La tela se adapta al cuerpo y cede algunos centimetros. - Las medidas estan tomadas sobre una superficie plana, no sobre el contorno de una persona.',
+    sizes: ['s' ,'m'],
+    colors: ['rosa viejo'],
+    material: 'microtul estampado',
+    care: 'Lavar a mano con agua fría',
+    stock: 1,
+    featured: true,
+    active: true,
+  },
+
+
+    {
+    id: 13,
+    name: 'vestido esme',
+    slug: 'vestido-esme',
+    category: 'vestidos',
+    price: 28200,
+    image: '/images/boho/vestido-esme-pe.avif',
+    images: ['/images/boho/vestido-esme-pe.avif'],
+    description: 'Vestido de microtul con volados. Atado al cuello y corto, talle único.',
+    sizes: ['s'],
+    colors: ['verde'],
+    material: 'microtul',
+    care: "Lavar con cuidado, preferiblemente a mano o ciclo suave. Evitar secadora.",
+    stock: 1,
+    featured: true,
+    new: true,
+    active: true,
+  },
+
   {
-    id: 10,
+    id: 14,
     name: 'Vestido platt',
     slug: 'vestido-platt',
     category: 'vestidos',
@@ -198,7 +313,7 @@ export const products = [
   },
 
   {
-    id: 11, 
+    id: 15, 
     name: 'Vestido inessia',
     slug: 'vestido-inessia',
     category: 'vestidos',
@@ -214,14 +329,14 @@ export const products = [
   },
 
   {
-    id: 12, 
+    id: 16, 
     name: 'Vestido stun',
     slug: 'vestido-stun',
     category: 'vestidos',
     price: 21500,
     image: '/images/noche/vestido-stun.avif',
     images: ['/images/noche/vestido-stun.avif'],
-    description: 'Vestido micro strapless para atar',
+    description: 'Vestido micro strapless con lazo regulable. Medidas aproximadas: busto:75cm a 95cm , largo total:63cm. - Las medidas estan tomadas sobre una superficie plana, no sobre el contorno de una persona.',
     sizes: ['S', 'M'],
     colors: ['Negro', 'Chocolate'],
     stock: 3,
@@ -230,7 +345,7 @@ export const products = [
   },
 
   {
-    id: 13, 
+    id: 17, 
     name: 'Vestido zetra',
     slug: 'vestido-zetra',
     category: 'vestidos',
@@ -247,62 +362,26 @@ export const products = [
     active: true,
   },
 
-
-   {
-    id: 14, 
-    name: 'Vestido issi',
-    slug: 'vestido-issi',
-    category: 'vestidos',
-    price: 26400,
-    image: '/images/boho/vestido-issi.avif',
-    images: ['/images/boho/vestido-issi.avif'],
-    description: 'vestido largo con tajo tejido',
-    sizes: ['S'],
-    colors: ['crema'],
-    material: 'tejido',
+ // === Short ===
+{
+    id: 18, 
+    name: 'short texas',
+    slug: 'short-texas',
+    category: 'short',
+    price: 51040,
+    image: '/images/noche/short-texas.avif',
+    images: ['/images/noche/short-texas.avif'],
+    description: 'Short engomado tiro bajo con apliques plateados, trenzado adelante y con pasacintos',
+    sizes: ['m' , 'l'],
+    colors: ['camel','chocolate'],
+    material: 'ecocuero',
     care: 'Lavar a mano con agua fría',
     stock: 1,
     featured: true,
     active: true,
   },
 
-   {
-    id: 15, 
-    name: 'Vestido rio',
-    slug: 'vestido-rio',
-    category: 'vestidos',
-    price: 23980,
-    image: '/images/boho/vestido-rio.avif',
-    images: ['/images/boho/vestido-rio.avif'],
-    description: 'vestido largo tela encaje - talle unico - medidas aproximadas (las medidas son tomadas con la prenda plana: ancho de busto:25cm , cintura:31cm , cadera:40cm , largo desde el cuello: 145cm ',
-    sizes: ['S'],
-    colors: ['bordo'],
-    material: 'encaje',
-    care: 'Lavar a mano con agua fría',
-    stock: 1,
-    featured: true,
-    active: true,
-  },
-
-    {
-    id: 16, 
-    name: 'Vestido isla',
-    slug: 'vestido-isla',
-    category: 'vestidos',
-    price: 26400,
-    image: '/images/categories/vestido-isla.avif',
-    images: ['/images/categories/vestido-isla.avif'],
-    description: 'vestido de tul estampado - talle unico - medidas aproximadas (las medidas son tomadas con la prenda plana. Pecho: 34cm ',
-    sizes: ['S'],
-    colors: ['bordo'],
-    material: 'encaje',
-    care: 'Lavar a mano con agua fría',
-    stock: 1,
-    featured: true,
-    active: true,
-  },
 ];
-
 // ============================================
 // CATEGORÍAS
 // ============================================
@@ -314,7 +393,7 @@ export const categories = [
   { id: 'sets', name: 'Sets', slug: 'sets', order: 3 },
   { id: 'blusas', name: 'Blusas', slug: 'blusas', order: 4 },
   { id: 'faldas', name: 'Faldas', slug: 'faldas', order: 5 },
-  { id: 'pantalones', name: 'Pantalones', slug: 'pantalones', order: 6 },
+  { id: 'short', name: 'short', slug: 'short', order: 6 },
   { id: 'camperas', name: 'Camperas', slug: 'camperas', order: 7 },
 ];
 
