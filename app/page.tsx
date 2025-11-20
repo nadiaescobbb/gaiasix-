@@ -75,7 +75,7 @@ const outfitCombinations = [
     items: [
       { name: "Vestido Stun", price: 21500 }
     ],
-    image: "/images/noche/vestido-stun.AVIF", // ✅ Cambiar extensión
+    image: "/images/noche/vestido-stun.AVIF", 
     total: 21500
   }
 ];

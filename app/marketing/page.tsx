@@ -1,390 +1,336 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useState, useRef, useCallback } from "react";
-import { formatPrice } from "../../utils/formatters";
-import { products } from "../../data/products";
-import { type Page } from "../../lib/types";
+import { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 
-// ===================================================
-// TYPES 
-// ===================================================
+const featuredProducts = [
+  {
+    id: 1,
+    name: "TOP FLOYD",
+    price: 16720,
+    image: "/images/noche/top-floyd.avif",
+    category: "tops",
+  },
+  {
+    id: 2,
+    name: "TOP MILI",
+    price: 10680,
+    image: "/images/noche/top-mili.avif",
+    category: "tops",
+  }
+];
 
-interface LookProduct {
-  name: string;
-  price: number;
-}
+const looks = [
+  {
+    id: 1,
+    name: "Midnight Slip",
+    description: "Vestido Platt",
+    price: 23500,
+    image: "/images/products/vestido-platt.avif",
+    outfit: true
+  },
+  {
+    id: 2,
+    name: "Afterglow Set",
+    description: "Set Feral",
+    price: 15670,
+    image: "/images/products/set-feral.avif",
+    outfit: true
+  },
+  {
+    id: 3,
+    name: "Crystal Mesh",
+    description: "Set Seline",
+    price: 12250,
+    image: "/images/products/set-seline.avif",
+    outfit: true
+  }
+];
 
-interface ShopLook {
-  id: number;
-  name: string;
-  totalPrice: number;
-  image: string;
-  products: LookProduct[];
-}
+const outfitCombinations = [
+  {
+    id: 1,
+    name: "Drape Silhouette",
+    items: [
+      { name: "Top Drape", price: 1350 },
+      { name: "Mini Trace", price: 1375 }
+    ],
+    image: "/images/products/top-drape.avif",
+    total: 2725
+  },
+  {
+    id: 2,
+    name: "Night Lines",
+    items: [
+      { name: "Top Fylo", price: 1350 },
+      { name: "Mini Lark", price: 1105 }
+    ],
+    image: "/images/products/top-fylo.avif",
+    total: 2455
+  },
+  {
+    id: 3,
+    name: "Black Icon",
+    items: [
+      { name: "Vestido Stun", price: 21500 }
+    ],
+    image: "/images/noche/vestido-stun.AVIF",
+    total: 21500
+  }
+];
 
-interface Category {
-  id: number;
-  title: string;
-  subtitle: string;
-  image: string;
-  link: string;
-}
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  featured?: boolean;
-  active?: boolean;
-}
-
-interface ShopTheLookCardProps {
-  look: ShopLook;
-  onNavigate: (page: Page) => void;
-}
-
-interface FeaturedProductProps {
-  product: Product;
-  priority?: boolean;
-  onNavigate: (page: Page) => void;
-}
-
-interface HomePageProps {
-  onNavigate: (page: Page) => void;
-}
-
-// ===================================================
-// SHOP THE LOOK CARD 
-// ===================================================
-function ShopTheLookCard({ look, onNavigate }: ShopTheLookCardProps) {
-  const [imageLoaded, setImageLoaded] = useState<boolean>(false);
-
-  return (
-    <div className="group border border-gray-100 p-4 hover:border-black transition-all duration-300">
-      <div className="relative overflow-hidden bg-gray-100 h-[420px] md:h-[480px] mb-4">
-        <Image
-          src={look.image}
-          alt={look.name}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-500"
-          onLoad={() => setImageLoaded(true)}
-        />
-        {!imageLoaded && (
-          <div className="absolute inset-0 bg-gray-200 animate-pulse" />
-        )}
-      </div>
-
-      <div className="text-center">
-        <h3 className="text-xl font-light text-gray-900 mb-6">
-          {look.name}
-        </h3>
-
-        <div className="space-y-3 mb-8">
-          {look.products.map((product, i) => (
-            <div key={i} className="text-center">
-              <p className="text-sm uppercase tracking-widest text-gray-600 mb-1">
-                {product.name}
-              </p>
-              <p className="text-sm font-light text-gray-900">
-                {formatPrice(product.price)}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        <div className="space-y-4">
-          <div className="border-t border-gray-200 pt-4">
-            <p className="text-lg font-light text-gray-900">
-              {formatPrice(look.totalPrice)}
-            </p>
-          </div>
-
-          <button
-            onClick={() => onNavigate("shop")}
-            className="w-full border border-gray-900 text-gray-900 py-3 text-sm uppercase tracking-wider hover:bg-gray-900 hover:text-white transition-all duration-300"
-          >
-            Comprar look
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ===================================================
-// FEATURED PRODUCT 
-// ===================================================
-function FeaturedProduct({ product, priority, onNavigate }: FeaturedProductProps) {
-  const [imageLoaded, setImageLoaded] = useState<boolean>(false);
-
-  const activate = (): void => onNavigate("shop");
-
-  const onKeyDown = (e: React.KeyboardEvent): void => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      activate();
-    }
+export default function HomePage() {
+  const formatPrice = (price: number) => {
+    return `$${price.toLocaleString('es-AR')}`;
   };
 
   return (
-    <div className="group">
-      <button
-        className="cursor-pointer text-left w-full"
-        onClick={activate}
-        onKeyDown={onKeyDown}
-        aria-label={`Ver ${product.name}`}
-      >
-        <div className="relative overflow-hidden bg-gray-50 h-[420px] md:h-[480px] mb-4">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            sizes="(max-width: 768px) 100vw, 33vw"
-            className={`object-cover group-hover:scale-102 transition-transform duration-700 ${
-              imageLoaded ? "opacity-100" : "opacity-0"
-            }`}
-            onLoad={() => setImageLoaded(true)}
-            quality={95}
-            priority={priority}
-          />
-
-          {!imageLoaded && (
-            <div className="absolute inset-0 bg-gray-100 animate-pulse" />
-          )}
-
-          <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
-        </div>
-
-        <div className="text-center space-y-1">
-          <h3 className="text-xs uppercase tracking-widest text-gray-600">
-            {product.name}
-          </h3>
-          <p className="text-sm font-light text-gray-900">
-            {formatPrice(product.price)}
-          </p>
-        </div>
-      </button>
-    </div>
-  );
-}
-
-// ===================================================
-// HOME PAGE (SIMPLIFICADO - sin carousel)
-// ===================================================
-export default function HomePage({ onNavigate }: HomePageProps) {
-  const categories: Category[] = [
-    {
-      id: 1,
-      title: "Boho Nocturno",
-      subtitle: "PINK LOVERS",
-      image: "/images/boho/vestido-issi.avif",
-      link: "/shop"
-    },
-    {
-      id: 2,
-      title: "glam party",
-      subtitle: "BEACH WEAR", 
-      image: "/images/boho/vestido-esme-fr.avif",
-      link: "/shop"
-    },
-    {
-      id: 3,
-      title: "noche",
-      subtitle: "EVENING DRESSES",
-      image: "/images/boho/vestido-rio.avif",
-      link: "/shop"
-    }
-  ];
-
-  const featuredProducts: Product[] = products
-    .filter((p: Product) => p.featured && p.active)
-    .slice(0, 3);
-
-  const shopTheLookData: ShopLook[] = [
-    {
-      id: 1,
-      name: "Midnight Slip",
-      totalPrice: 23500,
-      image: "/images/boho/top-mili.avif",
-      products: [{ name: "Vestido Platt", price: 23500 }],
-    },
-    {
-      id: 2,
-      name: "Afterglow Set",
-      totalPrice: 15670,
-      image: "/images/noche/top-floyd.avif",
-      products: [{ name: "Set Feral", price: 15670 }],
-    },
-    {
-      id: 3,
-      name: "Crystal Mesh",
-      totalPrice: 12250,
-      image: "/images/boho/vestido-esme-fr.avif",
-      products: [{ name: "Set Seline", price: 12250 }],
-    }
-  ];
-
-  return (
-    <div className="min-h-screen bg-white">
-
-      {/* =====================================
-          HERO SIMPLIFICADO
-      ===================================== */}
-      <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-white px-6">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h1 className="text-5xl md:text-7xl font-light text-gray-900 tracking-tight leading-tight">
-            GAIA SIX
+    <div className="min-h-screen bg-white font-sans text-black">
+      {/* HERO MINIMAL */}
+      <section className="relative min-h-[85vh] flex items-center justify-center bg-[#F0F3F4]">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <div className="inline-block mb-6 px-4 py-1.5 bg-black text-white text-xs tracking-widest">
+            NUEVA COLECCIÓN
+          </div>
+          
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-light mb-6 leading-tight">
+            vestí la <span className="font-bold italic text-[#AF161F]">noche</span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Moda femenina con estilo único y sostenible
+
+          <p className="text-lg md:text-xl text-black/60 mb-12 font-light max-w-lg mx-auto">
+            siluetas audaces. boho rocker glam.
           </p>
-          <button
-            onClick={() => onNavigate("shop")}
-            className="border border-gray-900 text-gray-900 px-12 py-4 text-xs uppercase tracking-wider hover:bg-gray-900 hover:text-white transition-all duration-500 mt-8"
+
+          <Link 
+            href="/shop"
+            className="inline-block bg-black text-white px-10 py-3.5 text-sm hover:bg-[#AF161F] transition-colors"
           >
-            Descubrir Colección
-          </button>
+            explorar
+          </Link>
         </div>
       </section>
 
-      {/* =====================================
-          COLLAGE 
-      ===================================== */}
-      <section className="w-full">
-        <div className="grid grid-cols-1 md:grid-cols-4 h-screen md:h-[80vh]">
-          {/* Imagen grande - ocupa 2 columnas */}
-          <div className="md:col-span-2 relative group">
-            <Image
-              src={categories[0].image}
-              alt={categories[0].title}
-              fill
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-white p-8">
-              <h3 className="text-4xl font-light mb-3">{categories[0].title}</h3>
-              <p className="text-xl mb-8">{categories[0].subtitle}</p>
-              <button 
-                onClick={() => onNavigate("shop")}
-                className="border-2 border-white px-10 py-3 text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all"
-              >
-                Ver Colección
-              </button>
-            </div>
+      {/* FEATURED - Layout asimétrico */}
+      <section id="prendas" className="py-20 md:py-32 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="mb-16 md:mb-24">
+            <span className="text-xs text-[#AF161F] tracking-widest">IMPRESCINDIBLES</span>
+            <h2 className="text-3xl md:text-5xl font-light mt-2">destacados</h2>
           </div>
 
-          {/* Contenedor de las 2 imágenes apiladas */}
-          <div className="md:col-span-2 grid grid-rows-2">
-            {/* Imagen superior */}
-            <div className="relative group">
-              <Image
-                src={categories[1].image}
-                alt={categories[1].title}
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-white p-6">
-                <h3 className="text-3xl font-light mb-2">{categories[1].title}</h3>
-                <p className="text-lg mb-6">{categories[1].subtitle}</p>
-                <button 
-                  onClick={() => onNavigate("shop")}
-                  className="border border-white px-8 py-2 text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all"
-                >
-                  Ver Colección
-                </button>
+          <div className="grid md:grid-cols-2 gap-8 md:gap-16">
+            {featuredProducts.map((product, idx) => (
+              <div key={product.id} className={`group ${idx === 1 ? 'md:mt-24' : ''}`}>
+                <div className="relative bg-gray-100 aspect-[3/4] mb-6 overflow-hidden">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-all duration-700"></div>
+                </div>
+
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-base font-light mb-1">{product.name}</h3>
+                    <p className="text-lg font-medium">{formatPrice(product.price)}</p>
+                  </div>
+                  <Link 
+                    href={`/shop/product/${product.id}`}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity text-sm underline"
+                  >
+                    ver
+                  </Link>
+                </div>
               </div>
-            </div>
-
-            {/* Imagen inferior */}
-            <div className="relative group">
-              <Image
-                src={categories[2].image}
-                alt={categories[2].title}
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-white p-6">
-                <h3 className="text-3xl font-light mb-2">{categories[2].title}</h3>
-                <p className="text-lg mb-6">{categories[2].subtitle}</p>
-                <button 
-                  onClick={() => onNavigate("shop")}
-                  className="border border-white px-8 py-2 text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all"
-                >
-                  Ver Colección
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================
-          FEATURED PRODUCTS
-      ===================================== */}
-      <section className="py-24 px-6 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-xs uppercase tracking-widest text-gray-400 mb-3">
-              Lo último
-            </p>
-            <h2 className="text-3xl md:text-4xl font-light text-gray-900">
-              para tu próxima noche.
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-14">
-            {featuredProducts.map((product, index) => (
-              <FeaturedProduct
-                key={product.id}
-                product={product}
-                priority={index === 0}
-                onNavigate={onNavigate}
-              />
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="text-center mt-16">
-            <button
-              onClick={() => onNavigate("shop")}
-              className="border border-gray-300 text-gray-600 px-8 py-3 text-xs uppercase tracking-widest hover:border-black hover:text-black transition-all duration-300"
-            >
-              Explorar todo
-            </button>
+      {/* LOOKS - Grid limpio */}
+      <section id="looks" className="py-20 md:py-32 bg-[#F0F3F4]">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="mb-16 text-center">
+            <span className="text-xs text-[#AF161F] tracking-widest">INSPIRACIÓN</span>
+            <h2 className="text-3xl md:text-5xl font-light mt-2 mb-3">shop the look</h2>
+            <p className="text-sm text-black/50">armá tu outfit completo</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {looks.map((look) => (
+              <div key={look.id} className="group bg-white">
+                <div className="relative bg-gray-100 aspect-[3/4] overflow-hidden">
+                  <Image
+                    src={look.image}
+                    alt={look.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-all duration-700"></div>
+                </div>
+
+                <div className="p-6">
+                  <p className="text-xs text-black/40 mb-1">{look.description}</p>
+                  <h3 className="text-lg font-light mb-3">{look.name}</h3>
+                  <div className="flex justify-between items-center">
+                    <p className="text-lg font-medium">{formatPrice(look.price)}</p>
+                    <Link 
+                      href={`/shop/product/${look.id}`}
+                      className="text-xs underline hover:text-[#AF161F] transition-colors"
+                    >
+                      combinar
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* =====================================
-          VALORES
-      ===================================== */}
-      <section className="py-20 px-6 bg-[#fafafa]">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 text-center">
-            <div>
-              <p className="text-2xl font-light text-gray-900 mb-3">Envíos Gratis</p>
-              <p className="text-xs uppercase tracking-widest text-gray-500">
-                superando los $50.000
-              </p>
-            </div>
+      {/* OUTFITS - Cards minimalistas */}
+      <section className="py-20 md:py-32 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="mb-16">
+            <span className="text-xs text-[#AF161F] tracking-widest">COMPLETA TU ESTILO</span>
+            <h2 className="text-3xl md:text-5xl font-light mt-2">outfits</h2>
+          </div>
 
-            <div>
-              <p className="text-2xl font-light text-gray-900 mb-3">3 cuotas</p>
-              <p className="text-xs uppercase tracking-widest text-gray-500">
-                Sin interés
-              </p>
-            </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {outfitCombinations.map((outfit) => (
+              <div key={outfit.id} className="group">
+                <div className="relative bg-gray-100 aspect-square mb-6 overflow-hidden">
+                  <Image
+                    src={outfit.image}
+                    alt={outfit.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-all duration-700"></div>
+                </div>
 
-            <div>
-              <p className="text-2xl font-light text-gray-900 mb-3">7 días</p>
-              <p className="text-xs uppercase tracking-widest text-gray-500">
-                Para cambios
-              </p>
-            </div>
+                <h3 className="text-xl font-light mb-4">{outfit.name}</h3>
+
+                <div className="space-y-2 mb-6 text-sm">
+                  {outfit.items.map((item, index) => (
+                    <div key={index} className="flex justify-between text-black/60">
+                      <span>{item.name}</span>
+                      <span>{formatPrice(item.price)}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {outfit.items.length > 1 && (
+                  <div className="flex justify-between border-t border-black/10 pt-4 mb-6">
+                    <span className="text-sm">total</span>
+                    <span className="font-medium">{formatPrice(outfit.total)}</span>
+                  </div>
+                )}
+
+                <Link 
+                  href="/shop"
+                  className="block w-full bg-black text-white py-3 text-sm text-center hover:bg-[#AF161F] transition-colors"
+                >
+                  comprar
+                </Link>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
+      {/* FEATURES minimalistas */}
+      <section className="py-16 border-y border-black/10">
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12">
+          <div className="text-center">
+            <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="text-sm font-medium mb-1">envíos gratis</h3>
+            <p className="text-xs text-black/50">compras +$150.000</p>
+          </div>
+          
+          <div className="text-center">
+            <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+            </div>
+            <h3 className="text-sm font-medium mb-1">3 cuotas</h3>
+            <p className="text-xs text-black/50">sin interés</p>
+          </div>
+          
+          <div className="text-center">
+            <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </div>
+            <h3 className="text-sm font-medium mb-1">cambios</h3>
+            <p className="text-xs text-black/50">7 días</p>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER MINIMAL */}
+      <footer className="bg-black text-white py-16">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+            
+            <div>
+              <h3 className="text-xl font-light tracking-wide mb-3">
+                GAIA<span className="font-bold text-[#AF161F]">SIX</span>
+              </h3>
+              <p className="text-sm text-white/60 leading-relaxed">
+                moda nocturna con carácter
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-xs text-white/40 mb-4 tracking-widest">CONTACTO</h4>
+              <ul className="space-y-2 text-sm text-white/70">
+                <li>gaiashowroom@gmail.com</li>
+                <li>+54 9 2964 479923</li>
+                <li>@gaiasix</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-xs text-white/40 mb-4 tracking-widest">INFO</h4>
+              <ul className="space-y-2 text-sm text-white/70">
+                <li>envíos 24-72hs</li>
+                <li>3 cuotas sin interés</li>
+                <li>cambios 7 días</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-xs text-white/40 mb-4 tracking-widest">LINKS</h4>
+              <ul className="space-y-2 text-sm text-white/70">
+                <li><a href="#shop" className="hover:text-white transition-colors">tienda</a></li>
+                <li><a href="#about" className="hover:text-white transition-colors">nosotros</a></li>
+                <li><a href="#faq" className="hover:text-white transition-colors">FAQ</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/40">
+            <p>© 2025 GAIA SIX</p>
+            <div className="flex gap-6">
+              <a href="#terms" className="hover:text-white/70 transition-colors">términos</a>
+              <a href="#privacy" className="hover:text-white/70 transition-colors">privacidad</a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

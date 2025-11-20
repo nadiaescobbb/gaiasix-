@@ -1,10 +1,10 @@
-// components/layout/ClientLayout.tsx - CORREGIDO
 'use client'
 
 import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAppContext } from '../../context/AppContext';
-import Header from './Header'; // ✅ IMPORTAR EL HEADER
+import Header from './Header';
+import CartSidebar from './cart/CartSidebar';
 import { type Page } from '../../lib/types';
 
 export default function ClientLayout({
@@ -13,11 +13,24 @@ export default function ClientLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname();
-  const { isInitialized, currentUser, cartItemsCount, logout, wishlistItemsCount } = useAppContext();
+  const router = useRouter();
+  
+  const { 
+    isInitialized, 
+    currentUser, 
+    cart, 
+    cartItemsCount, 
+    cartTotal,
+    logout, 
+    wishlistItemsCount,
+    updateQuantity,
+    removeFromCart
+  } = useAppContext();
+  
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<Page>('home');
+  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
 
-  // Efecto para manejar transiciones de página
   useEffect(() => {
     if (isInitialized) {
       const timer = setTimeout(() => setIsLoading(false), 300);
@@ -25,12 +38,10 @@ export default function ClientLayout({
     }
   }, [isInitialized]);
 
-  // Efecto para resetear scroll al cambiar de página
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  // Determinar la página actual basado en la ruta
   useEffect(() => {
     if (pathname === '/') setCurrentPage('home');
     else if (pathname === '/shop') setCurrentPage('shop');
@@ -41,19 +52,64 @@ export default function ClientLayout({
     else if (pathname === '/wishlist') setCurrentPage('wishlist');
   }, [pathname]);
 
-  // Funciones de navegación
   const handleNavigate = (page: Page) => {
     setCurrentPage(page);
-    // Aquí puedes agregar la lógica de navegación con Next.js router si es necesario
-    console.log('Navegando a:', page);
+    
+    switch (page) {
+      case 'home':
+        router.push('/');
+        break;
+      case 'shop':
+        router.push('/shop');
+        break;
+      case 'about':
+        router.push('/about');
+        break;
+      case 'contact':
+        router.push('/contact');
+        break;
+      case 'auth':
+        router.push('/auth');
+        break;
+      case 'profile':
+        router.push('/profile');
+        break;
+      case 'wishlist':
+        router.push('/wishlist');
+        break;
+      default:
+        router.push('/');
+    }
   };
 
   const handleCartToggle = () => {
-    // Aquí va tu lógica para abrir/cerrar el carrito
-    console.log('Toggle carrito');
+    setIsCartOpen(!isCartOpen);
   };
 
-  // Mostrar loading mientras la app se inicializa
+  const handleUpdateQuantity = (productId: number, size: string, newQuantity: number) => {
+    updateQuantity(productId, size, newQuantity);
+  };
+
+  const handleRemoveItem = (productId: number, size: string) => {
+    removeFromCart(productId, size);
+  };
+
+  const handleCheckout = async () => {
+    if (!currentUser) {
+      router.push('/auth');
+      setIsCartOpen(false);
+      return;
+    }
+    
+    console.log('Iniciando checkout...');
+    setIsCartOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    router.push('/');
+  };
+
   if (!isInitialized || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
@@ -74,13 +130,24 @@ export default function ClientLayout({
         wishlistItemsCount={wishlistItemsCount}
         onNavigate={handleNavigate}
         onCartToggle={handleCartToggle}
-        onLogout={logout}
+        onLogout={handleLogout}
         currentPage={currentPage}
       />
       
       <main className="flex-1 w-full">
         {children}
       </main>
+
+      <CartSidebar 
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        cart={cart}
+        cartTotal={cartTotal}
+        onUpdateQuantity={handleUpdateQuantity}
+        onRemoveItem={handleRemoveItem}
+        onCheckout={handleCheckout}
+        currentUser={currentUser}
+      />
     </div>
   );
 }

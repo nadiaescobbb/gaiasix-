@@ -1,4 +1,3 @@
-// components/layout/Header.tsx - ACTUALIZADO CON LA PROP FALTANTE
 "use client";
 
 import { useState } from "react";
@@ -10,7 +9,7 @@ import { type User as UserType, type Page } from "../../lib/types";
 interface HeaderProps {
   currentUser: UserType | null;
   cartItemsCount: number;
-  wishlistItemsCount: number; // ✅ AGREGAR ESTA PROP
+  wishlistItemsCount: number;
   onNavigate: (page: Page) => void;
   onCartToggle: () => void;
   onLogout: () => void;
@@ -20,7 +19,7 @@ interface HeaderProps {
 export default function Header({
   currentUser,
   cartItemsCount,
-  wishlistItemsCount, // ✅ RECIBIR LA PROP
+  wishlistItemsCount,
   onNavigate,
   onCartToggle,
   onLogout,
@@ -73,7 +72,6 @@ export default function Header({
 
           {/* ICONOS */}
           <div className="flex items-center space-x-5">
-
             {/* Wishlist */}
             <button
               onClick={() => onNavigate("wishlist")}
@@ -81,7 +79,7 @@ export default function Header({
               aria-label="Tus favoritos"
             >
               <Heart size={22} className="text-gray-700" />
-              {wishlistItemsCount > 0 && ( // ✅ USAR LA PROP
+              {wishlistItemsCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {wishlistItemsCount > 9 ? "9+" : wishlistItemsCount}
                 </span>
@@ -156,7 +154,7 @@ export default function Header({
             >
               <Heart size={18} />
               Tus Favoritos
-              {wishlistItemsCount > 0 && ( // ✅ USAR LA PROP
+              {wishlistItemsCount > 0 && (
                 <span className="ml-auto bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {wishlistItemsCount}
                 </span>

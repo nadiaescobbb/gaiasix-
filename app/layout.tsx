@@ -34,7 +34,7 @@ export const metadata = {
 }
 
 // ===============================
-// ROOT LAYOUT -
+// ROOT LAYOUT
 // ===============================
 export default function RootLayout({
   children,
