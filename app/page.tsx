@@ -3,79 +3,48 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { getFeaturedProducts, products } from '../data/products';
 
-const featuredProducts = [
-  {
-    id: 1,
-    name: "TOP FLOYD",
-    price: 16720,
-    image: "/images/noche/top-floyd.avif",
-    category: "tops",
-  },
-  {
-    id: 2,
-    name: "TOP MILI",
-    price: 10680,
-    image: "/images/noche/top-mili.avif",
-    category: "tops",
-  }
-];
+// Obtener productos destacados reales
+const featuredProducts = getFeaturedProducts(2);
 
-const looks = [
-  {
-    id: 1,
-    name: "Midnight Slip",
-    description: "Vestido Platt",
-    price: 23500,
-    image: "/images/products/vestido-platt.avif",
-    outfit: true
-  },
-  {
-    id: 2,
-    name: "Afterglow Set",
-    description: "Set Feral",
-    price: 15670,
-    image: "/images/products/set-feral.avif",
-    outfit: true
-  },
-  {
-    id: 3,
-    name: "Crystal Mesh",
-    description: "Set Seline",
-    price: 12250,
-    image: "/images/products/set-seline.avif",
-    outfit: true
-  }
-];
+const looks = getFeaturedProducts(3).map(product => ({
+  id: product.id,
+  name: product.name,
+  description: product.category,
+  price: product.price,
+  image: product.image,
+  outfit: true
+}));
 
 const outfitCombinations = [
   {
     id: 1,
     name: "Drape Silhouette",
     items: [
-      { name: "Top Drape", price: 1350 },
-      { name: "Mini Trace", price: 1375 }
+      { name: "Top drape", price: 13550 },
+      { name: "Mini trace", price: 11375 }
     ],
     image: "/images/products/top-drape.avif",
-    total: 2725
+    total: 24925
   },
   {
     id: 2,
     name: "Night Lines",
     items: [
-      { name: "Top Fylo", price: 1350 },
-      { name: "Mini Lark", price: 1105 }
+      { name: "Top fylo", price: 13550 },
+      { name: "Mini lark", price: 11125 }
     ],
     image: "/images/products/top-fylo.avif",
-    total: 2455
+    total: 24675
   },
   {
     id: 3,
     name: "Black Icon",
     items: [
-      { name: "Vestido Stun", price: 21500 }
+      { name: "Vestido stun", price: 21500 }
     ],
-    image: "/images/noche/vestido-stun.AVIF", 
+    image: "/images/noche/vestido-stun.avif", 
     total: 21500
   }
 ];
@@ -133,12 +102,23 @@ export default function HomePage() {
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-all duration-700"></div>
+                  
+                  {/* Badges */}
+                  <div className="absolute top-3 left-3 flex gap-2">
+                    {product.new && (
+                      <span className="bg-[#AF161F] text-white px-2 py-1 text-xs">Nuevo</span>
+                    )}
+                    {product.featured && (
+                      <span className="bg-black text-white px-2 py-1 text-xs">Destacado</span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-base font-light mb-1">{product.name}</h3>
+                    <h3 className="text-base font-light mb-1 capitalize">{product.name}</h3>
                     <p className="text-lg font-medium">{formatPrice(product.price)}</p>
+                    <p className="text-sm text-black/50 capitalize">{product.category}</p>
                   </div>
                   <Link 
                     href={`/shop/product/${product.id}`}
@@ -157,7 +137,7 @@ export default function HomePage() {
       <section id="looks" className="py-20 md:py-32 bg-[#F0F3F4]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-16 text-center">
-            <span className="text-xs text-[#AF161F] tracking-widest">shop the look  </span>
+            <span className="text-xs text-[#AF161F] tracking-widest">shop the look</span>
             <h2 className="text-3xl md:text-5xl font-light mt-2 mb-3">outfit u love</h2>
           </div>
 
@@ -176,8 +156,8 @@ export default function HomePage() {
                 </div>
 
                 <div className="p-6">
-                  <p className="text-xs text-black/40 mb-1">{look.description}</p>
-                  <h3 className="text-lg font-light mb-3">{look.name}</h3>
+                  <p className="text-xs text-black/40 mb-1 capitalize">{look.description}</p>
+                  <h3 className="text-lg font-light mb-3 capitalize">{look.name}</h3>
                   <div className="flex justify-between items-center">
                     <p className="text-lg font-medium">{formatPrice(look.price)}</p>
                     <Link 
@@ -221,7 +201,7 @@ export default function HomePage() {
                 <div className="space-y-2 mb-6 text-sm">
                   {outfit.items.map((item, index) => (
                     <div key={index} className="flex justify-between text-black/60">
-                      <span>{item.name}</span>
+                      <span className="capitalize">{item.name}</span>
                       <span>{formatPrice(item.price)}</span>
                     </div>
                   ))}
@@ -316,7 +296,7 @@ export default function HomePage() {
             <div>
               <h4 className="text-xs text-white/40 mb-4 tracking-widest">LINKS</h4>
               <ul className="space-y-2 text-sm text-white/70">
-                <li><a href="#shop" className="hover:text-white transition-colors">tienda</a></li>
+                <li><Link href="/shop" className="hover:text-white transition-colors">tienda</Link></li>
                 <li><a href="#about" className="hover:text-white transition-colors">nosotros</a></li>
                 <li><a href="#faq" className="hover:text-white transition-colors">FAQ</a></li>
               </ul>
