@@ -1,20 +1,22 @@
 "use client";
 
 import { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 const featuredProducts = [
   {
     id: 1,
     name: "TOP FLOYD",
     price: 16720,
-    image: "images/noche/top-floyd.avif",
+    image: "/images/noche/top-floyd.avif",
     category: "tops",
   },
   {
     id: 2,
     name: "TOP MILI",
     price: 10680,
-    image: "images/noche/top-mili.avif",
+    image: "/images/noche/top-mili.avif",
     category: "tops",
   }
 ];
@@ -25,7 +27,7 @@ const looks = [
     name: "Midnight Slip",
     description: "Vestido Platt",
     price: 23500,
-    image: "images/products/vestido-platt.avif",
+    image: "/images/products/vestido-platt.avif",
     outfit: true
   },
   {
@@ -33,7 +35,7 @@ const looks = [
     name: "Afterglow Set",
     description: "Set Feral",
     price: 15670,
-    image: "images/products/set-feral.avif",
+    image: "/images/products/set-feral.avif",
     outfit: true
   },
   {
@@ -41,7 +43,7 @@ const looks = [
     name: "Crystal Mesh",
     description: "Set Seline",
     price: 12250,
-    image: "images/products/set-seline.avif",
+    image: "/images/products/set-seline.avif",
     outfit: true
   }
 ];
@@ -54,7 +56,7 @@ const outfitCombinations = [
       { name: "Top Drape", price: 1350 },
       { name: "Mini Trace", price: 1375 }
     ],
-    image: "images/products/top-drape.avif",
+    image: "/images/products/top-drape.avif",
     total: 2725
   },
   {
@@ -64,7 +66,7 @@ const outfitCombinations = [
       { name: "Top Fylo", price: 1350 },
       { name: "Mini Lark", price: 1105 }
     ],
-    image: "images/products/top-fylo.avif",
+    image: "/images/products/top-fylo.avif",
     total: 2455
   },
   {
@@ -73,87 +75,19 @@ const outfitCombinations = [
     items: [
       { name: "Vestido Stun", price: 21500 }
     ],
-    image: "images/noche/vestido-stun.avif",
+    image: "/images/noche/vestido-stun.AVIF", // ✅ Cambiar extensión
     total: 21500
   }
 ];
 
 export default function HomePage() {
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  // ✅ CORREGIDO - Agregar tipo number al parámetro price
   const formatPrice = (price: number) => {
     return `$${price.toLocaleString('es-AR')}`;
   };
 
   return (
     <div className="min-h-screen bg-white font-sans text-black">
-      {/* HEADER MINIMAL */}
-      <header className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-black/5">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo minimalista */}
-            <div className="flex items-center">
-              <h1 className="text-xl md:text-2xl font-light tracking-wide">
-                GAIA<span className="font-bold text-[#AF161F]">SIX</span>
-              </h1>
-            </div>
-
-            {/* Nav Desktop */}
-            <nav className="hidden md:flex items-center gap-8">
-              <a href="#prendas" className="text-sm text-black/70 hover:text-black transition-colors">
-                prendas
-              </a>
-              <a href="#looks" className="text-sm text-black/70 hover:text-black transition-colors">
-                looks
-              </a>
-              <a href="#marca" className="text-sm text-black/70 hover:text-black transition-colors">
-                la marca
-              </a>
-            </nav>
-
-            {/* Icons minimal */}
-            <div className="flex items-center gap-4">
-              <button className="p-2 text-black/70 hover:text-black transition-colors hidden md:block">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
-              <button className="p-2 text-black/70 hover:text-black transition-colors relative">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                </svg>
-              </button>
-              
-              <button 
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="md:hidden p-2"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  {menuOpen ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  ) : (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  )}
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Menu Mobile */}
-        {menuOpen && (
-          <div className="md:hidden bg-white border-t border-black/5">
-            <nav className="flex flex-col gap-1 p-4">
-              <a href="#prendas" className="text-sm py-3 text-black/70 hover:text-black">prendas</a>
-              <a href="#looks" className="text-sm py-3 text-black/70 hover:text-black">looks</a>
-              <a href="#marca" className="text-sm py-3 text-black/70 hover:text-black">la marca</a>
-            </nav>
-          </div>
-        )}
-      </header>
-
-      <div className="h-16"></div>
+      {/* ❌ NO HEADER AQUÍ - Se usa el de components/layout/Header.tsx */}
 
       {/* HERO MINIMAL */}
       <section className="relative min-h-[85vh] flex items-center justify-center bg-[#F0F3F4]">
@@ -170,12 +104,12 @@ export default function HomePage() {
             siluetas audaces. boho rocker glam.
           </p>
 
-          <a 
-            href="#prendas"
+          <Link 
+            href="/shop"
             className="inline-block bg-black text-white px-10 py-3.5 text-sm hover:bg-[#AF161F] transition-colors"
           >
             explorar
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -189,24 +123,29 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-2 gap-8 md:gap-16">
             {featuredProducts.map((product, idx) => (
-              <div 
-                key={product.id} 
-                className={`group ${idx === 1 ? 'md:mt-24' : ''}`}
-              >
-                <div className="relative bg-[#F0F3F4] aspect-[3/4] mb-6 overflow-hidden">
+              <div key={product.id} className={`group ${idx === 1 ? 'md:mt-24' : ''}`}>
+                <div className="relative bg-gray-100 aspect-[3/4] mb-6 overflow-hidden">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-all duration-700"></div>
                 </div>
 
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-base font-light mb-1">
-                      {product.name}
-                    </h3>
+                    <h3 className="text-base font-light mb-1">{product.name}</h3>
                     <p className="text-lg font-medium">{formatPrice(product.price)}</p>
                   </div>
-                  <button className="opacity-0 group-hover:opacity-100 transition-opacity text-sm underline">
+                  <Link 
+                    href={`/shop/product/${product.id}`}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity text-sm underline"
+                  >
                     ver
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -218,28 +157,35 @@ export default function HomePage() {
       <section id="looks" className="py-20 md:py-32 bg-[#F0F3F4]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-16 text-center">
-            <span className="text-xs text-[#AF161F] tracking-widest">INSPIRACIÓN</span>
-            <h2 className="text-3xl md:text-5xl font-light mt-2 mb-3">shop the look</h2>
-            <p className="text-sm text-black/50">armá tu outfit completo</p>
+            <span className="text-xs text-[#AF161F] tracking-widest">shop the look  </span>
+            <h2 className="text-3xl md:text-5xl font-light mt-2 mb-3">outfit u love</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {looks.map((look) => (
               <div key={look.id} className="group bg-white">
-                <div className="relative bg-[#F0F3F4] aspect-[3/4] overflow-hidden">
+                <div className="relative bg-gray-100 aspect-[3/4] overflow-hidden">
+                  <Image
+                    src={look.image}
+                    alt={look.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-all duration-700"></div>
                 </div>
 
                 <div className="p-6">
                   <p className="text-xs text-black/40 mb-1">{look.description}</p>
-                  <h3 className="text-lg font-light mb-3">
-                    {look.name}
-                  </h3>
+                  <h3 className="text-lg font-light mb-3">{look.name}</h3>
                   <div className="flex justify-between items-center">
                     <p className="text-lg font-medium">{formatPrice(look.price)}</p>
-                    <button className="text-xs underline hover:text-[#AF161F] transition-colors">
+                    <Link 
+                      href={`/shop/product/${look.id}`}
+                      className="text-xs underline hover:text-[#AF161F] transition-colors"
+                    >
                       combinar
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -259,7 +205,14 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-8">
             {outfitCombinations.map((outfit) => (
               <div key={outfit.id} className="group">
-                <div className="relative bg-[#F0F3F4] aspect-square mb-6 overflow-hidden">
+                <div className="relative bg-gray-100 aspect-square mb-6 overflow-hidden">
+                  <Image
+                    src={outfit.image}
+                    alt={outfit.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-all duration-700"></div>
                 </div>
 
@@ -281,9 +234,12 @@ export default function HomePage() {
                   </div>
                 )}
 
-                <button className="w-full bg-black text-white py-3 text-sm hover:bg-[#AF161F] transition-colors">
+                <Link 
+                  href="/shop"
+                  className="block w-full bg-black text-white py-3 text-sm text-center hover:bg-[#AF161F] transition-colors"
+                >
                   comprar
-                </button>
+                </Link>
               </div>
             ))}
           </div>
