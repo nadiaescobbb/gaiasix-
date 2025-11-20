@@ -81,8 +81,9 @@ const outfitCombinations = [
 export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const formatPrice = (price) => {
-    return `${price.toLocaleString('es-AR')}`;
+  // ✅ CORREGIDO - Agregar tipo number al parámetro price
+  const formatPrice = (price: number) => {
+    return `$${price.toLocaleString('es-AR')}`;
   };
 
   return (
