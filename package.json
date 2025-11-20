@@ -1,8 +1,6 @@
 {
   "name": "gaia-six",
   "version": "1.0.0",
-  "description": "E-commerce de ropa femenina - Gaia Six",
-  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,25 +8,19 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "avif": "^0.5.3",
-    "bcryptjs": "^3.0.3",
-    "embla-carousel-react": "^8.6.0",
-    "lucide-react": "^0.263.1",
-    "next": "^14.2.0",
+    "lucide-react": "latest",
+    "next": "^16.0.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "sharp": "^0.34.5",
-    "use-debounce": "^10.0.6"
+    "use-debounce": "latest"
   },
   "devDependencies": {
-    "@types/node": "^20.19.25",
-    "@types/react": "^18.3.27",
-    "@types/react-dom": "^18",
-    "autoprefixer": "^10.4.20",
-    "eslint": "^8",
-    "eslint-config-next": "^14.2.0",
-    "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.1",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.6",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "10.4.0",
+    "postcss": "8.4.0",
+    "tailwindcss": "3.3.0",
     "typescript": "^5.9.3"
   }
 }
