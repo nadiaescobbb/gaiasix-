@@ -1,5 +1,3 @@
-// 📄 ARCHIVO: app/layout.tsx - CORREGIDO
-
 import './globals.css'
 import localFont from 'next/font/local'
 import { AppProvider } from '../context/AppContext'
@@ -7,7 +5,7 @@ import { ToastProvider } from '../context/ToastContext'
 import ClientLayout from '../components/layout/ClientLayout'
 
 // ===============================
-// FUENTES LOCALES - CORREGIDAS
+// FUENTES LOCALES
 // ===============================
 const galiscka = localFont({
   src: '../fonts/galiscka.woff2',  
@@ -36,7 +34,7 @@ export const metadata = {
 }
 
 // ===============================
-// ROOT LAYOUT
+// ROOT LAYOUT -
 // ===============================
 export default function RootLayout({
   children,

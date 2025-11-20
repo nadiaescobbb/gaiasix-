@@ -1,3 +1,4 @@
+// components/layout/Header.tsx - ACTUALIZADO CON LA PROP FALTANTE
 "use client";
 
 import { useState } from "react";
@@ -9,6 +10,7 @@ import { type User as UserType, type Page } from "../../lib/types";
 interface HeaderProps {
   currentUser: UserType | null;
   cartItemsCount: number;
+  wishlistItemsCount: number; // ✅ AGREGAR ESTA PROP
   onNavigate: (page: Page) => void;
   onCartToggle: () => void;
   onLogout: () => void;
@@ -18,13 +20,13 @@ interface HeaderProps {
 export default function Header({
   currentUser,
   cartItemsCount,
+  wishlistItemsCount, // ✅ RECIBIR LA PROP
   onNavigate,
   onCartToggle,
   onLogout,
   currentPage = "home",
 }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
-  const { wishlistItemsCount } = useAppContext();
 
   const isActive = (page: Page): boolean => currentPage === page;
 
@@ -49,7 +51,7 @@ export default function Header({
           </button>
 
           {/* NAV DESKTOP */}
-          <nav className="hidden md:flex items-center space-x-10 font-title tracking-widest text-sm">
+          <nav className="hidden md:flex items-center space-x-10 font-title text-sm">
             {[
               { label: "Prendas", page: "shop" },
               { label: "La Marca", page: "about" },
@@ -79,7 +81,7 @@ export default function Header({
               aria-label="Tus favoritos"
             >
               <Heart size={22} className="text-gray-700" />
-              {wishlistItemsCount > 0 && (
+              {wishlistItemsCount > 0 && ( // ✅ USAR LA PROP
                 <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {wishlistItemsCount > 9 ? "9+" : wishlistItemsCount}
                 </span>
@@ -154,7 +156,7 @@ export default function Header({
             >
               <Heart size={18} />
               Tus Favoritos
-              {wishlistItemsCount > 0 && (
+              {wishlistItemsCount > 0 && ( // ✅ USAR LA PROP
                 <span className="ml-auto bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {wishlistItemsCount}
                 </span>

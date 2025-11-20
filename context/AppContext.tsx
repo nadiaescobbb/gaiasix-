@@ -1,4 +1,4 @@
-// 📄 ARCHIVO: context/AppContext.tsx - CORREGIDO
+// 📄 ARCHIVO: context/AppContext.tsx - COMPLETO Y CORREGIDO
 
 "use client";
 
@@ -418,7 +418,7 @@ export function AppProvider({ children }: AppProviderProps) {
   }, []);
 
   // ==========================================
-  // WISHLIST ACTIONS
+  // WISHLIST ACTIONS - ✅ CORREGIDO
   // ==========================================
   
   const addToWishlist = useCallback((product: Product): void => {
@@ -428,26 +428,24 @@ export function AppProvider({ children }: AppProviderProps) {
         return prevWishlist;
       }
       
-      // En AppContext.tsx - CORREGIDO
-
-const wishlistItem: WishlistItem = {
-  id: product.id,
-  name: product.name,
-  price: product.price,
-  image: product.image,
-  category: product.category,
-  stock: product.stock,
-  sizes: product.sizes,
-  slug: product.slug, // ✅ AGREGAR ESTA LÍNEA
-  addedAt: new Date().toISOString(),
-  // Incluye otras propiedades de Product si son necesarias
-  description: product.description,
-  featured: product.featured,
-  color: product.color,
-  material: product.material,
-  care: product.care,
-  active: product.active,
-};
+      // ✅ CÓDIGO COMPLETO Y CORREGIDO
+      const wishlistItem: WishlistItem = {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        category: product.category,
+        stock: product.stock,
+        sizes: product.sizes,
+        slug: product.slug,
+        addedAt: new Date().toISOString(),
+        description: product.description,
+        featured: product.featured,
+        color: product.color,
+        material: product.material,
+        care: product.care,
+        active: product.active,
+      };
       
       return [...prevWishlist, wishlistItem];
     });
@@ -475,6 +473,12 @@ const wishlistItem: WishlistItem = {
         stock: wishlistItem.stock,
         sizes: wishlistItem.sizes,
         slug: wishlistItem.slug,
+        description: wishlistItem.description,
+        featured: wishlistItem.featured,
+        color: wishlistItem.color,
+        material: wishlistItem.material,
+        care: wishlistItem.care,
+        active: wishlistItem.active,
       };
       addToCart(product, size);
       removeFromWishlist(productId);
@@ -485,7 +489,6 @@ const wishlistItem: WishlistItem = {
     setWishlist([]);
     removeStorageItem('gaia-wishlist');
   }, []);
-
 
   // ==========================================
   // COMPUTED VALUES
