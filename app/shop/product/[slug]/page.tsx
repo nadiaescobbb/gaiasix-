@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { ArrowLeft, ShoppingCart, Package, Truck, RefreshCw } from 'lucide-react';
 
-// ✅ IMPORTACIONES CORREGIDAS
+// ✅ IMPORTACIONES 
 import { formatPrice } from '../../../../utils/formatters';
 import { WishlistButton } from '../../../../components/ui/WishlistButton';
 import { type Product } from '../../../../lib/types';
