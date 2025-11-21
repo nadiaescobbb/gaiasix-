@@ -508,3 +508,4 @@ export const getFeaturedProducts = (limit: number = 3): Product[] => {
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
   validateProducts();
 }
+
