@@ -4,7 +4,7 @@ import { useState, ChangeEvent, FormEvent } from 'react';
 import { Mail, Lock, User, Phone, AlertCircle, CheckCircle } from 'lucide-react';
 
 // ✅ IMPORTACIONES 
-import { type LoginResult, type RegisterResult, type RegisterUserData } from '../../lib/types';
+import { type LoginResult, type RegisterResult, type RegisterUserData } from '../../../lib/types';
 
 // ===================================================
 // TYPES
