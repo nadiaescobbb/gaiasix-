@@ -3,10 +3,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { formatPrice } from '../../../../utils/formatters';
-import { type Product } from '../../../../lib/types';
-import { useAppContext } from '../../../../context/AppContext';
-import { WishlistButton } from '../../../../components/ui/WishlistButton';
+import { formatPrice } from '../../../utils/formatters';
+import { type Product } from '../../../lib/types';
+import { useAppContext } from '../../../context/AppContext';
+import { WishlistButton } from '../../../components/ui/WishlistButton';
 
 // ===================================================
 // TYPES

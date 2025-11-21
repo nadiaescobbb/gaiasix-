@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
-import { products, categories } from '../../../../data/products';
-import { formatPrice } from '../../../../utils/formatters';
-import { type Product } from '../../../../lib/types';
+import { products, categories } from '../../../data/products';
+import { formatPrice } from '../../../utils/formatters';
+import { type Product } from '../../../lib/types';
 import CategoryProducts from './CategoryProducts';
 
 // ===================================================
