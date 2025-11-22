@@ -80,7 +80,7 @@ const outfitCombinations = [
   }
 ];
 
-// Slides del carrusel hero - REEMPLAZA CON TUS IMÁGENES
+// Slides del carrusel hero 
 const heroSlides = [
   {
     id: 1,
@@ -88,7 +88,7 @@ const heroSlides = [
     title: "vestí la",
     titleHighlight: "noche",
     subtitle: "siluetas audaces. boho rocker glam.",
-    image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1600&h=900&fit=crop&q=80",
+    image: "/images/boho/vestido-rio.avif",
     cta: "explorar colección"
   },
   {
@@ -97,7 +97,7 @@ const heroSlides = [
     title: "estilo",
     titleHighlight: "único",
     subtitle: "diseños que te hacen brillar. elegancia urbana.",
-    image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1600&h=900&fit=crop&q=80",
+    image: "/images/boho/pollera-nala.avif",
     cta: "ver nuevos arrivals"
   },
   {
@@ -106,7 +106,7 @@ const heroSlides = [
     title: "moda",
     titleHighlight: "atemporal",
     subtitle: "actitud y elegancia en cada prenda.",
-    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1600&h=900&fit=crop&q=80",
+    image: "/images/boho/vestido-isla-fr.avif",
     cta: "descubrir lookbook"
   }
 ];
@@ -158,7 +158,6 @@ export default function HomePage() {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  // ✅ CORREGIDO: Agregar tipo al parámetro price
   const formatPrice = (price: number) => {
     return `$${price.toLocaleString('es-AR')}`;
   };
