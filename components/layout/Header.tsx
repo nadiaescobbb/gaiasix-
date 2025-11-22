@@ -50,7 +50,7 @@ export default function Header() {
               <img
                 src="/gaialogo-header.png"
                 alt="GAIA SIX"
-                className="w-auto h-10 md:h-12 object-contain"
+                className="w-auto h-16 md:h-24 object-contain"
               />
             </a>
 
