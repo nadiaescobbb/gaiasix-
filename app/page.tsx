@@ -84,32 +84,33 @@ const outfitCombinations = [
 const heroSlides = [
   {
     id: 1,
-    tag: "NUEVA COLECCIÓN",
-    title: "vestí la",
-    titleHighlight: "noche",
-    subtitle: "siluetas audaces. boho rocker glam.",
+    tag: "noche",
+    title: "prendas para",
+    titleHighlight: "salir",
+    subtitle: "nuevas piezas que no fallan",
     image: "/images/boho/vestido-rio.avif",
-    cta: "explorar colección"
+    cta: "ver prendas"
   },
   {
     id: 2,
-    tag: "EXCLUSIVO",
-    title: "estilo",
-    titleHighlight: "único",
-    subtitle: "diseños que te hacen brillar. elegancia urbana.",
+    tag: "sixerclub",
+    title: "beneficios",
+    titleHighlight: "sixer",
+    subtitle: "10% off + cuotas + envíos gratis",
     image: "/images/boho/pollera-nala.avif",
-    cta: "ver nuevos arrivals"
+    cta: "activar"
   },
   {
     id: 3,
-    tag: "TENDENCIA 2025",
-    title: "moda",
-    titleHighlight: "atemporal",
-    subtitle: "actitud y elegancia en cada prenda.",
+    tag: "tendencia 2025",
+    title: "prendas",
+    titleHighlight: "que acompañan",
+    subtitle: "fáciles de combinar",
     image: "/images/boho/vestido-isla-fr.avif",
-    cta: "descubrir lookbook"
+    cta: "ver prendas"
   }
 ];
+
 
 // Definir tipos para TypeScript
 interface Product {
@@ -306,13 +307,13 @@ export default function HomePage() {
       </section>
 
       {/* ========================================
-          ✨ FEATURED - Layout asimétrico
+          ✨ FEATURED 
           ======================================== */}
       <section id="prendas" className="py-20 md:py-32 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-16 md:mb-24">
-            <span className="text-xs text-[#AF161F] tracking-[0.2em] uppercase font-medium">IMPRESCINDIBLES</span>
-            <h2 className="text-4xl md:text-6xl font-light mt-3 text-balance">destacados</h2>
+            <span className="text-xs text-[#AF161F] tracking-[0.2em] uppercase font-medium">DESTACADOS</span>
+            <h2 className="text-4xl md:text-6xl font-light mt-3 text-balance">lo más elegido</h2>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 md:gap-16">
@@ -329,10 +330,7 @@ export default function HomePage() {
                   {/* Badges */}
                   <div className="absolute top-4 left-4 flex gap-2">
                     {product.new && (
-                      <span className="bg-[#AF161F] text-white px-3 py-1.5 text-xs tracking-wider uppercase">Nuevo</span>
-                    )}
-                    {product.featured && (
-                      <span className="bg-black text-white px-3 py-1.5 text-xs tracking-wider uppercase">Destacado</span>
+                      <span className="bg-[#AF161F] text-white px-3 py-1.5 text-xs tracking-wider uppercase">Reingreso</span>
                     )}
                   </div>
 
@@ -367,7 +365,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-16 text-center">
             <span className="text-xs text-[#AF161F] tracking-[0.2em] uppercase font-medium">SHOP THE LOOK</span>
-            <h2 className="text-4xl md:text-6xl font-light mt-3 text-balance">outfit u love</h2>
+            <h2 className="text-4xl md:text-6xl font-light mt-3 text-balance">looks para salir</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -383,7 +381,9 @@ export default function HomePage() {
                 </div>
 
                 <div className="p-6">
-                  <p className="text-xs text-black/40 mb-1 capitalize tracking-wider">{look.description}</p>
+                 <p className="text-xs text-black/40 mb-1 capitalize tracking-wider">
+                  {look.description}
+                </p>
                   <h3 className="text-lg font-light mb-3 capitalize">{look.name}</h3>
                   <div className="flex justify-between items-center">
                     <p className="text-lg font-medium">{formatPrice(look.price)}</p>
@@ -391,7 +391,7 @@ export default function HomePage() {
                       href={`#product-${look.id}`}
                       className="text-xs underline hover:text-[#AF161F] transition-colors uppercase tracking-wider"
                     >
-                      combinar
+                      armar look
                     </a>
                   </div>
                 </div>
@@ -402,13 +402,13 @@ export default function HomePage() {
       </section>
 
       {/* ========================================
-          🎯 OUTFITS - Combinaciones
+          🎯 OUTFITS 
           ======================================== */}
       <section className="py-20 md:py-32 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-16">
             <span className="text-xs text-[#AF161F] tracking-[0.2em] uppercase font-medium">COMPLETA TU ESTILO</span>
-            <h2 className="text-4xl md:text-6xl font-light mt-3 text-balance">outfits</h2>
+            <h2 className="text-4xl md:text-6xl font-light mt-3 text-balance">inspo para usar ya</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -426,7 +426,6 @@ export default function HomePage() {
                   <h3 className="text-xl font-light mb-4">{outfit.name}</h3>
 
                   <div className="space-y-2 mb-6 text-sm">
-                    {/* ✅ CORREGIDO: Agregar tipos a los parámetros del map */}
                     {outfit.items.map((item: OutfitItem, index: number) => (
                       <div key={index} className="flex justify-between text-black/60">
                         <span className="capitalize">{item.name}</span>
@@ -467,7 +466,7 @@ export default function HomePage() {
               </svg>
             </div>
             <h3 className="text-sm font-medium mb-1 tracking-wider uppercase">envíos gratis</h3>
-            <p className="text-xs text-black/50">compras +$150.000</p>
+            <p className="text-xs text-black/50">en compras desde $150.000</p>
           </div>
           
           <div className="text-center">
@@ -476,7 +475,7 @@ export default function HomePage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
               </svg>
             </div>
-            <h3 className="text-sm font-medium mb-1 tracking-wider uppercase">3 cuotas</h3>
+            <h3 className="text-sm font-medium mb-1 tracking-wider uppercase">6 cuotas</h3>
             <p className="text-xs text-black/50">sin interés</p>
           </div>
           
@@ -487,7 +486,7 @@ export default function HomePage() {
               </svg>
             </div>
             <h3 className="text-sm font-medium mb-1 tracking-wider uppercase">cambios</h3>
-            <p className="text-xs text-black/50">7 días</p>
+            <p className="text-xs text-black/50">dentro de los 7 días</p>
           </div>
         </div>
       </section>
@@ -504,7 +503,7 @@ export default function HomePage() {
                 GAIA<span className="font-normal text-[#AF161F]">SIX</span>
               </h3>
               <p className="text-sm text-white/60 leading-relaxed">
-                moda nocturna con carácter
+                ropa para salir, sin complicarte
               </p>
             </div>
 
@@ -520,9 +519,9 @@ export default function HomePage() {
             <div>
               <h4 className="text-xs text-white/40 mb-4 tracking-[0.2em] uppercase">INFO</h4>
               <ul className="space-y-2 text-sm text-white/70">
-                <li>envíos 24-72hs</li>
-                <li>3 cuotas sin interés</li>
-                <li>cambios 7 días</li>
+                <li>envíos 24-48hs</li>
+                <li>6 cuotas sin interés</li>
+                <li>cambios  dentro de los 7 días</li>
               </ul>
             </div>
 
