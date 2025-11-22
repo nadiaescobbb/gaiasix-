@@ -1,115 +1,242 @@
-import { ReactNode } from 'react';
+"use client";
 
-// ===================================================
-// TYPES
-// ===================================================
+import { useState } from 'react';
 
-interface ShopLayoutProps {
-  children: ReactNode;
+// Definir tipos TypeScript
+interface Product {
+  id: number;
+  name: string;
+  category: string;
+  price: number;
+  image: string;
+  colors: string[];
+  new: boolean;
+  stock: number;
 }
 
-// ===================================================
-// SHOP LAYOUT COMPONENT
-// ===================================================
+interface Category {
+  id: string;
+  name: string;
+}
 
-export default function ShopLayout({ children }: ShopLayoutProps) {
+// Simulación de datos
+const products: Product[] = [
+  {
+    id: 1,
+    name: "VESTIDO STUN",
+    category: "vestidos",
+    price: 21500,
+    image: "/images/noche/vestido-stun.avif",
+    colors: ['black'],
+    new: true,
+    stock: 1,
+  },
+  {
+    id: 2,
+    name: "TOP DRAPE",
+    category: "tops",
+    price: 13550,
+    image: "/images/products/top-drape.avif",
+    colors: ['black', 'red'],
+    new: false,
+    stock: 2,
+  },
+  {
+    id: 3,
+    name: "MINI TRACE",
+    category: "polleras",
+    price: 11375,
+    image: "/images/products/mini-tracee.avif",
+    colors: ['black'],
+    new: false,
+    stock: 1,
+  },
+  {
+    id: 4,
+    name: "TOP FYLO",
+    category: "tops",
+    price: 13550,
+    image: "/images/products/top-fylo.avif",
+    colors: ['black'],
+    new: true,
+    stock: 1,
+  },
+  {
+    id: 5,
+    name: "top black",
+    category: "tops",
+    price: 12200,
+    image: "/images/products/top-black.avif",
+    colors: ['black'],
+    new: false,
+    stock: 1,
+  },
+  {
+    id: 6,
+    name: "short texas",
+    category: "short",
+    price: 51040,
+    image: "/images/noche/short-texas.avif",
+    colors: ['camel', 'marron'],
+    new: false,
+    stock: 2,
+  },
+  {
+    id: 7,
+    name: "top tini",
+    category: "tops",
+    price: 12800,
+    image: "/images/products/top-tini.avif",
+    colors: ['black'],
+    new: true,
+    stock: 1,
+  },
+  {
+    id: 8,
+    name: "top halter",
+    category: "tops",
+    price: 18900,
+    image: "/images/products/top-halter.avif",
+    colors: ['gris'],
+    new: false,
+    stock: 1,
+  },
+];
+
+const categories: Category[] = [
+  { id: 'all', name: 'TODOS' },
+  { id: 'vestidos', name: 'VESTIDOS' },
+  { id: 'tops', name: 'TOPS' },
+  { id: 'polleras', name: 'POLLERAS' },
+  { id: 'short', name: 'SHORT' },
+];
+
+export default function ShopPage() {
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  const formatPrice = (price: number): string => {
+    return `$${price.toLocaleString('es-AR')}`;
+  };
+
+  const filteredProducts = selectedCategory === 'all' 
+    ? products 
+    : products.filter(p => p.category === selectedCategory);
+
+  const getColorStyle = (color: string): string => {
+    const colors: Record<string, string> = {
+      'black': '#000000',
+      'white': '#FFFFFF',
+      'red': '#AF161F',
+      'beige': '#D4B996',
+    };
+    return colors[color] || color; 
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex gap-8">
-          {/* Sidebar de categorías - Desktop */}
-          <aside className="hidden lg:block w-64 flex-shrink-0 py-8">
-            <div className="sticky top-24 space-y-6">
-              <div>
-                <h3 className="text-sm uppercase tracking-widest text-gray-500 mb-4">
-                  Categorías
-                </h3>
-                <nav className="space-y-2">
-                  <CategoryLink href="/shop" label="Todos los productos" />
-                  <CategoryLink href="/shop/vestidos" label="Vestidos" />
-                  <CategoryLink href="/shop/tops" label="Tops" />
-                  <CategoryLink href="/shop/sets" label="Sets" />
-                  <CategoryLink href="/shop/faldas" label="Faldas" />
-                  <CategoryLink href="/shop/short" label="Shorts" />
-                </nav>
-              </div>
-
-              {/* Filtros adicionales */}
-              <div className="pt-6 border-t border-gray-200">
-                <h3 className="text-sm uppercase tracking-widest text-gray-500 mb-4">
-                  Filtros
-                </h3>
-                <div className="space-y-3">
-                  <FilterOption label="Nuevos ingresos" />
-                  <FilterOption label="Más vendidos" />
-                  <FilterOption label="En oferta" />
-                </div>
-              </div>
-
-              {/* Información de envío */}
-              <div className="pt-6 border-t border-gray-200">
-                <div className="text-xs text-gray-500 space-y-2">
-                  <p>🚚 Envío gratis desde $150.000</p>
-                  <p>💳 3 cuotas sin interés</p>
-                  <p>↩️ 7 días para cambios</p>
-                </div>
-              </div>
-            </div>
-          </aside>
-
-          {/* Contenido principal */}
-          <main className="flex-1 min-w-0">
-            {children}
-          </main>
+    <div className="min-h-screen bg-white">
+      <div className="border-b border-gray-300">
+        <div className="max-w-[1400px] mx-auto px-4">
+          <nav className="flex items-center justify-center gap-8 h-12 text-[13px] font-medium tracking-wider overflow-x-auto">
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                className={`whitespace-nowrap transition-colors ${
+                  selectedCategory === category.id
+                    ? 'text-black border-b-2 border-black'
+                    : 'text-gray-600 hover:text-black'
+                }`}
+              >
+                {category.name}
+              </button>
+            ))}
+          </nav>
         </div>
       </div>
+
+      {/* Grid de productos */}
+      <div className="max-w-[1400px] mx-auto px-4 py-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          {filteredProducts.map((product) => (
+            <div key={product.id} className="group relative">
+              {/* Imagen */}
+              <a href={`#product-${product.id}`} className="block relative aspect-[3/4] bg-gray-100 overflow-hidden mb-3">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+                
+                {/* Botón comprar en hover */}
+                <button className="absolute top-3 right-3 bg-white text-black px-4 py-2 text-[11px] font-semibold tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300 border border-black">
+                  COMPRAR
+                </button>
+
+                {/* Indicadores de color */}
+                {product.colors.length > 1 && (
+                  <div className="absolute bottom-3 left-3 flex gap-1">
+                    {product.colors.map((color, idx) => (
+                      <button
+                        key={idx}
+                        className="w-4 h-4 rounded-full border border-gray-400"
+                        style={{ backgroundColor: getColorStyle(color) }}
+                        title={color}
+                      />
+                    ))}
+                  </div>
+                )}
+              </a>
+
+              {/* Info del producto */}
+              <div className="text-center">
+                <a href={`#product-${product.id}`}>
+                  <h3 className="text-[13px] font-medium tracking-wide mb-1 text-black hover:opacity-70 transition-opacity">
+                    {product.name}
+                  </h3>
+                  <p className="text-[15px] font-semibold text-black">
+                    {formatPrice(product.price)}
+                  </p>
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Sin productos */}
+        {filteredProducts.length === 0 && (
+          <div className="text-center py-20">
+            <p className="text-gray-500 text-sm mb-4">No hay productos disponibles</p>
+            <button
+              onClick={() => setSelectedCategory('all')}
+              className="text-sm underline"
+            >
+              Ver todos los productos
+            </button>
+          </div>
+        )}
+      </div>
+
+      {filteredProducts.length > 0 && (
+        <div className="max-w-[1400px] mx-auto px-4 pb-12">
+          <div className="flex justify-center items-center gap-2">
+            <button className="w-8 h-8 flex items-center justify-center border border-gray-300 text-gray-600 hover:border-black hover:text-black transition-colors">
+              ←
+            </button>
+            <button className="w-8 h-8 flex items-center justify-center bg-black text-white text-sm font-medium">
+              1
+            </button>
+            <button className="w-8 h-8 flex items-center justify-center border border-gray-300 text-gray-600 hover:border-black hover:text-black transition-colors text-sm">
+              2
+            </button>
+            <button className="w-8 h-8 flex items-center justify-center border border-gray-300 text-gray-600 hover:border-black hover:text-black transition-colors text-sm">
+              3
+            </button>
+            <button className="w-8 h-8 flex items-center justify-center border border-gray-300 text-gray-600 hover:border-black hover:text-black transition-colors">
+              →
+            </button>
+          </div>
+        </div>
+      )}
     </div>
-  );
-}
-
-// ===================================================
-// COMPONENTES AUXILIARES
-// ===================================================
-
-interface CategoryLinkProps {
-  href: string;
-  label: string;
-  isActive?: boolean;
-}
-
-function CategoryLink({ href, label, isActive = false }: CategoryLinkProps) {
-  return (
-    <a
-      href={href}
-      className={`
-        block text-sm transition-colors
-        ${isActive 
-          ? 'text-black font-medium' 
-          : 'text-gray-600 hover:text-black'
-        }
-      `}
-    >
-      {label}
-    </a>
-  );
-}
-
-interface FilterOptionProps {
-  label: string;
-  checked?: boolean;
-  onChange?: () => void;
-}
-
-function FilterOption({ label, checked = false, onChange }: FilterOptionProps) {
-  return (
-    <label className="flex items-center space-x-2 text-sm text-gray-600 cursor-pointer hover:text-black transition-colors">
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={onChange}
-        className="w-4 h-4 text-black border-gray-300 rounded focus:ring-black"
-      />
-      <span>{label}</span>
-    </label>
   );
 }

@@ -27,24 +27,21 @@ const featuredProducts = [
 const looks = [
   {
     id: 1,
-    name: "Vestido Stun",
-    description: "vestidos",
-    price: 21500,
-    image: "/images/noche/vestido-stun.avif"
+    name: "vestido isla",
+    price: 31500,
+    image: "/images/boho/vestido-isla.avif"
   },
   {
     id: 2,
-    name: "Top Drape",
-    description: "tops",
-    price: 13550,
-    image: "/images/products/top-drape.avif"
+    name: "pollera nala",
+    price: 33440,
+    image: "/images/boho/pollera-nala-ang.avif"
   },
   {
     id: 3,
-    name: "Top Fylo",
-    description: "tops",
-    price: 13550,
-    image: "/images/products/top-fylo.avif"
+    name: "vestido esme",
+    price: 29500,
+    image: "/images/boho/vestido-esme.avif"
   }
 ];
 
@@ -63,19 +60,19 @@ const outfitCombinations = [
     id: 2,
     name: "Night Lines",
     items: [
-      { name: "Top fylo", price: 13550 },
-      { name: "Mini lark", price: 11125 }
+      { name: "Top floyd", price: 16720 },
+      { name: "pollera nala", price: 33440 }
     ],
-    image: "/images/products/top-fylo.avif",
-    total: 24675
+    image: "/images/noche/top-floyd.avif",
+    total: 50160
   },
   {
     id: 3,
     name: "Black Icon",
     items: [
-      { name: "Vestido stun", price: 21500 }
+      { name: "Vestido issi", price: 26400 }
     ],
-    image: "/images/noche/vestido-stun.avif", 
+    image: "/images/boho/vestido-issi.avif", 
     total: 21500
   }
 ];
@@ -126,7 +123,7 @@ interface Product {
 interface Look {
   id: number;
   name: string;
-  description: string;
+  description?: string;
   price: number;
   image: string;
 }

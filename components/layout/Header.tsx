@@ -1,13 +1,35 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { type Page } from '../../lib/types'; // Ajusta la ruta según tu estructura
 
-export default function Header() {
+// Define las props que recibirá el Header
+interface HeaderProps {
+  currentUser?: any; // O el tipo específico de User que tengas
+  cartItemsCount: number;
+  wishlistItemsCount: number;
+  onNavigate: (page: Page) => void;
+  onCartToggle: () => void;
+  onLogout: () => void;
+  currentPage: Page;
+}
+
+export default function Header({ 
+  cartItemsCount = 0, 
+  wishlistItemsCount = 0,
+  onNavigate,
+  onCartToggle,
+  onLogout,
+  currentPage,
+  currentUser 
+}: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [cartCount] = useState(3);
-  const [wishlistCount] = useState(2);
-  const [isLoggedIn] = useState(true);
+  
+  // Usa las props en lugar de los estados hardcodeados
+  const cartCount = cartItemsCount;
+  const wishlistCount = wishlistItemsCount;
+  const isLoggedIn = !!currentUser;
 
   // Detectar scroll para cambiar estilo del header
   useEffect(() => {
@@ -29,6 +51,12 @@ export default function Header() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Función para navegación mejorada
+  const handleNavigation = (page: Page) => {
+    setMenuOpen(false);
+    onNavigate(page);
+  };
+
   return (
     <>
       <header 
@@ -42,8 +70,8 @@ export default function Header() {
           <div className="flex items-center justify-between h-20">
             
             {/* ========== LOGO ========== */}
-            <a 
-              href="#home"
+            <button 
+              onClick={() => onNavigate('home')}
               className="transition-opacity hover:opacity-70 flex items-center group"
               aria-label="Ir al inicio"
             >
@@ -52,23 +80,29 @@ export default function Header() {
                 alt="GAIA SIX"
                 className="w-auto h-16 md:h-24 object-contain"
               />
-            </a>
+            </button>
 
             {/* ========== NAV DESKTOP ========== */}
             <nav className="hidden md:flex items-center space-x-10 text-sm">
               {[
-                { label: "Prendas", href: "#shop" },
-                { label: "La Marca", href: "#about" },
-                { label: "Contacto", href: "#contact" },
+                { label: "Prendas", page: "shop" as Page },
+                { label: "La Marca", page: "about" as Page },
+                { label: "Contacto", page: "contact" as Page },
               ].map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className="relative uppercase tracking-wider text-gray-600 hover:text-black transition-colors duration-300 group"
+                <button
+                  key={item.page}
+                  onClick={() => onNavigate(item.page)}
+                  className={`relative uppercase tracking-wider transition-colors duration-300 group ${
+                    currentPage === item.page 
+                      ? 'text-black font-medium' 
+                      : 'text-gray-600 hover:text-black'
+                  }`}
                 >
                   {item.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#AF161F] group-hover:w-full transition-all duration-300"></span>
-                </a>
+                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-[#AF161F] transition-all duration-300 ${
+                    currentPage === item.page ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`}></span>
+                </button>
               ))}
             </nav>
 
@@ -76,8 +110,8 @@ export default function Header() {
             <div className="flex items-center space-x-4 md:space-x-5">
               
               {/* Wishlist */}
-              <a
-                href="#wishlist"
+              <button
+                onClick={() => onNavigate('wishlist')}
                 className="relative group transition-transform hover:scale-110 duration-300"
                 aria-label="Tus favoritos"
               >
@@ -99,11 +133,11 @@ export default function Header() {
                     {wishlistCount > 9 ? "9+" : wishlistCount}
                   </span>
                 )}
-              </a>
+              </button>
 
               {/* Usuario */}
-              <a
-                href="#profile"
+              <button
+                onClick={() => onNavigate(currentUser ? 'profile' : 'auth')}
                 className="transition-transform hover:scale-110 duration-300 group"
                 aria-label="Mi cuenta"
               >
@@ -120,10 +154,11 @@ export default function Header() {
                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" 
                   />
                 </svg>
-              </a>
+              </button>
 
               {/* Carrito */}
               <button
+                onClick={onCartToggle}
                 className="relative group transition-transform hover:scale-110 duration-300"
                 aria-label="Bolsa de compras"
               >
@@ -170,25 +205,27 @@ export default function Header() {
           {menuOpen && (
             <nav className="md:hidden py-4 border-t border-gray-200 space-y-1 animate-fade-in">
               {[
-                { label: "Prendas", href: "#shop" },
-                { label: "La Marca", href: "#about" },
-                { label: "Contacto", href: "#contact" },
+                { label: "Prendas", page: "shop" as Page },
+                { label: "La Marca", page: "about" as Page },
+                { label: "Contacto", page: "contact" as Page },
               ].map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMenuOpen(false)}
-                  className="block w-full text-left py-3 px-4 text-sm uppercase tracking-wider rounded text-gray-700 hover:bg-gray-50 hover:text-black transition-all"
+                <button
+                  key={item.page}
+                  onClick={() => handleNavigation(item.page)}
+                  className={`block w-full text-left py-3 px-4 text-sm uppercase tracking-wider rounded transition-all ${
+                    currentPage === item.page
+                      ? 'bg-gray-50 text-black font-medium'
+                      : 'text-gray-700 hover:bg-gray-50 hover:text-black'
+                  }`}
                 >
                   {item.label}
-                </a>
+                </button>
               ))}
 
               {/* WISHLIST MOBILE */}
-              <a
-                href="#wishlist"
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-3 py-3 px-4 text-sm text-gray-700 hover:bg-gray-50 hover:text-black rounded transition-all"
+              <button
+                onClick={() => handleNavigation('wishlist')}
+                className="flex items-center gap-3 py-3 px-4 text-sm text-gray-700 hover:bg-gray-50 hover:text-black rounded transition-all w-full text-left"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -199,24 +236,26 @@ export default function Header() {
                     {wishlistCount}
                   </span>
                 )}
-              </a>
+              </button>
 
               {/* USUARIO MOBILE */}
-              <a
-                href="#profile"
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-3 py-3 px-4 text-sm text-gray-700 hover:bg-gray-50 hover:text-black rounded transition-all"
+              <button
+                onClick={() => handleNavigation(currentUser ? 'profile' : 'auth')}
+                className="flex items-center gap-3 py-3 px-4 text-sm text-gray-700 hover:bg-gray-50 hover:text-black rounded transition-all w-full text-left"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
-                {isLoggedIn ? "Mi Cuenta" : "Iniciar Sesión"}
-              </a>
+                {currentUser ? "Mi Cuenta" : "Iniciar Sesión"}
+              </button>
 
               {/* Cerrar sesión */}
-              {isLoggedIn && (
+              {currentUser && (
                 <button
-                  onClick={() => setMenuOpen(false)}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    onLogout();
+                  }}
                   className="w-full text-left flex items-center gap-3 py-3 px-4 text-sm text-gray-700 hover:bg-gray-50 hover:text-black rounded transition-all"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
