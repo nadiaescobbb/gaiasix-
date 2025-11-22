@@ -85,7 +85,7 @@ const heroSlides = [
     title: "prendas para",
     titleHighlight: "salir",
     subtitle: "nuevas piezas que no fallan",
-    image: "/images/boho/vestido-rio.avif",
+    image: "/images/boho/vestido-isla-.avif",
     cta: "ver prendas"
   },
   {
@@ -94,7 +94,7 @@ const heroSlides = [
     title: "beneficios",
     titleHighlight: "sixer",
     subtitle: "10% off + cuotas + envíos gratis",
-    image: "/images/boho/pollera-nala.avif",
+    image: "/images/boho/vestido-rio.avif",
     cta: "activar"
   },
   {
@@ -103,7 +103,7 @@ const heroSlides = [
     title: "prendas",
     titleHighlight: "que acompañan",
     subtitle: "fáciles de combinar",
-    image: "/images/boho/vestido-isla-fr.avif",
+    image: "/images/boho/vestido-esme.avif",
     cta: "ver prendas"
   }
 ];
