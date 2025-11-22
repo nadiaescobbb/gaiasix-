@@ -277,33 +277,6 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* Controles de navegación */}
-        <div className="absolute inset-0 pointer-events-none z-20">
-          <div className="h-full max-w-7xl mx-auto px-4 md:px-12 flex items-center justify-between">
-            <button
-              onClick={prevSlide}
-              disabled={isAnimating}
-              className="pointer-events-auto w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white/20 hover:border-white/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
-              aria-label="Slide anterior"
-            >
-              <svg className="w-6 h-6 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-
-            <button
-              onClick={nextSlide}
-              disabled={isAnimating}
-              className="pointer-events-auto w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-white/20 hover:border-white/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
-              aria-label="Siguiente slide"
-            >
-              <svg className="w-6 h-6 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
-        </div>
-
         {/* Indicadores de slides */}
         <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 flex gap-3 z-20">
           {heroSlides.map((_, index: number) => (
