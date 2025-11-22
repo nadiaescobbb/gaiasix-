@@ -1,4 +1,3 @@
-// app/about/page.tsx
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white py-16 px-6">

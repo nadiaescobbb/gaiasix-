@@ -1,4 +1,3 @@
-// En tu wishlist/page.tsx - VERSIÓN CORREGIDA
 "use client";
 
 import { useState } from 'react';

@@ -1,11 +1,9 @@
-// 📄 ARCHIVO: context/AppContext.tsx - COMPLETO Y CORREGIDO
-
 "use client";
 
 import { createContext, useContext, useEffect, useState, useCallback, useMemo, ReactNode } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
-// ✅ IMPORTACIONES CORREGIDAS - CON COMAS
+// ✅ IMPORTACIONES 
 import { hashPassword, verifyPassword, validatePasswordStrength, migrateUserPassword } from '../lib/auth';
 import { 
   type User, 
