@@ -2,10 +2,8 @@
 
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { Mail, Lock, User, Phone, AlertCircle, CheckCircle } from 'lucide-react';
-import { logger, logErrorWithContext } from './../../../lib/logger'; 
-
-// ✅ IMPORTACIONES 
-import { type LoginResult, type RegisterResult, type RegisterUserData } from '../../../lib/types';
+import { type LoginResult, type RegisterResult, type RegisterUserData } from '.../../lib/types';
+import { logger, logErrorWithContext } from '.../../lib/logger'; 
 
 // ===================================================
 // TYPES
@@ -54,9 +52,8 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode }: Au
   };
 
   const validatePhone = (phone: string): boolean => {
-    // ✅ MEJORADO: Validación más flexible
     const cleaned = phone.replace(/\D/g, '');
-    return cleaned.length >= 8; // Más flexible para diferentes formatos
+    return cleaned.length >= 8;
   };
 
   const validateForm = (): boolean => {
@@ -112,6 +109,8 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode }: Au
           setFormData({ email: '', password: '', name: '', phone: '' });
         } else {
           setErrors({ submit: result.error });
+          // ✅ USO DEL LOGGER
+          logErrorWithContext('Login failed', { email: formData.email, error: result.error });
         }
       } else {
         result = await onRegister({
@@ -125,13 +124,19 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode }: Au
           setSuccessMessage('¡Cuenta creada exitosamente! 🎊');
           // Limpiar formulario
           setFormData({ email: '', password: '', name: '', phone: '' });
+          // ✅ USO DEL LOGGER
+          logger.info(`User registered: ${formData.email}`);
         } else {
           setErrors({ submit: result.error });
+          // ✅ USO DEL LOGGER
+          logErrorWithContext('Registration failed', { email: formData.email, error: result.error });
         }
       }
     } catch (error) {
       console.error('Auth error:', error);
       setErrors({ submit: 'Error de conexión. Intenta nuevamente.' });
+      // ✅ USO DEL LOGGER
+      logErrorWithContext('Auth connection error', { email: formData.email, error });
     } finally {
       setIsSubmitting(false);
     }
@@ -149,7 +154,6 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode }: Au
     }
   };
 
-  // Limpiar mensajes al cambiar modo
   const handleToggleMode = (): void => {
     setErrors({});
     setSuccessMessage('');
@@ -291,22 +295,6 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode }: Au
           </button>
         </div>
 
-        {/* Estilos para animaciones */}
-        <style jsx global>{`
-          @keyframes fade-in {
-            from {
-              opacity: 0;
-              transform: translateY(-10px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-          .animate-fade-in {
-            animation: fade-in 0.3s ease-out;
-          }
-        `}</style>
       </div>
     </div>
   );
