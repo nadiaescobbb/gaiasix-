@@ -2,8 +2,8 @@
 
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { Mail, Lock, User, Phone, AlertCircle, CheckCircle } from 'lucide-react';
-import { type LoginResult, type RegisterResult, type RegisterUserData } from '.../../../lib/types';
-import { logger, logErrorWithContext } from '.../../../lib/logger'; 
+import { type LoginResult, type RegisterResult, type RegisterUserData } from './../lib/types';
+import { logger, logErrorWithContext } from './../lib/logger'; 
 
 // ===================================================
 // TYPES
