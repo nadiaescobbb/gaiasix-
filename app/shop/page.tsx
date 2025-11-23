@@ -1,159 +1,242 @@
 "use client";
 
+import { useState } from 'react';
+
+// Definir tipos TypeScript
+interface Product {
+  id: number;
+  name: string;
+  category: string;
+  price: number;
+  image: string;
+  colors: string[];
+  new: boolean;
+  stock: number;
+}
+
+interface Category {
+  id: string;
+  name: string;
+}
+
 // Simulación de datos
-const products = [
+const products: Product[] = [
   {
     id: 1,
-    name: "Vestido Stun",
+    name: "VESTIDO STUN",
     category: "vestidos",
     price: 21500,
-    image: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=600&h=800&fit=crop",
+    image: "/images/noche/vestido-stun.avif",
+    colors: ['black'],
     new: true,
-    stock: 5,
+    stock: 1,
   },
   {
     id: 2,
-    name: "Top Drape",
+    name: "TOP DRAPE",
     category: "tops",
     price: 13550,
-    image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=600&h=800&fit=crop",
+    image: "/images/products/top-drape.avif",
+    colors: ['black', 'red'],
     new: false,
-    stock: 3,
+    stock: 2,
   },
   {
     id: 3,
-    name: "Mini Trace",
-    category: "pantalones",
+    name: "MINI TRACE",
+    category: "polleras",
     price: 11375,
-    image: "https://images.unsplash.com/photo-1624206112918-ad7b0a4eb040?w=600&h=800&fit=crop",
+    image: "/images/products/mini-tracee.avif",
+    colors: ['black'],
     new: false,
-    stock: 8,
+    stock: 1,
   },
   {
     id: 4,
-    name: "Top Fylo",
+    name: "TOP FYLO",
     category: "tops",
     price: 13550,
-    image: "https://images.unsplash.com/photo-1581338834647-b0fb40704e21?w=600&h=800&fit=crop",
+    image: "/images/products/top-fylo.avif",
+    colors: ['black'],
     new: true,
-    stock: 6,
+    stock: 1,
   },
   {
     id: 5,
-    name: "Vestido Eclipse",
-    category: "vestidos",
-    price: 19800,
-    image: "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?w=600&h=800&fit=crop",
+    name: "top black",
+    category: "tops",
+    price: 12200,
+    image: "/images/products/top-black.avif",
+    colors: ['black'],
     new: false,
-    stock: 0,
+    stock: 1,
   },
   {
     id: 6,
-    name: "Pantalón Wide",
-    category: "pantalones",
-    price: 15200,
-    image: "https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&h=800&fit=crop",
+    name: "short texas",
+    category: "short",
+    price: 51040,
+    image: "/images/noche/short-texas.avif",
+    colors: ['camel', 'marron'],
     new: false,
-    stock: 4,
+    stock: 2,
   },
   {
     id: 7,
-    name: "Top Mesh",
+    name: "top tini",
     category: "tops",
     price: 12800,
-    image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=600&h=800&fit=crop",
+    image: "/images/products/top-tini.avif",
+    colors: ['black'],
     new: true,
-    stock: 7,
+    stock: 1,
   },
   {
     id: 8,
-    name: "Vestido Midi",
-    category: "vestidos",
+    name: "top halter",
+    category: "tops",
     price: 18900,
-    image: "https://images.unsplash.com/photo-1572804013427-4d7ca7268217?w=600&h=800&fit=crop",
+    image: "/images/products/top-halter.avif",
+    colors: ['gris'],
     new: false,
-    stock: 5,
-  },
-  {
-    id: 9,
-    name: "Jean High Waist",
-    category: "pantalones",
-    price: 16500,
-    image: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=600&h=800&fit=crop",
-    new: false,
-    stock: 10,
+    stock: 1,
   },
 ];
 
+const categories: Category[] = [
+  { id: 'all', name: 'TODOS' },
+  { id: 'vestidos', name: 'VESTIDOS' },
+  { id: 'tops', name: 'TOPS' },
+  { id: 'polleras', name: 'POLLERAS' },
+  { id: 'short', name: 'SHORT' },
+];
+
 export default function ShopPage() {
-  const formatPrice = (price: number) => {
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  const formatPrice = (price: number): string => {
     return `$${price.toLocaleString('es-AR')}`;
+  };
+
+  const filteredProducts = selectedCategory === 'all' 
+    ? products 
+    : products.filter(p => p.category === selectedCategory);
+
+  const getColorStyle = (color: string): string => {
+    const colors: Record<string, string> = {
+      'black': '#000000',
+      'white': '#FFFFFF',
+      'red': '#AF161F',
+      'beige': '#D4B996',
+    };
+    return colors[color] || color; 
   };
 
   return (
     <div className="min-h-screen bg-white">
-      
-      {/* Header simple */}
-      <div className="border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <h1 className="text-3xl md:text-4xl font-light tracking-wide mb-2">PRODUCTOS</h1>
-          <p className="text-sm text-gray-500">{products.length} productos</p>
+      <div className="border-b border-gray-300">
+        <div className="max-w-[1400px] mx-auto px-4">
+          <nav className="flex items-center justify-center gap-8 h-12 text-[13px] font-medium tracking-wider overflow-x-auto">
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                className={`whitespace-nowrap transition-colors ${
+                  selectedCategory === category.id
+                    ? 'text-black border-b-2 border-black'
+                    : 'text-gray-600 hover:text-black'
+                }`}
+              >
+                {category.name}
+              </button>
+            ))}
+          </nav>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        
-        {/* Grid de productos minimalista */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-          {products.map((product) => (
-            <a
-              key={product.id}
-              href={`#product-${product.id}`}
-              className="group"
-            >
+      {/* Grid de productos */}
+      <div className="max-w-[1400px] mx-auto px-4 py-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          {filteredProducts.map((product) => (
+            <div key={product.id} className="group relative">
               {/* Imagen */}
-              <div className="relative bg-gray-100 aspect-[3/4] mb-3 overflow-hidden">
+              <a href={`#product-${product.id}`} className="block relative aspect-[3/4] bg-gray-100 overflow-hidden mb-3">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover group-hover:opacity-80 transition-opacity duration-300"
+                  className="w-full h-full object-cover"
                 />
                 
-                {/* Badge solo si es nuevo o sin stock */}
-                {product.new && (
-                  <span className="absolute top-2 left-2 bg-black text-white px-2 py-1 text-[10px] tracking-wider">
-                    NUEVO
-                  </span>
+                {/* Botón comprar en hover */}
+                <button className="absolute top-3 right-3 bg-white text-black px-4 py-2 text-[11px] font-semibold tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300 border border-black">
+                  COMPRAR
+                </button>
+
+                {/* Indicadores de color */}
+                {product.colors.length > 1 && (
+                  <div className="absolute bottom-3 left-3 flex gap-1">
+                    {product.colors.map((color, idx) => (
+                      <button
+                        key={idx}
+                        className="w-4 h-4 rounded-full border border-gray-400"
+                        style={{ backgroundColor: getColorStyle(color) }}
+                        title={color}
+                      />
+                    ))}
+                  </div>
                 )}
-                {product.stock === 0 && (
-                  <span className="absolute top-2 left-2 bg-gray-400 text-white px-2 py-1 text-[10px] tracking-wider">
-                    AGOTADO
-                  </span>
-                )}
-              </div>
+              </a>
 
               {/* Info del producto */}
-              <div>
-                <h3 className="text-sm font-light mb-1 uppercase tracking-wide">
-                  {product.name}
-                </h3>
-                <p className="text-sm font-medium">{formatPrice(product.price)}</p>
+              <div className="text-center">
+                <a href={`#product-${product.id}`}>
+                  <h3 className="text-[13px] font-medium tracking-wide mb-1 text-black hover:opacity-70 transition-opacity">
+                    {product.name}
+                  </h3>
+                  <p className="text-[15px] font-semibold text-black">
+                    {formatPrice(product.price)}
+                  </p>
+                </a>
               </div>
-            </a>
+            </div>
           ))}
         </div>
 
-        {/* Paginación simple (opcional) */}
-        <div className="flex justify-center items-center gap-4 mt-12 pt-8 border-t border-gray-200">
-          <button className="px-4 py-2 text-sm border border-gray-300 hover:border-black disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-            ANTERIOR
-          </button>
-          <span className="text-sm text-gray-600">1 / 1</span>
-          <button className="px-4 py-2 text-sm border border-gray-300 hover:border-black disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-            SIGUIENTE
-          </button>
-        </div>
+        {/* Sin productos */}
+        {filteredProducts.length === 0 && (
+          <div className="text-center py-20">
+            <p className="text-gray-500 text-sm mb-4">No hay productos disponibles</p>
+            <button
+              onClick={() => setSelectedCategory('all')}
+              className="text-sm underline"
+            >
+              Ver todos los productos
+            </button>
+          </div>
+        )}
       </div>
+
+      {filteredProducts.length > 0 && (
+        <div className="max-w-[1400px] mx-auto px-4 pb-12">
+          <div className="flex justify-center items-center gap-2">
+            <button className="w-8 h-8 flex items-center justify-center border border-gray-300 text-gray-600 hover:border-black hover:text-black transition-colors">
+              ←
+            </button>
+            <button className="w-8 h-8 flex items-center justify-center bg-black text-white text-sm font-medium">
+              1
+            </button>
+            <button className="w-8 h-8 flex items-center justify-center border border-gray-300 text-gray-600 hover:border-black hover:text-black transition-colors text-sm">
+              2
+            </button>
+            <button className="w-8 h-8 flex items-center justify-center border border-gray-300 text-gray-600 hover:border-black hover:text-black transition-colors text-sm">
+              3
+            </button>
+            <button className="w-8 h-8 flex items-center justify-center border border-gray-300 text-gray-600 hover:border-black hover:text-black transition-colors">
+              →
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

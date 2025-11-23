@@ -150,7 +150,7 @@ export interface ToastContextType {
   success: (message: string, duration?: number) => number;
   error: (message: string, duration?: number) => number;
   warning: (message: string, duration?: number) => number;
-  info: (message: string, duration?: number) => number;
+  info: (message: string, duration?: number) => number; 
   addToast: (message: string, type?: ToastType, duration?: number) => number;
   removeToast: (id: number) => void;
   toasts: Toast[];
@@ -160,34 +160,8 @@ export interface ToastContextType {
 // TIPOS DE COMPONENTES
 // ==========================================
 
-export type Page = 'home' | 'shop' | 'wishlist' | 'product' | 'about' | 'auth' | 'profile' | 'cart'| 'contact';
+export type Page = 'home' | 'shop' | 'wishlist' | 'product' | 'about' | 'auth' | 'profile' | 'cart' | 'contact';
 export type AuthMode = 'login' | 'register';
-
-export interface PageProps {
-  onNavigate?: (page: Page) => void;
-  onAddToCart?: (product: Product, size: string) => void;
-  onProductSelect?: (product: Product) => void;
-  selectedCategory?: string;
-  onSelectCategory?: (category: string) => void;
-}
-
-export interface ProductPageProps {
-  product: Product | null;
-  onAddToCart: (product: Product, size: string) => void;
-  onBack: () => void;
-}
-
-export interface ShopPageProps {
-  selectedCategory?: string;
-  onSelectCategory?: (category: string) => void;
-  onAddToCart?: (product: Product, size: string) => void;
-  onProductSelect?: (product: Product) => void;
-}
-
-export interface WishlistPageProps {
-  onNavigate?: (page: Page) => void;
-  onAddToCart?: (product: Product, size: string) => void;
-}
 
 export interface AuthPageProps {
   mode: AuthMode;
@@ -204,6 +178,7 @@ export interface ProfilePageProps {
 export interface HeaderProps {
   currentUser: User | null;
   cartItemsCount: number;
+  wishlistItemsCount: number;
   onNavigate: (page: Page) => void;
   onCartToggle: () => void;
   onLogout: () => void;
@@ -223,9 +198,10 @@ export interface CartSidebarProps {
 
 export interface WishlistButtonProps {
   product: Product;
-  variant?: 'icon' | 'text' | 'both';
+  variant?: 'icon' | 'text' | 'compact'; 
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
+  showLabel?: boolean; 
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void; 
 }
 
 // ==========================================
@@ -302,6 +278,8 @@ export interface PaginatedResponse<T> {
 export interface Category {
   id: string;
   name: string;
+  slug?: string; 
+  order?: number; 
   description?: string;
   image?: string;
   productCount?: number;
@@ -357,6 +335,9 @@ export enum ProductCategory {
   DRESSES = 'vestidos',
   TOPS = 'tops',
   BOTTOMS = 'bottoms',
+  SETS = 'sets', 
+  SKIRTS = 'faldas', 
+  SHORTS = 'short',
   ACCESSORIES = 'accesorios',
   ALL = 'all'
 }
@@ -391,22 +372,6 @@ export interface ToastProviderProps {
 }
 
 // ==========================================
-// TIPOS DE PÁGINAS Y RUTAS
-// ==========================================
-
-export interface HomePageProps {
-  onNavigate: (page: Page) => void;
-}
-
-export interface AboutPageProps {
-  onNavigate?: (page: Page) => void;
-}
-
-export interface ContactPageProps {
-  onNavigate?: (page: Page) => void;
-}
-
-// ==========================================
 // TIPOS DE PRODUCT CARD
 // ==========================================
 
@@ -416,18 +381,6 @@ export interface ProductCardProps {
   onAddToCart?: (product: Product, size: string) => void;
   onProductSelect?: (product: Product) => void;
   className?: string;
-}
-
-// ==========================================
-// TIPOS DE FILTROS
-// ==========================================
-
-export interface FilterState {
-  categories: string[];
-  priceRange: [number, number];
-  sizes: string[];
-  inStock: boolean;
-  sortBy: string;
 }
 
 // ==========================================
@@ -476,107 +429,14 @@ export interface ErrorState {
 }
 
 // ==========================================
-// TIPOS DE SEARCH
+// TIPOS DE SKELETON (LOADING UI)
 // ==========================================
 
-export interface SearchProps {
-  onSearch: (query: string) => void;
-  placeholder?: string;
+export interface SkeletonProps {
   className?: string;
-  value?: string;
-}
-
-// ==========================================
-// TIPOS DE RATING
-// ==========================================
-
-export interface Rating {
-  average: number;
-  count: number;
-}
-
-export interface Review {
-  id: number;
-  user: {
-    name: string;
-    avatar?: string;
-  };
-  rating: number;
-  comment: string;
-  date: string;
-  verified?: boolean;
-}
-
-// ==========================================
-// TIPOS DE IMAGE GALLERY
-// ==========================================
-
-export interface ImageGalleryProps {
-  images: string[];
-  productName: string;
-  className?: string;
-}
-
-// ==========================================
-// TIPOS DE SIZE SELECTOR
-// ==========================================
-
-export interface SizeSelectorProps {
-  sizes: string[];
-  selectedSize?: string;
-  onSizeSelect: (size: string) => void;
-  availableSizes?: { [size: string]: number };
-  className?: string;
-}
-
-// ==========================================
-// TIPOS DE QUANTITY SELECTOR
-// ==========================================
-
-export interface QuantitySelectorProps {
-  quantity: number;
-  onQuantityChange: (quantity: number) => void;
-  maxQuantity?: number;
-  minQuantity?: number;
-  className?: string;
-}
-
-// ==========================================
-// TIPOS DE ACCORDION
-// ==========================================
-
-export interface AccordionProps {
-  title: string;
-  children: React.ReactNode;
-  defaultOpen?: boolean;
-  className?: string;
-}
-
-// ==========================================
-// TIPOS DE TAB
-// ==========================================
-
-export interface Tab {
-  id: string;
-  label: string;
-  content: React.ReactNode;
-}
-
-export interface TabsProps {
-  tabs: Tab[];
-  defaultTab?: string;
-  className?: string;
-}
-
-// ==========================================
-// TIPOS DE BADGE
-// ==========================================
-
-export interface BadgeProps {
-  children: React.ReactNode;
-  variant?: 'default' | 'success' | 'warning' | 'error' | 'info';
-  size?: 'sm' | 'md' | 'lg';
-  className?: string;
+  variant?: 'default' | 'light' | 'dark'; // ✅ CAMBIADO: coincide con LoadingStates.tsx
+  width?: number | string;
+  height?: number | string;
 }
 
 // ==========================================
@@ -592,78 +452,29 @@ export interface AlertProps {
 }
 
 // ==========================================
-// TIPOS DE SKELETON
+// TIPOS DE BADGE
 // ==========================================
 
-export interface SkeletonProps {
-  className?: string;
-  variant?: 'text' | 'circular' | 'rectangular';
-  width?: number | string;
-  height?: number | string;
-}
-
-// ==========================================
-// TIPOS DE PROGRESS
-// ==========================================
-
-export interface ProgressProps {
-  value: number;
-  max?: number;
-  className?: string;
-  showLabel?: boolean;
-}
-
-// ==========================================
-// TIPOS DE TOOLTIP
-// ==========================================
-
-export interface TooltipProps {
-  content: string;
+export interface BadgeProps {
   children: React.ReactNode;
-  position?: 'top' | 'bottom' | 'left' | 'right';
+  variant?: 'default' | 'success' | 'warning' | 'error' | 'info';
+  size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
 
 // ==========================================
-// TIPOS DE POPOVER
+// TIPOS DE SPINNER (LOADING INDICATOR)
 // ==========================================
 
-export interface PopoverProps {
-  trigger: React.ReactNode;
-  content: React.ReactNode;
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  className?: string;
+export interface SpinnerProps {
+  size?: 'sm' | 'md' | 'lg';
+  color?: 'black' | 'white' | 'red';
 }
 
 // ==========================================
-// TIPOS DE DROPDOWN
+// TIPOS DE PAGE LOADER
 // ==========================================
 
-export interface DropdownProps {
-  trigger: React.ReactNode;
-  items: {
-    label: string;
-    onClick: () => void;
-    icon?: React.ReactNode;
-    disabled?: boolean;
-  }[];
-  className?: string;
-}
-
-// ==========================================
-// TIPOS DE NOTIFICATION
-// ==========================================
-
-export interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  type: 'info' | 'success' | 'warning' | 'error';
-  read: boolean;
-  date: string;
-  action?: {
-    label: string;
-    onClick: () => void;
-  };
+export interface PageLoaderProps {
+  message?: string;
 }

@@ -2,6 +2,7 @@
 
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { Mail, Lock, User, Phone, AlertCircle, CheckCircle } from 'lucide-react';
+import { logger, logErrorWithContext } from './../../../lib/logger'; 
 
 // ✅ IMPORTACIONES 
 import { type LoginResult, type RegisterResult, type RegisterUserData } from '../../../lib/types';
@@ -83,7 +84,7 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode }: Au
       if (!formData.phone.trim()) {
         newErrors.phone = 'El teléfono es requerido';
       } else if (!validatePhone(formData.phone)) {
-        newErrors.phone = 'Teléfono inválido (mín. 8 dígitos)'; // ✅ ACTUALIZADO
+        newErrors.phone = 'Teléfono inválido (mín. 8 dígitos)';
       }
     }
 

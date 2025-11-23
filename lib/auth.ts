@@ -1,4 +1,6 @@
+import { logger } from './logger'; 
 import { type User, type PasswordValidationResult } from './types';
+
 // ==========================================
 // MOCK FUNCTIONS PARA DESARROLLO (CLIENTE)
 // ==========================================
@@ -8,7 +10,7 @@ import { type User, type PasswordValidationResult } from './types';
  */
 export const hashPassword = async (password: string): Promise<string> => {
   // En producción, esto debería hacerse en el servidor
-  console.warn('⚠️  Hash de contraseña en cliente - Solo para desarrollo');
+  logger.warn('⚠️ Hash de contraseña en cliente - Solo para desarrollo'); // ✅ MIGRADO
   return `mock-hashed-${password}-${Date.now()}`;
 };
 
@@ -42,6 +44,6 @@ export const validatePasswordStrength = (password: string): PasswordValidationRe
  */
 export const migrateUserPassword = async (user: User): Promise<User> => {
   // En desarrollo, no hacer migración real
-  console.warn('⚠️  Migración de usuario en cliente - Solo para desarrollo');
+  logger.warn('⚠️ Migración de usuario en cliente - Solo para desarrollo'); // ✅ MIGRADO
   return user;
 };

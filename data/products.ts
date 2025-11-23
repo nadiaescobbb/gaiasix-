@@ -1,3 +1,6 @@
+import { logger } from '../lib/logger';
+
+
 // ===================================================
 // TYPES
 // ===================================================
@@ -429,6 +432,10 @@ export const categories: Category[] = [
 // VALIDACIONES MEJORADAS
 // ============================================
 
+// ============================================
+// VALIDACIONES MEJORADAS
+// ============================================
+
 export const validateProducts = (): boolean => {
   const errors: string[] = [];
   const ids = new Set<number>();
@@ -468,13 +475,19 @@ export const validateProducts = (): boolean => {
   });
   
   if (errors.length > 0) {
-    console.error('🔴 ERRORES EN PRODUCTOS:');
-    errors.forEach(error => console.error(error));
+    logger.error('🔴 ERRORES EN PRODUCTOS:'); // ✅ MIGRADO
+    errors.forEach(error => logger.error(error)); // ✅ MIGRADO
+    
+    // ✅ AGREGADO: Detener en desarrollo
+    if (process.env.NODE_ENV === 'development') {
+      throw new Error(`Productos inválidos:\n${errors.join('\n')}`);
+    }
+    
     return false;
   } else {
-    console.log('✅ Todos los productos validados correctamente');
-    console.log(`📦 Total de productos: ${products.length}`);
-    console.log(`🏷️ IDs: ${Array.from(ids).sort((a, b) => a - b).join(', ')}`);
+    logger.success('✅ Todos los productos validados correctamente'); // ✅ MIGRADO
+    logger.info(`📦 Total de productos: ${products.length}`); // ✅ MIGRADO
+    logger.info(`🏷️ IDs: ${Array.from(ids).sort((a, b) => a - b).join(', ')}`); // ✅ MIGRADO
     return true;
   }
 };
@@ -508,4 +521,3 @@ export const getFeaturedProducts = (limit: number = 3): Product[] => {
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
   validateProducts();
 }
-
