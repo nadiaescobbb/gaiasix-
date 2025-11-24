@@ -187,9 +187,6 @@ export default function ContactPage() {
                 <span className="text-xs text-[#AF161F] tracking-[0.2em] uppercase font-medium">
                   Nuestros Datos
                 </span>
-                <h2 className="text-3xl font-light mt-3 mb-4">
-                  Conectá con nosotros
-                </h2>
                 <p className="text-gray-600 leading-relaxed">
                  Consultas, pedidos o lo que necesites. Estamos del otro lado.
                 </p>
@@ -198,29 +195,6 @@ export default function ContactPage() {
               {/* Contact Cards */}
               <div className="space-y-6">
                 
-                {/* Email */}
-                <a 
-                  href="mailto:gaiashowroom@gmail.com"
-                  className="group block p-6 border border-gray-200 hover:border-[#AF161F] transition-all duration-300 bg-white hover:shadow-lg"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-gray-50 group-hover:bg-[#AF161F] rounded-full flex items-center justify-center transition-colors duration-300">
-                      <Mail className="text-gray-600 group-hover:text-white transition-colors" size={20} />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-sm uppercase tracking-wider text-gray-500 mb-1">
-                        Email
-                      </h3>
-                      <p className="text-lg font-light text-gray-900 group-hover:text-[#AF161F] transition-colors">
-                        gaiashowroom@gmail.com
-                      </p>
-                      <p className="text-sm text-gray-500 mt-1">
-                       Respondemos dentro del día o al siguiente.
-                      </p>
-                    </div>
-                  </div>
-                </a>
-
                 {/* WhatsApp */}
                 <a 
                   href="https://wa.me/5492964479923"
@@ -332,9 +306,6 @@ export default function ContactPage() {
                   <h2 className="text-3xl font-light mt-3 mb-2">
                     Dejanos tu mensaje
                   </h2>
-                  <p className="text-gray-600">
-                    Dejanos tu mensaje y te escribimos ni bien podamos.
-                  </p>
                 </div>
 
                 {/* Success Message */}
