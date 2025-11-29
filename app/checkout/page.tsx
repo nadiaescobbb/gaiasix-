@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useAppContext } from '.../../../context/AppContext';
+import { useAppContext } from './../../context/AppContext';
 import { useRouter } from 'next/navigation';
 import { 
   ShippingMethod, 
@@ -10,8 +10,8 @@ import {
   argentinianProvinces, 
   calculateShipping,
   getAvailableMethodsForProvince 
-} from '.../../../config/shipping';
-import { formatPrice } from '.../../../utils/formatters';
+} from './../../config/shipping';
+import { formatPrice } from './../../utils/formatters';
 import { Truck, CreditCard, CheckCircle, ArrowLeft, MapPin, User, Mail, Phone } from 'lucide-react';
 
 export default function CheckoutPage() {
