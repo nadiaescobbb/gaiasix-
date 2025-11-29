@@ -154,14 +154,11 @@ export default function ContactPage() {
         {/* Content */}
         <div className="relative h-full flex items-center justify-center">
           <div className="text-center text-white px-6">
-            <span className="text-xs tracking-[0.3em] uppercase text-white/80 mb-4 block">
-              Hablemos
-            </span>
             <h1 className="text-5xl md:text-7xl font-light mb-4 tracking-tight">
-              Contacto
+              HABLEMOS
             </h1>
             <p className="text-lg md:text-xl text-white/80 font-light max-w-2xl mx-auto">
-              Escribinos cuando quieras. Te respondemos lo antes posible.
+              Escribinos y te respondemos dentro del mismo día hábil.
             </p>
           </div>
         </div>
@@ -188,7 +185,7 @@ export default function ContactPage() {
                   Nuestros Datos
                 </span>
                 <p className="text-gray-600 leading-relaxed">
-                 Consultas, pedidos o lo que necesites. Estamos del otro lado.
+                 Consultas, pedidos o lo que necesites. Te respondemos dentro del mismo día hábil.
                 </p>
               </div>
 
@@ -238,7 +235,7 @@ export default function ContactPage() {
                       </p>
                       <p className="text-sm text-gray-500 mt-2 flex items-center gap-2">
                         <Clock size={14} />
-                        Solo con cita previa
+                       Atención solo con cita previa.
                       </p>
                     </div>
                   </div>
@@ -263,7 +260,7 @@ export default function ContactPage() {
                         @gaiasix
                       </p>
                       <p className="text-sm text-gray-500 mt-1">
-                       Ahí subimos lanzamientos y novedades.
+                      Publicamos novedades, ingresos y actualizaciones diarias.
                       </p>
                     </div>
                   </div>
@@ -282,7 +279,7 @@ export default function ContactPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-white/80">Sábados</span>
-                    <span className="font-light">16:00 - 10:00hs</span>
+                    <span className="font-light">16:00 - 21:00hs</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-white/80">Domingos</span>
@@ -300,11 +297,8 @@ export default function ContactPage() {
                 
                 {/* Header */}
                 <div className="mb-8">
-                  <span className="text-xs text-[#AF161F] tracking-[0.2em] uppercase font-medium">
-                    Escribinos
-                  </span>
                   <h2 className="text-3xl font-light mt-3 mb-2">
-                    Dejanos tu mensaje
+                    Escribinos
                   </h2>
                 </div>
 
@@ -314,11 +308,8 @@ export default function ContactPage() {
                     <CheckCircle className="text-green-600 flex-shrink-0 mt-0.5" size={20} />
                     <div>
                       <p className="text-sm font-medium text-green-800">
-                       ¡Listo! Recibimos tu mensaje.
+                      ¡Listo! Recibimos tu mensaje. Te vamos a escribir a {formData.email} dentro del día hábil.
                       </p>
-                      <p className="text-sm text-green-700 mt-1">
-                       Te respondemos a {formData.email} en breve.
-                    </p>
                     </div>
                   </div>
                 )}
@@ -511,8 +502,8 @@ export default function ContactPage() {
           <div className="space-y-6">
             {[
               {
-                q: '¿Cuál es el tiempo de respuesta?',
-                a: 'Respondemos dentro de 24-48hs hábiles.'
+                q: '¿En cuánto tiempo responden?',
+                a: 'Respondemos en el mismo día hábil. Si escribís fuera de horario, te contestamos al día siguiente.'
               },
               {
                 q: '¿Puedo visitar el showroom?',
@@ -520,7 +511,7 @@ export default function ContactPage() {
               },
               {
                 q: '¿Hacen envíos a todo el país?',
-                a: 'Sí, enviamos a todo el país. El costo depende de la zona.'
+                a: 'Trabajamos con Correo Argentino, Andreani y envíos en moto dentro de Río Grande. Los despachos salen en el día.'
               },
               {
                 q: '¿Puedo cambiar un producto?',
