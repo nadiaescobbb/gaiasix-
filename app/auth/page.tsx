@@ -1,3 +1,4 @@
+// app/auth/page.tsx
 "use client";
 
 import AuthPage from '../../components/auth/AuthPage';
@@ -9,13 +10,17 @@ export default function AuthRoute() {
     mode,
     isLoading,
     error,
+    successMessage,
     handleLogin,
     handleRegister,
-    handleToggleMode
+    handleToggleMode,
+    clearError,
+    clearSuccess
   } = useAuthForm();
 
+  // Mostrar spinner mientras se inicializa
   if (isLoading) {
-    return <LoadingSpinner message="Procesando..." />;
+    return <LoadingSpinner message="Cargando..." />;
   }
 
   return (

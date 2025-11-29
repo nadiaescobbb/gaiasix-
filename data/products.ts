@@ -39,10 +39,8 @@ export const categories: Category[] = [
   { id: 'vestidos', name: 'Vestidos', slug: 'vestidos', order: 1 },
   { id: 'tops', name: 'Tops', slug: 'tops', order: 2 },
   { id: 'sets', name: 'Sets', slug: 'sets', order: 3 },
-  { id: 'blusas', name: 'Blusas', slug: 'blusas', order: 4 },
-  { id: 'faldas', name: 'Faldas', slug: 'faldas', order: 5 },
-  { id: 'short', name: 'Short', slug: 'short', order: 6 },
-  { id: 'camperas', name: 'Camperas', slug: 'camperas', order: 7 },
+  { id: 'faldas', name: 'Faldas', slug: 'faldas', order: 4 },
+  { id: 'short', name: 'Short', slug: 'short', order: 5 },
 ];
 
 // ===================================================

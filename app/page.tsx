@@ -1,125 +1,10 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-
-// Simulación de datos de productos
-const featuredProducts = [
-  {
-    id: 1,
-    name: "Vestido Stun",
-    category: "vestidos",
-    price: 21500,
-    image: "/images/noche/vestido-stun.avif",
-    new: true,
-    featured: true
-  },
-  {
-    id: 2,
-    name: "Top Drape",
-    category: "tops",
-    price: 13550,
-    image: "/images/products/top-drape.avif",
-    new: true,
-    featured: true
-  }
-];
-
-const looks = [
-  {
-    id: 1,
-    name: "vestido isla",
-    price: 31500,
-    image: "/images/boho/vestido-isla.avif"
-  },
-  {
-    id: 2,
-    name: "pollera nala",
-    price: 33440,
-    image: "/images/boho/pollera-nala-ang.avif"
-  },
-  {
-    id: 3,
-    name: "vestido esme",
-    price: 29500,
-    image: "/images/boho/vestido-esme.avif"
-  }
-];
-
-const outfitCombinations = [
-  {
-    id: 1,
-    name: "Drape Silhouette",
-    items: [
-      { name: "Top drape", price: 13550 },
-      { name: "Mini trace", price: 11375 }
-    ],
-    image: "/images/products/top-drape.avif",
-    total: 24925
-  },
-  {
-    id: 2,
-    name: "Night Lines",
-    items: [
-      { name: "Top floyd", price: 16720 },
-      { name: "pollera nala", price: 33440 }
-    ],
-    image: "/images/noche/top-floyd.avif",
-    total: 50160
-  },
-  {
-    id: 3,
-    name: "Black Icon",
-    items: [
-      { name: "Vestido issi", price: 26400 }
-    ],
-    image: "/images/boho/vestido-issi.avif", 
-    total: 21500
-  }
-];
-
-// Slides del carrusel hero 
-const heroSlides = [
-  {
-    id: 1,
-    tag: "noche",
-    title: "prendas para",
-    titleHighlight: "salir",
-    subtitle: "nuevas piezas que no fallan",
-    image: "/images/boho/vestido-isla-.avif",
-    cta: "ver prendas"
-  },
-  {
-    id: 2,
-    tag: "sixerclub",
-    title: "beneficios",
-    titleHighlight: "sixer",
-    subtitle: "10% off + cuotas + envíos gratis",
-    image: "/images/boho/vestido-rio.avif",
-    cta: "activar"
-  },
-  {
-    id: 3,
-    tag: "tendencia 2025",
-    title: "prendas",
-    titleHighlight: "que acompañan",
-    subtitle: "fáciles de combinar",
-    image: "/images/boho/vestido-esme.avif",
-    cta: "ver prendas"
-  }
-];
-
+import { getFeaturedProducts, getNewProducts } from '../lib/products';
+import Link from 'next/link';
 
 // Definir tipos para TypeScript
-interface Product {
-  id: number;
-  name: string;
-  category: string;
-  price: number;
-  image: string;
-  new?: boolean;
-  featured?: boolean;
-}
-
 interface Look {
   id: number;
   name: string;
@@ -151,10 +36,99 @@ interface HeroSlide {
   cta: string;
 }
 
+// Slides del carrusel hero 
+const heroSlides: HeroSlide[] = [
+  {
+    id: 1,
+    tag: "noche",
+    title: "prendas para",
+    titleHighlight: "salir",
+    subtitle: "nuevas piezas que no fallan",
+    image: "/images/boho/vestido-isla-.avif",
+    cta: "ver prendas"
+  },
+  {
+    id: 2,
+    tag: "sixerclub",
+    title: "beneficios",
+    titleHighlight: "sixer",
+    subtitle: "10% off + cuotas + envíos gratis",
+    image: "/images/boho/vestido-rio.avif",
+    cta: "activar"
+  },
+  {
+    id: 3,
+    tag: "tendencia 2025",
+    title: "prendas",
+    titleHighlight: "que acompañan",
+    subtitle: "fáciles de combinar",
+    image: "/images/boho/vestido-esme.avif",
+    cta: "ver prendas"
+  }
+];
+
+// Datos de looks (puedes mover esto a lib/products.ts después)
+const looks: Look[] = [
+  {
+    id: 1,
+    name: "vestido isla",
+    price: 31500,
+    image: "/images/boho/vestido-isla.avif"
+  },
+  {
+    id: 2,
+    name: "pollera nala",
+    price: 33440,
+    image: "/images/boho/pollera-nala-ang.avif"
+  },
+  {
+    id: 3,
+    name: "vestido esme",
+    price: 29500,
+    image: "/images/boho/vestido-esme.avif"
+  }
+];
+
+const outfitCombinations: OutfitCombination[] = [
+  {
+    id: 1,
+    name: "Drape Silhouette",
+    items: [
+      { name: "Top drape", price: 13550 },
+      { name: "Mini trace", price: 11375 }
+    ],
+    image: "/images/products/top-drape.avif",
+    total: 24925
+  },
+  {
+    id: 2,
+    name: "Night Lines",
+    items: [
+      { name: "Top floyd", price: 16720 },
+      { name: "pollera nala", price: 33440 }
+    ],
+    image: "/images/noche/top-floyd.avif",
+    total: 50160
+  },
+  {
+    id: 3,
+    name: "Black Icon",
+    items: [
+      { name: "Vestido issi", price: 26400 }
+    ],
+    image: "/images/boho/vestido-issi.avif", 
+    total: 26400
+  }
+];
+
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
+  
+  // Usar productos reales de tu sistema
+  const featuredProducts = getFeaturedProducts(2);
+  const newProducts = getNewProducts(3);
 
   const formatPrice = (price: number) => {
     return `$${price.toLocaleString('es-AR')}`;
@@ -260,14 +234,14 @@ export default function HomePage() {
                     </p>
 
                     {/* CTA Button */}
-                    <a 
-                      href="#prendas"
+                    <Link 
+                      href="/shop"
                       className={`inline-block bg-white text-black px-8 py-4 text-sm font-medium tracking-wider uppercase hover:bg-[#AF161F] hover:text-white transition-all duration-300 shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 ${
                         index === currentSlide ? 'opacity-100 translate-y-0 delay-800' : 'opacity-0 translate-y-12'
                       }`}
                     >
                       {slide.cta}
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -304,7 +278,7 @@ export default function HomePage() {
       </section>
 
       {/* ========================================
-          ✨ FEATURED 
+          ✨ FEATURED PRODUCTS
           ======================================== */}
       <section id="prendas" className="py-20 md:py-32 bg-white">
         <div className="max-w-7xl mx-auto px-6">
@@ -314,7 +288,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 md:gap-16">
-            {featuredProducts.map((product: Product, idx: number) => (
+            {featuredProducts.map((product, idx: number) => (
               <div key={product.id} className={`group ${idx === 1 ? 'md:mt-24' : ''}`}>
                 <div className="relative bg-gray-50 aspect-[3/4] mb-6 overflow-hidden">
                   <img
@@ -327,18 +301,21 @@ export default function HomePage() {
                   {/* Badges */}
                   <div className="absolute top-4 left-4 flex gap-2">
                     {product.new && (
-                      <span className="bg-[#AF161F] text-white px-3 py-1.5 text-xs tracking-wider uppercase">Reingreso</span>
+                      <span className="bg-[#AF161F] text-white px-3 py-1.5 text-xs tracking-wider uppercase">Nuevo</span>
+                    )}
+                    {product.featured && (
+                      <span className="bg-black text-white px-3 py-1.5 text-xs tracking-wider uppercase">Destacado</span>
                     )}
                   </div>
 
                   {/* Quick view overlay */}
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <a 
-                      href={`#product-${product.id}`}
-                      className="bg-white text-black px-6 py-3 text-sm tracking-wider uppercase hover:bg-black hover:text-white transition-colors duration-300 shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform"
+                    <Link 
+                      href={`/shop/product/${product.slug}`}
+                      className="bg-white text-black px-6 py-3 text-sm tracking-wider uppercase hover:bg-black hover:text-white transition-colors duration-300 shadow-lg transform translate-y-4 group-hover:translate-y-0"
                     >
                       ver detalles
-                    </a>
+                    </Link>
                   </div>
                 </div>
 
@@ -351,6 +328,16 @@ export default function HomePage() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Ver más button */}
+          <div className="text-center mt-16">
+            <Link 
+              href="/shop"
+              className="inline-block border border-black text-black px-8 py-4 text-sm font-medium tracking-wider uppercase hover:bg-black hover:text-white transition-all duration-300"
+            >
+              ver toda la tienda
+            </Link>
           </div>
         </div>
       </section>
@@ -378,18 +365,15 @@ export default function HomePage() {
                 </div>
 
                 <div className="p-6">
-                 <p className="text-xs text-black/40 mb-1 capitalize tracking-wider">
-                  {look.description}
-                </p>
                   <h3 className="text-lg font-light mb-3 capitalize">{look.name}</h3>
                   <div className="flex justify-between items-center">
                     <p className="text-lg font-medium">{formatPrice(look.price)}</p>
-                    <a 
-                      href={`#product-${look.id}`}
+                    <Link 
+                      href="/shop"
                       className="text-xs underline hover:text-[#AF161F] transition-colors uppercase tracking-wider"
                     >
                       armar look
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -438,12 +422,12 @@ export default function HomePage() {
                     </div>
                   )}
 
-                  <a 
-                    href="#shop"
+                  <Link 
+                    href="/shop"
                     className="block w-full bg-black text-white py-3 text-sm text-center tracking-wider uppercase hover:bg-[#AF161F] transition-colors duration-300"
                   >
                     comprar
-                  </a>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -518,14 +502,14 @@ export default function HomePage() {
               <ul className="space-y-2 text-sm text-white/70">
                 <li>envíos 24-48hs</li>
                 <li>6 cuotas sin interés</li>
-                <li>cambios  dentro de los 7 días</li>
+                <li>cambios dentro de los 7 días</li>
               </ul>
             </div>
 
             <div>
               <h4 className="text-xs text-white/40 mb-4 tracking-[0.2em] uppercase">LINKS</h4>
               <ul className="space-y-2 text-sm text-white/70">
-                <li><a href="#shop" className="hover:text-white transition-colors">tienda</a></li>
+                <li><Link href="/shop" className="hover:text-white transition-colors">tienda</Link></li>
                 <li><a href="#about" className="hover:text-white transition-colors">nosotros</a></li>
                 <li><a href="#faq" className="hover:text-white transition-colors">FAQ</a></li>
               </ul>

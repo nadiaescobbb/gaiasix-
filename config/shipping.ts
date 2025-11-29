@@ -1,6 +1,20 @@
+// config/shipping.ts
+
 // ===================================================
-// CONFIGURACIÓN DE ENVÍOS Y ENTREGAS
+// CONFIGURACIÓN MEJORADA CON MÚLTIPLES TRANSPORTISTAS
 // ===================================================
+
+export interface ShippingCarrier {
+  id: string;
+  name: string;
+  logo: string;
+  apiEnabled: boolean;
+  apiConfig?: {
+    baseUrl: string;
+    apiKey: string;
+    calculatorEndpoint: string;
+  };
+}
 
 export interface ShippingMethod {
   id: string;
@@ -8,16 +22,26 @@ export interface ShippingMethod {
   description: string;
   price: number;
   deliveryTime: string;
-  freeThreshold?: number; // Precio mínimo para envío gratis
+  freeThreshold?: number;
   available: boolean;
   icon: string;
+  carrier: string; // 'correo-argentino' | 'andreani' | 'pickup' | 'custom'
+  serviceType: string; // Tipo de servicio específico del carrier
+  requiresAddress: boolean;
+  weightLimit?: number; // kg
+  dimensionsLimit?: string; // "LxAxA cm"
+  insurance?: number; // Valor del seguro incluido
+  tracking: boolean;
+  apiCalculated: boolean; // Si el precio se calcula via API
 }
 
 export interface ShippingZone {
   id: string;
   name: string;
   provinces: string[];
+  carriers: string[]; // Carriers disponibles en esta zona
   methods: string[]; // IDs de métodos disponibles
+  extraCost?: number; // Costo adicional por zona remota
 }
 
 export interface ShippingConfig {
@@ -33,123 +57,319 @@ export interface ShippingConfig {
 }
 
 // ===================================================
-// MÉTODOS DE ENVÍO DISPONIBLES
+// LISTA DE PROVINCIAS ARGENTINAS
 // ===================================================
 
-export const shippingMethods: ShippingMethod[] = [
+export const argentinianProvinces = [
+  'Buenos Aires',
+  'Catamarca',
+  'Chaco',
+  'Chubut',
+  'Córdoba',
+  'Corrientes',
+  'Entre Ríos',
+  'Formosa',
+  'Jujuy',
+  'La Pampa',
+  'La Rioja',
+  'Mendoza',
+  'Misiones',
+  'Neuquén',
+  'Río Negro',
+  'Salta',
+  'San Juan',
+  'San Luis',
+  'Santa Cruz',
+  'Santa Fe',
+  'Santiago del Estero',
+  'Tierra del Fuego',
+  'Tucumán'
+];
+
+// ===================================================
+// TRANSPORTISTAS DISPONIBLES
+// ===================================================
+
+export const shippingCarriers: ShippingCarrier[] = [
   {
-    id: 'standard',
-    name: 'Envío Estándar',
-    description: 'Entrega en 3-5 días hábiles',
-    price: 2500,
-    deliveryTime: '3-5 días hábiles',
-    freeThreshold: 50000,
-    available: true,
-    icon: '🚚'
+    id: 'correo-argentino',
+    name: 'Correo Argentino',
+    logo: '📮',
+    apiEnabled: true,
+    apiConfig: {
+      baseUrl: 'https://api.correoargentino.com.ar',
+      apiKey: process.env.CORREO_ARGENTINO_API_KEY || '',
+      calculatorEndpoint: '/shipping/calculate'
+    }
   },
   {
-    id: 'express',
-    name: 'Envío Express',
-    description: 'Entrega en 24-48 horas',
-    price: 4500,
-    deliveryTime: '24-48 horas',
-    freeThreshold: 80000,
-    available: true,
-    icon: '⚡'
+    id: 'andreani',
+    name: 'Andreani',
+    logo: '🚛',
+    apiEnabled: true,
+    apiConfig: {
+      baseUrl: 'https://api.andreani.com',
+      apiKey: process.env.ANDREANI_API_KEY || '',
+      calculatorEndpoint: '/v1/tarifas'
+    }
   },
   {
     id: 'pickup',
-    name: 'Retiro en Showroom',
-    description: 'Retirá gratis en nuestro showroom',
-    price: 0,
-    deliveryTime: 'Coordinado por WhatsApp',
-    available: true,
-    icon: '🏪'
+    name: 'Retiro en Local',
+    logo: '🏪',
+    apiEnabled: false
   },
   {
-    id: 'international',
-    name: 'Envío Internacional',
-    description: 'América Latina - Consultar costos',
-    price: 15000,
-    deliveryTime: '7-15 días hábiles',
-    available: false, // Temporalmente no disponible
-    icon: '🌎'
+    id: 'custom',
+    name: 'Envío Propio',
+    logo: '🚚',
+    apiEnabled: false
   }
 ];
 
 // ===================================================
-// ZONAS DE ENVÍO
+// MÉTODOS DE ENVÍO EXPANDIDOS
+// ===================================================
+
+export const shippingMethods: ShippingMethod[] = [
+  // CORREO ARGENTINO
+  {
+    id: 'correo-standard',
+    name: 'Correo Argentino - Estandar',
+    description: 'Envío económico a todo el país',
+    price: 1800,
+    deliveryTime: '5-8 días hábiles',
+    freeThreshold: 45000,
+    available: true,
+    icon: '📮',
+    carrier: 'correo-argentino',
+    serviceType: 'standard',
+    requiresAddress: true,
+    weightLimit: 25,
+    dimensionsLimit: '60x60x60',
+    insurance: 10000,
+    tracking: true,
+    apiCalculated: true
+  },
+  {
+    id: 'correo-express',
+    name: 'Correo Argentino - Express',
+    description: 'Entrega prioritaria',
+    price: 3500,
+    deliveryTime: '2-4 días hábiles',
+    freeThreshold: 70000,
+    available: true,
+    icon: '📮⚡',
+    carrier: 'correo-argentino',
+    serviceType: 'express',
+    requiresAddress: true,
+    weightLimit: 15,
+    tracking: true,
+    apiCalculated: true
+  },
+  {
+    id: 'correo-priority',
+    name: 'Correo Argentino - Prioritario',
+    description: 'Máxima velocidad de entrega',
+    price: 5000,
+    deliveryTime: '24-48 horas',
+    freeThreshold: 90000,
+    available: true,
+    icon: '📮🚀',
+    carrier: 'correo-argentino',
+    serviceType: 'priority',
+    requiresAddress: true,
+    weightLimit: 10,
+    tracking: true,
+    apiCalculated: true
+  },
+
+  // ANDREANI
+  {
+    id: 'andreani-standard',
+    name: 'Andreani - Estandar',
+    description: 'Logística profesional a domicilio',
+    price: 2200,
+    deliveryTime: '3-6 días hábiles',
+    freeThreshold: 50000,
+    available: true,
+    icon: '🚛',
+    carrier: 'andreani',
+    serviceType: 'standard',
+    requiresAddress: true,
+    weightLimit: 30,
+    dimensionsLimit: '80x80x80',
+    insurance: 20000,
+    tracking: true,
+    apiCalculated: true
+  },
+  {
+    id: 'andreani-express',
+    name: 'Andreani - Express',
+    description: 'Entrega rápida con seguimiento',
+    price: 4000,
+    deliveryTime: '1-3 días hábiles',
+    freeThreshold: 75000,
+    available: true,
+    icon: '🚛⚡',
+    carrier: 'andreani',
+    serviceType: 'express',
+    requiresAddress: true,
+    weightLimit: 20,
+    tracking: true,
+    apiCalculated: true
+  },
+  {
+    id: 'andreani-urgent',
+    name: 'Andreani - Urgente',
+    description: 'Servicio premium de entrega',
+    price: 6500,
+    deliveryTime: '24 horas',
+    freeThreshold: 100000,
+    available: false, // Solo para CABA y GBA
+    icon: '🚛🚨',
+    carrier: 'andreani',
+    serviceType: 'urgent',
+    requiresAddress: true,
+    weightLimit: 15,
+    tracking: true,
+    apiCalculated: true
+  },
+
+  // RETIRO EN LOCAL
+  {
+    id: 'pickup-showroom',
+    name: 'Retiro en Showroom',
+    description: 'Retirá gratis en nuestro showroom de Palermo',
+    price: 0,
+    deliveryTime: 'Coordinado por WhatsApp',
+    available: true,
+    icon: '🏪',
+    carrier: 'pickup',
+    serviceType: 'showroom',
+    requiresAddress: false,
+    tracking: false,
+    apiCalculated: false
+  },
+  {
+    id: 'pickup-point',
+    name: 'Punto de Retiro',
+    description: 'Retirá en nuestros puntos asociados',
+    price: 0,
+    deliveryTime: '2-3 días hábiles',
+    available: true,
+    icon: '📍',
+    carrier: 'pickup',
+    serviceType: 'pickup-point',
+    requiresAddress: false,
+    tracking: false,
+    apiCalculated: false
+  },
+
+  // ENVÍO PROPIO (backup)
+  {
+    id: 'custom-standard',
+    name: 'Envío Propio - Estandar',
+    description: 'Nuestro servicio de envío',
+    price: 2500,
+    deliveryTime: '4-7 días hábiles',
+    freeThreshold: 50000,
+    available: true,
+    icon: '🚚',
+    carrier: 'custom',
+    serviceType: 'standard',
+    requiresAddress: true,
+    tracking: true,
+    apiCalculated: false
+  }
+];
+
+// ===================================================
+// ZONAS DE ENVÍO MEJORADAS
 // ===================================================
 
 export const shippingZones: ShippingZone[] = [
   {
-    id: 'tierra-del-fuego',
-    name: 'Tierra del Fuego',
-    provinces: ['Tierra del Fuego'],
-    methods: ['standard', 'express', 'pickup']
-  },
-  {
-    id: 'patagonia',
-    name: 'Patagonia',
-    provinces: ['Santa Cruz', 'Chubut', 'Río Negro', 'Neuquén'],
-    methods: ['standard', 'express']
-  },
-  {
-    id: 'buenos-aires',
-    name: 'Buenos Aires',
+    id: 'caba-gba',
+    name: 'CABA y GBA',
     provinces: ['Buenos Aires'],
-    methods: ['standard', 'express']
+    carriers: ['correo-argentino', 'andreani', 'pickup', 'custom'],
+    methods: [
+      'correo-standard', 'correo-express', 'correo-priority',
+      'andreani-standard', 'andreani-express', 'andreani-urgent',
+      'pickup-showroom', 'pickup-point', 'custom-standard'
+    ]
   },
   {
     id: 'centro',
     name: 'Región Centro',
     provinces: ['Córdoba', 'Santa Fe', 'Entre Ríos', 'La Pampa'],
-    methods: ['standard', 'express']
+    carriers: ['correo-argentino', 'andreani', 'custom'],
+    methods: [
+      'correo-standard', 'correo-express',
+      'andreani-standard', 'andreani-express',
+      'custom-standard'
+    ]
+  },
+  {
+    id: 'patagonia',
+    name: 'Patagonia',
+    provinces: ['Santa Cruz', 'Chubut', 'Río Negro', 'Neuquén'],
+    carriers: ['correo-argentino', 'andreani'],
+    methods: [
+      'correo-standard', 'correo-express',
+      'andreani-standard'
+    ],
+    extraCost: 800 // Costo adicional por zona remota
   },
   {
     id: 'norte',
     name: 'Región Norte',
     provinces: ['Jujuy', 'Salta', 'Formosa', 'Chaco', 'Santiago del Estero', 'Tucumán', 'Catamarca', 'La Rioja', 'Misiones', 'Corrientes'],
-    methods: ['standard']
+    carriers: ['correo-argentino'],
+    methods: ['correo-standard', 'correo-express'],
+    extraCost: 500
   },
   {
     id: 'cuyo',
     name: 'Región Cuyo',
     provinces: ['Mendoza', 'San Juan', 'San Luis'],
-    methods: ['standard', 'express']
+    carriers: ['correo-argentino', 'andreani'],
+    methods: [
+      'correo-standard', 'correo-express',
+      'andreani-standard'
+    ]
+  },
+  {
+    id: 'tierra-del-fuego',
+    name: 'Tierra del Fuego',
+    provinces: ['Tierra del Fuego'],
+    carriers: ['correo-argentino'],
+    methods: ['correo-standard'],
+    extraCost: 1500
   }
 ];
 
 // ===================================================
-// CONFIGURACIÓN PRINCIPAL
-// ===================================================
-
-export const shippingConfig: ShippingConfig = {
-  defaultMethod: 'standard',
-  freeShippingThreshold: 50000, // $50.000 para envío gratis
-  availableMethods: shippingMethods.filter(method => method.available),
-  shippingZones,
-  processingTime: '24-48 horas hábiles',
-  returnPolicy: {
-    days: 7,
-    conditions: [
-      'El producto debe estar en perfecto estado',
-      'Debe conservar todas las etiquetas',
-      'No debe haber sido usado',
-      'Presentar ticket de compra',
-      'El costo de envío de devolución corre por cuenta del cliente'
-    ]
-  }
-};
-
-// ===================================================
-// FUNCIONES UTILITARIAS
+// FUNCIONES UTILITARIAS MEJORADAS
 // ===================================================
 
 /**
- * Calcula el costo de envío basado en el total del carrito
+ * Calcula envío considerando APIs de transportistas
  */
-export function calculateShipping(cartTotal: number, methodId: string = 'standard'): number {
+export async function calculateShipping(
+  cartTotal: number, 
+  methodId: string = 'correo-standard',
+  destination?: {
+    province: string;
+    city: string;
+    zipCode: string;
+  },
+  packageInfo?: {
+    weight: number;
+    dimensions: string;
+  }
+): Promise<number> {
   const method = shippingMethods.find(m => m.id === methodId);
   
   if (!method || !method.available) {
@@ -161,11 +381,125 @@ export function calculateShipping(cartTotal: number, methodId: string = 'standar
     return 0;
   }
 
-  return method.price;
+  // Si el método usa API, calcular precio real
+  if (method.apiCalculated && destination) {
+    try {
+      const apiPrice = await calculateShippingViaAPI(method, destination, packageInfo);
+      return apiPrice;
+    } catch (error) {
+      console.warn(`Error calculando envío via API, usando precio fijo: ${method.price}`);
+      return method.price;
+    }
+  }
+
+  // Aplicar costo adicional por zona
+  const zone = shippingZones.find(z => 
+    z.provinces.some(p => p.toLowerCase() === destination?.province.toLowerCase())
+  );
+  
+  const basePrice = method.price;
+  const extraCost = zone?.extraCost || 0;
+  
+  return basePrice + extraCost;
 }
 
 /**
+ * Calcula envío via API del transportista
+ */
+async function calculateShippingViaAPI(
+  method: ShippingMethod,
+  destination: { province: string; city: string; zipCode: string },
+  packageInfo?: { weight: number; dimensions: string }
+): Promise<number> {
+  const carrier = shippingCarriers.find(c => c.id === method.carrier);
+  
+  if (!carrier?.apiEnabled || !carrier.apiConfig) {
+    throw new Error(`API no configurada para ${carrier?.name}`);
+  }
+
+  // Aquí integrarías con las APIs reales
+  // Ejemplo para Correo Argentino:
+  if (method.carrier === 'correo-argentino') {
+    return await calculateCorreoArgentinoShipping(method, destination, packageInfo);
+  }
+  
+  // Ejemplo para Andreani:
+  if (method.carrier === 'andreani') {
+    return await calculateAndreaniShipping(method, destination, packageInfo);
+  }
+
+  return method.price; // Fallback al precio fijo
+}
+
+/**
+ * Simulación API Correo Argentino
+ */
+async function calculateCorreoArgentinoShipping(
+  method: ShippingMethod,
+  destination: { province: string; city: string; zipCode: string },
+  packageInfo?: { weight: number; dimensions: string }
+): Promise<number> {
+  // En un caso real, harías fetch a la API de Correo Argentino
+  // Por ahora usamos el precio fijo como fallback
+  console.log('Calculando envío Correo Argentino:', { method: method.serviceType, destination });
+  
+  // Simular delay de API
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  return method.price; // Usar precio base por ahora
+}
+
+/**
+ * Simulación API Andreani
+ */
+async function calculateAndreaniShipping(
+  method: ShippingMethod,
+  destination: { province: string; city: string; zipCode: string },
+  packageInfo?: { weight: number; dimensions: string }
+): Promise<number> {
+  // En un caso real, harías fetch a la API de Andreani
+  // Por ahora usamos el precio fijo como fallback
+  console.log('Calculando envío Andreani:', { method: method.serviceType, destination });
+  
+  // Simular delay de API
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  return method.price; // Usar precio base por ahora
+}
+
+/**
+ * Obtiene métodos disponibles filtrados por transportista
+ */
+export function getMethodsByCarrier(carrierId: string): ShippingMethod[] {
+  return shippingMethods.filter(method => 
+    method.carrier === carrierId && method.available
+  );
+}
+
+/**
+ * Obtiene carriers disponibles para una provincia
+ */
+export function getAvailableCarriersForProvince(province: string): ShippingCarrier[] {
+  const zone = shippingZones.find(z => 
+    z.provinces.some(p => p.toLowerCase() === province.toLowerCase())
+  );
+  
+  if (!zone) {
+    return shippingCarriers.filter(c => c.id === 'correo-argentino');
+  }
+
+  return shippingCarriers.filter(carrier => 
+    zone.carriers.includes(carrier.id)
+  );
+}
+
+// ===================================================
+// FUNCIONES FALTANTES PARA EL CHECKOUT
+// ===================================================
+
+/**
  * Obtiene métodos de envío disponibles para una provincia
+ * (Función requerida por el checkout)
  */
 export function getAvailableMethodsForProvince(province: string): ShippingMethod[] {
   const zone = shippingZones.find(z => 
@@ -173,7 +507,8 @@ export function getAvailableMethodsForProvince(province: string): ShippingMethod
   );
   
   if (!zone) {
-    return shippingMethods.filter(m => m.available && m.id === 'standard');
+    // Si no se encuentra la zona, devolver métodos estándar disponibles
+    return shippingMethods.filter(m => m.available && m.id === 'correo-standard');
   }
 
   return shippingMethods.filter(method => 
@@ -204,13 +539,13 @@ export function getEstimatedDelivery(methodId: string): string {
  */
 export function getDefaultMethodForProvince(province: string): string {
   const availableMethods = getAvailableMethodsForProvince(province);
-  const standardMethod = availableMethods.find(m => m.id === 'standard');
+  const standardMethod = availableMethods.find(m => m.id === 'correo-standard');
   
   if (standardMethod && standardMethod.available) {
-    return 'standard';
+    return 'correo-standard';
   }
   
-  return availableMethods[0]?.id || 'standard';
+  return availableMethods[0]?.id || 'correo-standard';
 }
 
 /**
@@ -230,34 +565,26 @@ export function getAllProvinces(): string[] {
 }
 
 // ===================================================
-// DATOS PARA FORMULARIOS
+// CONFIGURACIÓN PRINCIPAL ACTUALIZADA
 // ===================================================
 
-export const argentinianProvinces = [
-  'Buenos Aires',
-  'Catamarca',
-  'Chaco',
-  'Chubut',
-  'Córdoba',
-  'Corrientes',
-  'Entre Ríos',
-  'Formosa',
-  'Jujuy',
-  'La Pampa',
-  'La Rioja',
-  'Mendoza',
-  'Misiones',
-  'Neuquén',
-  'Río Negro',
-  'Salta',
-  'San Juan',
-  'San Luis',
-  'Santa Cruz',
-  'Santa Fe',
-  'Santiago del Estero',
-  'Tierra del Fuego',
-  'Tucumán'
-];
+export const shippingConfig: ShippingConfig = {
+  defaultMethod: 'correo-standard',
+  freeShippingThreshold: 50000,
+  availableMethods: shippingMethods.filter(method => method.available),
+  shippingZones,
+  processingTime: '24-48 horas hábiles',
+  returnPolicy: {
+    days: 7,
+    conditions: [
+      'El producto debe estar en perfecto estado',
+      'Debe conservar todas las etiquetas',
+      'No debe haber sido usado',
+      'Presentar ticket de compra',
+      'El costo de envío de devolución corre por cuenta del cliente'
+    ]
+  }
+};
 
 // ===================================================
 // VALIDACIÓN DE CONFIGURACIÓN

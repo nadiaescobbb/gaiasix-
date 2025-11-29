@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 // ==========================================
 // TIPOS PRINCIPALES
 // ==========================================
@@ -244,4 +246,31 @@ export interface PaginatedResponse<T> {
   page: number;
   limit: number;
   totalPages: number;
+}
+
+// ==========================================
+// TOAST TYPES
+// ==========================================
+
+export type ToastType = 'success' | 'error' | 'warning' | 'info';
+
+export interface Toast {
+  id: number;
+  message: string;
+  type: ToastType;
+  duration?: number;
+}
+
+export interface ToastContextType {
+  success: (message: string, duration?: number) => number;
+  error: (message: string, duration?: number) => number;
+  warning: (message: string, duration?: number) => number;
+  info: (message: string, duration?: number) => number;
+  addToast: (message: string, type?: ToastType, duration?: number) => number;
+  removeToast: (id: number) => void;
+  toasts: Toast[];
+}
+
+export interface ToastProviderProps {
+  children: ReactNode;
 }
