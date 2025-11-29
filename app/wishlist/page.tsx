@@ -4,10 +4,10 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Heart, ShoppingBag, ArrowLeft, Trash2 } from 'lucide-react';
-import { formatPrice } from "../../../utils/formatters";
-import { useAppContext } from "../../../context/AppContext";
-import { WishlistButton } from "../../../components/ui/WishlistButton";
-import { type Product, type WishlistItem } from "../../../lib/types";
+import { formatPrice } from "../../utils/formatters";
+import { useAppContext } from "../../context/AppContext";
+import { WishlistButton } from "../../components/ui/WishlistButton";
+import { type Product, type WishlistItem } from "../../lib/types";
 
 // ===================================================
 // TYPES

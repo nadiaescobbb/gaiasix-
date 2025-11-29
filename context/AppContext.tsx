@@ -3,9 +3,10 @@
 import { createContext, useContext, useEffect, useState, useCallback, useMemo, ReactNode } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
-// ✅ IMPORTACIONES 
+// Utils mejorados
 import { hashPassword, verifyPassword, validatePasswordStrength, migrateUserPassword } from '../lib/auth';
-import { logger, logSection, logErrorWithContext } from '../lib/logger';
+import { generateId } from '../lib/utils';
+import { logger } from '../lib/logger';
 import { 
   type User, 
   type CartItem, 
@@ -21,7 +22,7 @@ import {
 } from '../lib/types';
 
 // ==========================================
-// STORAGE HELPERS
+// STORAGE HELPERS MEJORADOS
 // ==========================================
 
 const isBrowser = typeof window !== 'undefined';
@@ -68,7 +69,6 @@ const removeStorageItem = (key: string): boolean => {
 
 const AppContext = createContext<AppContextType | null>(null);
 
-// ✅ HOOK EXPORTADO CORRECTAMENTE
 export const useAppContext = (): AppContextType => {
   const context = useContext(AppContext);
   if (!context) {
@@ -78,7 +78,7 @@ export const useAppContext = (): AppContextType => {
 };
 
 // ==========================================
-// PROVIDER COMPONENT
+// PROVIDER COMPONENT MEJORADO
 // ==========================================
 
 export function AppProvider({ children }: AppProviderProps) {
@@ -113,7 +113,7 @@ export function AppProvider({ children }: AppProviderProps) {
   }, 600);
 
   // ==========================================
-  // INICIALIZACIÓN 
+  // INICIALIZACIÓN MEJORADA
   // ==========================================
   
   useEffect(() => {
@@ -124,107 +124,55 @@ export function AppProvider({ children }: AppProviderProps) {
 
     const initializeData = async () => {
       try {
-        logSection('INICIALIZACIÓN DE DATOS');
+        logger.info('🔧 Inicializando datos de la aplicación...');
 
         const storedUser = getStorageItem<User | null>('gaia-current-user', null);
         const storedUsers = getStorageItem<User[]>('gaia-users', []);
         const storedCart = getStorageItem<CartItem[]>('gaia-cart', []);
         const storedWishlist = getStorageItem<WishlistItem[]>('gaia-wishlist', []);
 
-        logger.log('Validando datos de localStorage...');
-
         // Validar usuario actual
-        if (storedUser && 
-            typeof storedUser === 'object' && 
-            storedUser.id && 
-            storedUser.email &&
-            typeof storedUser.email === 'string' &&
-            storedUser.password) {
-          setCurrentUser(storedUser);
-          logger.success(`Usuario encontrado: ${storedUser.email}`);
+        if (storedUser && isValidUser(storedUser)) {
+          // Migrar contraseña si es necesario
+          const migratedUser = await migrateUserPassword(storedUser);
+          setCurrentUser(migratedUser);
+          logger.success(`Usuario cargado: ${migratedUser.email}`);
         } else {
           removeStorageItem('gaia-current-user');
           setCurrentUser(null);
-          logger.info('No hay usuario activo');
         }
 
         // Validar lista de usuarios
         if (Array.isArray(storedUsers)) {
-          const validUsers = storedUsers.filter(user => 
-            user && 
-            typeof user === 'object' &&
-            user.id && 
-            user.email &&
-            typeof user.email === 'string' &&
-            user.password &&
-            typeof user.password === 'string'
-          );
-
+          const validUsers = storedUsers.filter(isValidUser);
           if (validUsers.length > 0) {
-            logger.log(`Migrando ${validUsers.length} usuarios...`);
             const migratedUsers = await Promise.all(
               validUsers.map(user => migrateUserPassword(user))
             );
             setUsers(migratedUsers);
-            logger.success(`✓ ${migratedUsers.length} usuarios migrados`);
+            logger.info(`${migratedUsers.length} usuarios migrados`);
           } else {
             setUsers([]);
           }
-        } else {
-          setUsers([]);
         }
 
         // Validar carrito
         if (Array.isArray(storedCart)) {
-          const validCart = storedCart.filter(item => 
-            item &&
-            typeof item === 'object' &&
-            item.id &&
-            typeof item.id === 'number' &&
-            item.name &&
-            typeof item.name === 'string' &&
-            typeof item.price === 'number' &&
-            item.price > 0 &&
-            typeof item.quantity === 'number' &&
-            item.quantity > 0 &&
-            item.quantity <= 99 &&
-            item.size &&
-            typeof item.size === 'string'
-          );
+          const validCart = storedCart.filter(isValidCartItem);
           setCart(validCart);
-          logger.log(`🛒 Carrito: ${storedCart.length} items, ${validCart.length} válidos`);
-        } else {
-          setCart([]);
+          logger.info(`Carrito: ${validCart.length} items válidos`);
         }
 
         // Validar wishlist
         if (Array.isArray(storedWishlist)) {
-          const validWishlist = storedWishlist.filter(item => 
-            item &&
-            typeof item === 'object' &&
-            item.id &&
-            typeof item.id === 'number' &&
-            item.name &&
-            typeof item.name === 'string' &&
-            typeof item.price === 'number' &&
-            item.price > 0 &&
-            item.image &&
-            typeof item.image === 'string'
-          );
+          const validWishlist = storedWishlist.filter(isValidWishlistItem);
           setWishlist(validWishlist);
-          logger.log(`❤️ Wishlist: ${storedWishlist.length} items, ${validWishlist.length} válidos`);
-        } else {
-          setWishlist([]);
+          logger.info(`Wishlist: ${validWishlist.length} items válidos`);
         }
 
-        logger.success('Validación de datos completada exitosamente');
-
       } catch (error) {
-        logErrorWithContext(error, {
-          function: 'initializeData',
-          timestamp: new Date().toISOString()
-        });
-        
+        logger.error('Error en inicialización:', error);
+        // Limpiar datos corruptos
         removeStorageItem('gaia-current-user');
         removeStorageItem('gaia-users');
         removeStorageItem('gaia-cart');
@@ -235,12 +183,49 @@ export function AppProvider({ children }: AppProviderProps) {
         setWishlist([]);
       } finally {
         setIsInitialized(true);
-        logger.info('🚀 Aplicación inicializada');
+        logger.success('✅ Aplicación inicializada');
       }
     };
 
     initializeData();
   }, []);
+
+  // ==========================================
+  // FUNCIONES DE VALIDACIÓN
+  // ==========================================
+
+  const isValidUser = (user: any): user is User => {
+    return user &&
+      typeof user === 'object' &&
+      typeof user.id === 'number' &&
+      typeof user.email === 'string' &&
+      user.email.includes('@') &&
+      typeof user.password === 'string' &&
+      user.password.length > 0;
+  };
+
+  const isValidCartItem = (item: any): item is CartItem => {
+    return item &&
+      typeof item === 'object' &&
+      typeof item.id === 'number' &&
+      typeof item.name === 'string' &&
+      typeof item.price === 'number' &&
+      item.price > 0 &&
+      typeof item.quantity === 'number' &&
+      item.quantity > 0 &&
+      item.quantity <= 99 &&
+      typeof item.size === 'string' &&
+      typeof item.stock === 'number';
+  };
+
+  const isValidWishlistItem = (item: any): item is WishlistItem => {
+    return item &&
+      typeof item === 'object' &&
+      typeof item.id === 'number' &&
+      typeof item.name === 'string' &&
+      typeof item.price === 'number' &&
+      item.price > 0;
+  };
 
   // ==========================================
   // PERSISTENCIA CON DEBOUNCE
@@ -267,7 +252,7 @@ export function AppProvider({ children }: AppProviderProps) {
   }, [wishlist, isInitialized, debouncedSaveWishlist]);
 
   // ==========================================
-  // AUTH ACTIONS
+  // AUTH ACTIONS MEJORADAS
   // ==========================================
   
   const login = useCallback(async (email: string, password: string): Promise<LoginResult> => {
@@ -279,13 +264,14 @@ export function AppProvider({ children }: AppProviderProps) {
       const user = users.find(u => u.email === email);
       
       if (!user) {
-        logger.warn(`Intento de login fallido: usuario no encontrado (${email})`);
+        logger.warn(`Login fallido: usuario no encontrado - ${email}`);
         return { success: false, error: 'Usuario no encontrado' };
       }
 
       const isPasswordValid = await verifyPassword(password, user.password);
       
       if (isPasswordValid) {
+        // Migrar contraseña si es necesario
         if (user.password && !user.password.startsWith('$2a$') && !user.password.startsWith('$2b$')) {
           const migratedUser = await migrateUserPassword(user);
           setUsers(prev => prev.map(u => u.id === user.id ? migratedUser : u));
@@ -294,23 +280,20 @@ export function AppProvider({ children }: AppProviderProps) {
           setCurrentUser(user);
         }
         logger.success(`Login exitoso: ${email}`);
-        return { success: true };
+        return { success: true, user };
       } else {
-        logger.warn(`Intento de login fallido: contraseña incorrecta (${email})`);
+        logger.warn(`Login fallido: contraseña incorrecta - ${email}`);
         return { success: false, error: 'Contraseña incorrecta' };
       }
     } catch (error) {
-      logErrorWithContext(error, {
-        function: 'login',
-        email,
-        timestamp: new Date().toISOString()
-      });
+      logger.error('Error en login:', error);
       return { success: false, error: 'Error interno del sistema' };
     }
   }, [users]);
 
   const register = useCallback(async (userData: RegisterUserData): Promise<RegisterResult> => {
     try {
+      // Validaciones
       if (!userData.email || !userData.password) {
         return { success: false, error: 'Email y contraseña requeridos' };
       }
@@ -327,31 +310,29 @@ export function AppProvider({ children }: AppProviderProps) {
 
       const emailExists = users.some(u => u.email === userData.email);
       if (emailExists) {
-        logger.warn(`Intento de registro con email duplicado: ${userData.email}`);
+        logger.warn(`Registro fallido: email duplicado - ${userData.email}`);
         return { success: false, error: 'El email ya está registrado' };
       }
 
+      // Crear usuario
       const hashedPassword = await hashPassword(userData.password);
-
-      const newUser: User = { 
+      const newUser: User = {
         ...userData,
-        id: Date.now(),
+        id: generateId(),
         password: hashedPassword,
         orders: [],
-        createdAt: new Date().toISOString()
-      } as User;
-      
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
       setUsers(prev => [...prev, newUser]);
       setCurrentUser(newUser);
+      
       logger.success(`Registro exitoso: ${userData.email}`);
-      return { success: true };
+      return { success: true, user: newUser };
       
     } catch (error) {
-      logErrorWithContext(error, {
-        function: 'register',
-        email: userData.email,
-        timestamp: new Date().toISOString()
-      });
+      logger.error('Error en registro:', error);
       return { success: false, error: 'Error al crear la cuenta' };
     }
   }, [users]);
@@ -362,21 +343,32 @@ export function AppProvider({ children }: AppProviderProps) {
     removeStorageItem('gaia-current-user');
   }, [currentUser]);
 
-  const updateUserOrders = useCallback((orderId: number, orderData: Partial<Order>): void => {
+  const updateUserOrders = useCallback((orderData: Omit<Order, 'id'>): void => {
     if (!currentUser) return;
+
+    const newOrder: Order = {
+      ...orderData,
+      id: generateId()
+    };
 
     const updatedUser: User = {
       ...currentUser,
-      orders: [...(currentUser.orders || []), { id: orderId, ...orderData } as Order]
+      orders: [...(currentUser.orders || []), newOrder],
+      updatedAt: new Date().toISOString()
     };
 
     setUsers(prev => prev.map(u => u.id === currentUser.id ? updatedUser : u));
     setCurrentUser(updatedUser);
-    logger.success(`Orden #${orderId} agregada al usuario ${currentUser.email}`);
-  }, [currentUser]);
+    
+    // Persistir inmediatamente
+    setStorageItem('gaia-current-user', updatedUser);
+    setStorageItem('gaia-users', users.map(u => u.id === currentUser.id ? updatedUser : u));
+    
+    logger.success(`Orden #${newOrder.id} agregada a ${currentUser.email}`);
+  }, [currentUser, users]);
 
   // ==========================================
-  // CART ACTIONS
+  // CART ACTIONS MEJORADAS
   // ==========================================
   
   const addToCart = useCallback((product: Product, size: string): void => {
@@ -387,21 +379,25 @@ export function AppProvider({ children }: AppProviderProps) {
         );
         
         if (existingItem) {
-          if (existingItem.quantity >= product.stock) {
-            logger.warn(`Stock máximo alcanzado para ${product.name} (${size})`);
+          // Verificar stock disponible
+          const availableStock = product.stock - existingItem.quantity;
+          if (availableStock <= 0) {
+            logger.warn(`Stock insuficiente: ${product.name} (${size})`);
             return prevCart;
           }
           
-          logger.log(`Cantidad actualizada: ${product.name} (${size}) → ${existingItem.quantity + 1}`);
+          const newQuantity = existingItem.quantity + 1;
+          logger.info(`Carrito actualizado: ${product.name} (${size}) → ${newQuantity}`);
           return prevCart.map(item =>
             item.id === product.id && item.size === size
-              ? { ...item, quantity: item.quantity + 1 }
+              ? { ...item, quantity: newQuantity }
               : item
           );
         }
         
+        // Nuevo item
         if (product.stock > 0) {
-          logger.success(`Producto agregado al carrito: ${product.name} (${size})`);
+          logger.success(`Producto agregado: ${product.name} (${size})`);
           return [...prevCart, { 
             id: product.id,
             name: product.name,
@@ -413,11 +409,11 @@ export function AppProvider({ children }: AppProviderProps) {
           }];
         }
         
-        logger.warn(`Sin stock disponible: ${product.name}`);
+        logger.warn(`Sin stock: ${product.name}`);
         return prevCart;
       });
     } catch (error) {
-      logErrorWithContext(error, { function: 'addToCart', product, size });
+      logger.error('Error agregando al carrito:', error);
     }
   }, []);
 
@@ -426,12 +422,12 @@ export function AppProvider({ children }: AppProviderProps) {
       setCart(prevCart => {
         const item = prevCart.find(i => i.id === productId && i.size === size);
         if (item) {
-          logger.log(`Producto removido del carrito: ${item.name} (${size})`);
+          logger.info(`Producto removido: ${item.name} (${size})`);
         }
         return prevCart.filter(item => !(item.id === productId && item.size === size));
       });
     } catch (error) {
-      logErrorWithContext(error, { function: 'removeFromCart', productId, size });
+      logger.error('Error removiendo del carrito:', error);
     }
   }, []);
 
@@ -443,9 +439,13 @@ export function AppProvider({ children }: AppProviderProps) {
         setCart(prevCart =>
           prevCart.map(item => {
             if (item.id === productId && item.size === size) {
-              const maxQuantity = item.stock || 99;
+              const maxQuantity = Math.min(item.stock, 99);
               const finalQuantity = Math.min(newQuantity, maxQuantity);
-              logger.debug(`Cantidad actualizada: ${item.name} → ${finalQuantity}`);
+              
+              if (finalQuantity !== item.quantity) {
+                logger.debug(`Cantidad actualizada: ${item.name} → ${finalQuantity}`);
+              }
+              
               return { 
                 ...item, 
                 quantity: finalQuantity
@@ -456,7 +456,7 @@ export function AppProvider({ children }: AppProviderProps) {
         );
       }
     } catch (error) {
-      logErrorWithContext(error, { function: 'updateQuantity', productId, size, newQuantity });
+      logger.error('Error actualizando cantidad:', error);
     }
   }, [removeFromCart]);
 
@@ -467,7 +467,7 @@ export function AppProvider({ children }: AppProviderProps) {
   }, []);
 
   // ==========================================
-  // WISHLIST ACTIONS
+  // WISHLIST ACTIONS MEJORADAS
   // ==========================================
   
   const addToWishlist = useCallback((product: Product): void => {
@@ -475,33 +475,20 @@ export function AppProvider({ children }: AppProviderProps) {
       setWishlist(prevWishlist => {
         const exists = prevWishlist.some(item => item.id === product.id);
         if (exists) {
-          logger.warn(`El producto ya está en favoritos: ${product.name}`);
+          logger.warn(`Ya en favoritos: ${product.name}`);
           return prevWishlist;
         }
         
         const wishlistItem: WishlistItem = {
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          image: product.image,
-          category: product.category,
-          stock: product.stock,
-          sizes: product.sizes,
-          slug: product.slug,
+          ...product,
           addedAt: new Date().toISOString(),
-          description: product.description,
-          featured: product.featured,
-          color: product.color,
-          material: product.material,
-          care: product.care,
-          active: product.active,
         };
         
         logger.success(`Agregado a favoritos: ${product.name}`);
         return [...prevWishlist, wishlistItem];
       });
     } catch (error) {
-      logErrorWithContext(error, { function: 'addToWishlist', product });
+      logger.error('Error agregando a favoritos:', error);
     }
   }, []);
 
@@ -510,12 +497,12 @@ export function AppProvider({ children }: AppProviderProps) {
       setWishlist(prevWishlist => {
         const item = prevWishlist.find(i => i.id === productId);
         if (item) {
-          logger.log(`Removido de favoritos: ${item.name}`);
+          logger.info(`Removido de favoritos: ${item.name}`);
         }
         return prevWishlist.filter(item => item.id !== productId);
       });
     } catch (error) {
-      logErrorWithContext(error, { function: 'removeFromWishlist', productId });
+      logger.error('Error removiendo de favoritos:', error);
     }
   }, []);
 
@@ -527,28 +514,12 @@ export function AppProvider({ children }: AppProviderProps) {
     try {
       const wishlistItem = wishlist.find(item => item.id === productId);
       if (wishlistItem && size) {
-        const product: Product = {
-          id: wishlistItem.id,
-          name: wishlistItem.name,
-          price: wishlistItem.price,
-          image: wishlistItem.image,
-          category: wishlistItem.category,
-          stock: wishlistItem.stock,
-          sizes: wishlistItem.sizes,
-          slug: wishlistItem.slug,
-          description: wishlistItem.description,
-          featured: wishlistItem.featured,
-          color: wishlistItem.color,
-          material: wishlistItem.material,
-          care: wishlistItem.care,
-          active: wishlistItem.active,
-        };
-        addToCart(product, size);
+        addToCart(wishlistItem, size);
         removeFromWishlist(productId);
         logger.success(`Movido al carrito: ${wishlistItem.name}`);
       }
     } catch (error) {
-      logErrorWithContext(error, { function: 'moveToCart', productId, size });
+      logger.error('Error moviendo al carrito:', error);
     }
   }, [wishlist, addToCart, removeFromWishlist]);
 
@@ -582,7 +553,7 @@ export function AppProvider({ children }: AppProviderProps) {
   // ==========================================
   
   const clearAllStorage = useCallback((): void => {
-    logger.warn('⚠️ Limpiando todo el almacenamiento local');
+    logger.warn('Limpiando almacenamiento local');
     removeStorageItem('gaia-current-user');
     removeStorageItem('gaia-users');
     removeStorageItem('gaia-cart');
@@ -652,4 +623,4 @@ export function AppProvider({ children }: AppProviderProps) {
       {children}
     </AppContext.Provider>
   );
-}
+} 

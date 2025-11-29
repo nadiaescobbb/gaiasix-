@@ -69,16 +69,26 @@ export interface Address {
 // TIPOS DE AUTH
 // ==========================================
 
+export type AuthError = 
+  | 'INVALID_EMAIL'
+  | 'WEAK_PASSWORD' 
+  | 'EMAIL_EXISTS'
+  | 'USER_NOT_FOUND'
+  | 'INVALID_PASSWORD'
+  | 'NETWORK_ERROR'
+  | 'VALIDATION_ERROR'
+  | 'UNKNOWN_ERROR';
+
 export interface LoginResult {
   success: boolean;
-  error?: string;
+  error?: AuthError | string;
   user?: User;
   message?: string;
 }
 
 export interface RegisterResult {
   success: boolean;
-  error?: string;
+  error?: AuthError | string;
   user?: User;
   message?: string;
 }
@@ -86,6 +96,7 @@ export interface RegisterResult {
 export interface PasswordValidationResult {
   valid: boolean;
   error?: string;
+  suggestions?: string[];
 }
 
 // ==========================================
@@ -103,7 +114,7 @@ export interface AppContextType {
   login: (email: string, password: string) => Promise<LoginResult>;
   register: (userData: RegisterUserData) => Promise<RegisterResult>;
   logout: () => void;
-  updateUserOrders: (orderId: number, orderData: Partial<Order>) => void;
+  updateUserOrders: (orderData: Omit<Order, 'id'>) => void;
   
   // Cart
   addToCart: (product: Product, size: string) => void;
@@ -130,78 +141,6 @@ export interface RegisterUserData {
   password: string;
   name?: string;
   phone?: string;
-  confirmPassword?: string;
-}
-
-// ==========================================
-// TIPOS DE TOAST
-// ==========================================
-
-export type ToastType = 'success' | 'error' | 'warning' | 'info';
-
-export interface Toast {
-  id: number;
-  message: string;
-  type: ToastType;
-  duration?: number;
-}
-
-export interface ToastContextType {
-  success: (message: string, duration?: number) => number;
-  error: (message: string, duration?: number) => number;
-  warning: (message: string, duration?: number) => number;
-  info: (message: string, duration?: number) => number; 
-  addToast: (message: string, type?: ToastType, duration?: number) => number;
-  removeToast: (id: number) => void;
-  toasts: Toast[];
-}
-
-// ==========================================
-// TIPOS DE COMPONENTES
-// ==========================================
-
-export type Page = 'home' | 'shop' | 'wishlist' | 'product' | 'about' | 'auth' | 'profile' | 'cart' | 'contact';
-export type AuthMode = 'login' | 'register';
-
-export interface AuthPageProps {
-  mode: AuthMode;
-  onLogin: (email: string, password: string) => Promise<LoginResult>;
-  onRegister: (userData: RegisterUserData) => Promise<RegisterResult>;
-  onToggleMode: () => void;
-}
-
-export interface ProfilePageProps {
-  user: User;
-  onLogout: () => void;
-}
-
-export interface HeaderProps {
-  currentUser: User | null;
-  cartItemsCount: number;
-  wishlistItemsCount: number;
-  onNavigate: (page: Page) => void;
-  onCartToggle: () => void;
-  onLogout: () => void;
-  currentPage: Page;
-}
-
-export interface CartSidebarProps {
-  isOpen: boolean;
-  onClose: () => void;
-  cart: CartItem[];
-  cartTotal: number;
-  onUpdateQuantity: (productId: number, size: string, newQuantity: number) => void;
-  onRemoveItem: (productId: number, size: string) => void;
-  onCheckout: () => void;
-  currentUser: User | null;
-}
-
-export interface WishlistButtonProps {
-  product: Product;
-  variant?: 'icon' | 'text' | 'compact'; 
-  className?: string;
-  showLabel?: boolean; 
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void; 
 }
 
 // ==========================================
@@ -231,101 +170,23 @@ export interface CheckoutFormData {
 }
 
 // ==========================================
-// TIPOS DE FILTROS Y BÚSQUEDA
+// TIPOS DE COMPONENTES
 // ==========================================
 
-export interface ProductFilters {
-  category?: string;
-  priceRange?: {
-    min: number;
-    max: number;
-  };
-  sizes?: string[];
-  inStock?: boolean;
-  sortBy?: 'name' | 'price' | 'newest';
-  sortOrder?: 'asc' | 'desc';
-}
+export type Page = 'home' | 'shop' | 'wishlist' | 'product' | 'about' | 'auth' | 'profile' | 'cart' | 'contact';
+export type AuthMode = 'login' | 'register';
 
-export interface SearchState {
-  query: string;
-  results: Product[];
-  isSearching: boolean;
-}
-
-// ==========================================
-// TIPOS DE API/RESPUESTAS
-// ==========================================
-
-export interface ApiResponse<T = any> {
-  success: boolean;
-  data?: T;
+export interface AuthPageProps {
+  mode: AuthMode;
+  onLogin: (email: string, password: string) => Promise<LoginResult>;
+  onRegister: (userData: RegisterUserData) => Promise<RegisterResult>;
+  onToggleMode: () => void;
   error?: string;
-  message?: string;
 }
 
-export interface PaginatedResponse<T> {
-  data: T[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
-// ==========================================
-// TIPOS DE CATEGORÍAS
-// ==========================================
-
-export interface Category {
-  id: string;
-  name: string;
-  slug?: string; 
-  order?: number; 
-  description?: string;
-  image?: string;
-  productCount?: number;
-}
-
-// ==========================================
-// TIPOS DE COMPONENTES UI
-// ==========================================
-
-export interface ButtonProps {
+export interface AppProviderProps {
   children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
-  size?: 'sm' | 'md' | 'lg';
-  disabled?: boolean;
-  loading?: boolean;
-  onClick?: () => void;
-  type?: 'button' | 'submit' | 'reset';
-  className?: string;
 }
-
-export interface InputProps {
-  label?: string;
-  type?: string;
-  placeholder?: string;
-  value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  error?: string;
-  required?: boolean;
-  disabled?: boolean;
-  className?: string;
-}
-
-export interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string;
-  children: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
-}
-
-// ==========================================
-// UTILITY TYPES
-// ==========================================
-
-export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
-export type RequiredKeys<T, K extends keyof T> = T & Required<Pick<T, K>>;
 
 // ==========================================
 // ENUMS
@@ -360,121 +221,27 @@ export enum Size {
 }
 
 // ==========================================
-// PROPS DE PROVIDERS
+// UTILITY TYPES
 // ==========================================
 
-export interface AppProviderProps {
-  children: React.ReactNode;
+export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+export type RequiredKeys<T, K extends keyof T> = T & Required<Pick<T, K>>;
+
+// ==========================================
+// API TYPES
+// ==========================================
+
+export interface ApiResponse<T = any> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
 }
 
-export interface ToastProviderProps {
-  children: React.ReactNode;
-}
-
-// ==========================================
-// TIPOS DE PRODUCT CARD
-// ==========================================
-
-export interface ProductCardProps {
-  product: Product;
-  viewMode?: 'grid' | 'list';
-  onAddToCart?: (product: Product, size: string) => void;
-  onProductSelect?: (product: Product) => void;
-  className?: string;
-}
-
-// ==========================================
-// TIPOS DE PAGINACIÓN
-// ==========================================
-
-export interface PaginationProps {
-  currentPage: number;
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
-  className?: string;
-}
-
-// ==========================================
-// TIPOS DE BREADCRUMB
-// ==========================================
-
-export interface BreadcrumbItem {
-  label: string;
-  href?: string;
-  active?: boolean;
-}
-
-export interface BreadcrumbProps {
-  items: BreadcrumbItem[];
-  className?: string;
-}
-
-// ==========================================
-// TIPOS DE LOADING STATES
-// ==========================================
-
-export interface LoadingState {
-  isLoading: boolean;
-  message?: string;
-}
-
-// ==========================================
-// TIPOS DE ERROR STATES
-// ==========================================
-
-export interface ErrorState {
-  hasError: boolean;
-  message?: string;
-  code?: number;
-}
-
-// ==========================================
-// TIPOS DE SKELETON (LOADING UI)
-// ==========================================
-
-export interface SkeletonProps {
-  className?: string;
-  variant?: 'default' | 'light' | 'dark'; // ✅ CAMBIADO: coincide con LoadingStates.tsx
-  width?: number | string;
-  height?: number | string;
-}
-
-// ==========================================
-// TIPOS DE ALERT
-// ==========================================
-
-export interface AlertProps {
-  title?: string;
-  message: string;
-  type?: 'success' | 'error' | 'warning' | 'info';
-  onClose?: () => void;
-  className?: string;
-}
-
-// ==========================================
-// TIPOS DE BADGE
-// ==========================================
-
-export interface BadgeProps {
-  children: React.ReactNode;
-  variant?: 'default' | 'success' | 'warning' | 'error' | 'info';
-  size?: 'sm' | 'md' | 'lg';
-  className?: string;
-}
-
-// ==========================================
-// TIPOS DE SPINNER (LOADING INDICATOR)
-// ==========================================
-
-export interface SpinnerProps {
-  size?: 'sm' | 'md' | 'lg';
-  color?: 'black' | 'white' | 'red';
-}
-
-// ==========================================
-// TIPOS DE PAGE LOADER
-// ==========================================
-
-export interface PageLoaderProps {
-  message?: string;
 }

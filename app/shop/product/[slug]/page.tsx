@@ -1,15 +1,15 @@
 import { notFound } from 'next/navigation';
-import { getProductById } from '../../../../data/products';
+import { getProductBySlug } from '../../../../lib/products';
 import ProductDetail from './productdetail';
 
 interface ProductPageProps {
   params: {
-    id: string;
+    slug: string;
   };
 }
 
 export async function generateMetadata({ params }: ProductPageProps) {
-  const product = getProductById(params.id);
+  const product = getProductBySlug(params.slug);
   
   if (!product) {
     return {
@@ -19,12 +19,18 @@ export async function generateMetadata({ params }: ProductPageProps) {
 
   return {
     title: `${product.name} | Gaia Six`,
-    description: product.description || `Compra ${product.name} en Gaia Six`,
+    description: product.description.substring(0, 160) || `Compra ${product.name} en Gaia Six. Envíos a todo el país.`,
+    openGraph: {
+      title: product.name,
+      description: product.description.substring(0, 160),
+      images: [product.image],
+      type: 'product',
+    },
   };
 }
 
 export default function ProductPage({ params }: ProductPageProps) {
-  const product = getProductById(params.id);
+  const product = getProductBySlug(params.slug);
 
   if (!product) {
     notFound();
