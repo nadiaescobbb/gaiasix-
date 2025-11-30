@@ -19,7 +19,7 @@ export interface Product {
   care?: string;
   stock: number;
   featured?: boolean;
-  new?: boolean;
+  isNew: boolean;
   active: boolean;
 }
 
@@ -44,7 +44,7 @@ export const categories: Category[] = [
 ];
 
 // ===================================================
-// PRODUCTS DATA - ORDENADO Y CORREGIDO
+// PRODUCTS DATA - CORREGIDO CON TODOS LOS isNew
 // ===================================================
 
 export const products: Product[] = [
@@ -64,7 +64,7 @@ export const products: Product[] = [
     care: "Lavar con cuidado, preferiblemente a mano o ciclo suave. Evitar secadora.",
     stock: 1,
     featured: true,
-    new: true,
+    isNew: true,
     active: true,
   },
   {
@@ -82,7 +82,7 @@ export const products: Product[] = [
     care: "Lavar con cuidado, preferiblemente a mano o ciclo suave.",
     stock: 1,
     featured: true,
-    new: true,
+    isNew: true,
     active: true,
   },
   {
@@ -100,7 +100,7 @@ export const products: Product[] = [
     care: "Lavar con cuidado, preferiblemente a mano o ciclo suave.",
     stock: 1,
     featured: true,
-    new: true,
+    isNew: true,
     active: true,
   },
   {
@@ -118,7 +118,7 @@ export const products: Product[] = [
     care: "Lavar con cuidado, preferiblemente a mano o ciclo suave. Evitar secadora.",
     stock: 1,
     featured: true,
-    new: true,
+    isNew: true,
     active: true,
   },
   {
@@ -136,7 +136,7 @@ export const products: Product[] = [
     care: "Lavar con cuidado, preferiblemente a mano o ciclo suave. Evitar secadora.",
     stock: 1,
     featured: true,
-    new: true,
+    isNew: true,
     active: true,
   },
   {
@@ -153,6 +153,7 @@ export const products: Product[] = [
     care: 'Lavar a máquina en ciclo suave',
     stock: 2,
     featured: true,
+    isNew: false,
     active: true,
   },
   {
@@ -169,6 +170,7 @@ export const products: Product[] = [
     care: 'Lavar a máquina en ciclo suave',
     stock: 2,
     featured: true,
+    isNew: false,
     active: true,
   },
   {
@@ -185,6 +187,7 @@ export const products: Product[] = [
     care: 'Lavar a máquina en ciclo suave',
     stock: 2,
     featured: true,
+    isNew: false,
     active: true,
   },
   {
@@ -201,6 +204,7 @@ export const products: Product[] = [
     care: 'Lavar a máquina en ciclo suave',
     stock: 2,
     featured: true,
+    isNew: false,
     active: true,
   },
 
@@ -220,7 +224,7 @@ export const products: Product[] = [
     care: "Lavar con cuidado, preferiblemente a mano o ciclo suave.",
     stock: 1,
     featured: true,
-    new: true,
+    isNew: true,
     active: true,
   },
   {
@@ -237,6 +241,7 @@ export const products: Product[] = [
     care: 'Lavar a mano con agua fría',
     stock: 1,
     featured: true,
+    isNew: false,
     active: true,
   },
   {
@@ -253,6 +258,7 @@ export const products: Product[] = [
     care: 'Lavar a mano con agua fría',
     stock: 1,
     featured: true,
+    isNew: false,
     active: true,
   },
   {
@@ -270,6 +276,7 @@ export const products: Product[] = [
     care: 'Lavar a mano con agua fría',
     stock: 1,
     featured: true,
+    isNew: false,
     active: true,
   },
 
@@ -289,6 +296,7 @@ export const products: Product[] = [
     care: 'Lavar a máquina en ciclo suave',
     stock: 1,
     featured: true,
+    isNew: false,
     active: true,
   },
   {
@@ -306,6 +314,7 @@ export const products: Product[] = [
     care: 'Lavar a mano con agua fría',
     stock: 1,
     featured: true,
+    isNew: false,
     active: true,
   },
 
@@ -325,6 +334,7 @@ export const products: Product[] = [
     care: 'Lavar a mano con agua fría',
     stock: 1,
     featured: true,
+    isNew: false,
     active: true,
   },
   {
@@ -342,6 +352,7 @@ export const products: Product[] = [
     care: 'Lavar a mano con agua fría',
     stock: 1,
     featured: true,
+    isNew: false,
     active: true,
   },
   {
@@ -359,6 +370,7 @@ export const products: Product[] = [
     care: 'Lavar a mano con agua fría',
     stock: 1,
     featured: true,
+    isNew: false,
     active: true,
   },
   {
@@ -376,7 +388,7 @@ export const products: Product[] = [
     care: "Lavar con cuidado, preferiblemente a mano o ciclo suave. Evitar secadora.",
     stock: 1,
     featured: true,
-    new: true,
+    isNew: true,
     active: true,
   },
   {
@@ -393,6 +405,7 @@ export const products: Product[] = [
     care: 'Lavar a mano con agua fría',
     stock: 2,
     featured: true,
+    isNew: false,
     active: true,
   },
   {
@@ -408,6 +421,7 @@ export const products: Product[] = [
     colors: ['Negro'],
     stock: 2,
     featured: true,
+    isNew: false,
     active: true,
   },
   {
@@ -423,6 +437,7 @@ export const products: Product[] = [
     colors: ['Negro', 'Chocolate'],
     stock: 3,
     featured: true,
+    isNew: false,
     active: true,
   },
   {
@@ -440,6 +455,7 @@ export const products: Product[] = [
     care: 'Lavar a mano con agua fría',
     stock: 1,
     featured: true,
+    isNew: false,
     active: true,
   },
   {
@@ -457,6 +473,7 @@ export const products: Product[] = [
     care: 'Lavar a mano con agua fría',
     stock: 1,
     featured: true,
+    isNew: false,
     active: true,
   },
 
@@ -476,6 +493,7 @@ export const products: Product[] = [
     care: 'Lavar a mano con agua fría',
     stock: 1,
     featured: true,
+    isNew: false,
     active: true,
   },
   {
@@ -493,6 +511,7 @@ export const products: Product[] = [
     care: 'Lavar a máquina en ciclo suave',
     stock: 1,
     featured: true,
+    isNew: false,
     active: true,
   },
   {
@@ -510,6 +529,7 @@ export const products: Product[] = [
     care: 'Lavar a máquina en ciclo suave',
     stock: 1,
     featured: true,
+    isNew: false,
     active: true,
   },
 ];
@@ -554,6 +574,11 @@ export const validateProducts = (): boolean => {
     // Validar imagen
     if (!product.image) {
       errors.push(`⚠️ Producto "${product.name}" sin imagen`);
+    }
+
+    // Validar isNew (ahora obligatorio)
+    if (product.isNew === undefined) {
+      errors.push(`❌ Producto "${product.name}" sin valor para isNew`);
     }
 
     // Validar categoría existente
@@ -607,11 +632,21 @@ export const getFeaturedProducts = (limit: number = 3): Product[] => {
 
 export const getNewProducts = (limit: number = 3): Product[] => {
   return products
-    .filter(p => p.new && p.active)
+    .filter(p => p.isNew && p.active)
     .slice(0, limit);
 };
 
 // Ejecutar validación en desarrollo
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
   validateProducts();
+}
+
+export function getRelatedProducts(
+  category: string, 
+  excludeId: number, 
+  limit: number = 3
+): Product[] {
+  return products
+    .filter(p => p.active && p.category === category && p.id !== excludeId)
+    .slice(0, limit);
 }

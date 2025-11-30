@@ -14,11 +14,14 @@ export interface Product {
   sizes?: string[];
   description?: string;
   featured?: boolean;
+  isNew?: boolean;  
   color?: string;
   material?: string;
   care?: string;
   slug: string;
   active?: boolean;
+  images?: string[]; 
+  colors?: string[]; 
 }
 
 export interface CartItem {

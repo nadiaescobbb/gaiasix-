@@ -2,6 +2,7 @@
 
 import { formatPrice, formatDate } from '../../../utils/formatters';
 import { type User } from '../../../lib/types';
+import { LogOut, User as UserIcon, Package, Mail, Phone } from 'lucide-react';
 
 // ===================================================
 // TYPES
@@ -28,81 +29,218 @@ interface Order {
 }
 
 // ===================================================
-// PROFILE PAGE COMPONENT
+// PROFILE PAGE COMPONENT - ESTILO GAIA SIX
 // ===================================================
 
 export default function ProfilePage({ user, onLogout }: ProfilePageProps) {
   const orders: Order[] = user?.orders || [];
 
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return 'text-gaia-crimson';
+      case 'pending':
+        return 'text-amber-600';
+      case 'shipped':
+        return 'text-blue-600';
+      default:
+        return 'text-gaia-silver';
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return 'Completado';
+      case 'pending':
+        return 'Confirmando';
+      case 'shipped':
+        return 'En camino';
+      default:
+        return status;
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-white py-12 px-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-12 pb-6 border-b border-gray-200">
-          <h2 className="text-3xl font-light">Mi cuenta</h2>
+    <div className="min-h-screen bg-gaia-white pt-24 pb-16">
+      <div className="container-gaia">
+        {/* Header - Estilo Gaia */}
+        <div className="flex items-center justify-between mb-16 pb-8 border-b border-gaia-border">
+          <div>
+            <h2 className="text-4xl md:text-5xl font-light mb-3 font-display tracking-gaia-tight">
+              Mi Espacio
+            </h2>
+            <p className="text-gaia-silver font-body">
+              Gestión de tu experiencia Gaia Six
+            </p>
+          </div>
           <button
             onClick={onLogout}
-            className="text-sm uppercase tracking-wide hover:text-red-800 transition-colors"
+            className="flex items-center gap-2 text-sm uppercase tracking-widest text-gaia-silver hover:text-gaia-crimson transition-colors duration-300 font-body"
           >
+            <LogOut size={16} />
             Salir
           </button>
         </div>
         
-        {/* Información del usuario */}
-        <div className="grid md:grid-cols-2 gap-12 mb-12">
-          <div className="space-y-4">
-            <div>
-              <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">Nombre</p>
-              <p className="text-lg">{user.name}</p>
+        {/* Grid de información */}
+        <div className="grid lg:grid-cols-3 gap-12 mb-16">
+          {/* Información personal */}
+          <div className="lg:col-span-2">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="w-12 h-12 bg-gaia-charcoal rounded-full flex items-center justify-center">
+                <UserIcon size={24} className="text-gaia-white" />
+              </div>
+              <div>
+                <h3 className="text-xl font-light mb-1 font-display">Información Personal</h3>
+                <p className="text-gaia-silver text-sm font-body">Detalles de tu cuenta</p>
+              </div>
             </div>
-            <div>
-              <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">Email</p>
-              <p className="text-lg">{user.email}</p>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <div>
+                  <p className="label-gaia text-gaia-black mb-2">Nombre</p>
+                  <p className="text-lg font-light font-body">{user.name || 'No especificado'}</p>
+                </div>
+                <div>
+                  <p className="label-gaia text-gaia-black mb-2 flex items-center gap-2">
+                    <Mail size={14} />
+                    Email
+                  </p>
+                  <p className="text-lg font-light font-body">{user.email}</p>
+                </div>
+              </div>
+              <div className="space-y-6">
+                <div>
+                  <p className="label-gaia text-gaia-black mb-2 flex items-center gap-2">
+                    <Phone size={14} />
+                    Teléfono
+                  </p>
+                  <p className="text-lg font-light font-body">{user.phone || 'No especificado'}</p>
+                </div>
+                <div>
+                  <p className="label-gaia text-gaia-black mb-2">Miembro desde</p>
+                  <p className="text-lg font-light font-body">
+                    {user.createdAt ? formatDate(user.createdAt) : 'Reciente'}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="space-y-4">
-            <div>
-              <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">Teléfono</p>
-              <p className="text-lg">{user.phone}</p>
+
+          {/* Estadísticas rápidas */}
+          <div className="bg-gaia-charcoal/5 p-6 rounded-sm border border-gaia-border">
+            <h4 className="text-sm uppercase tracking-widest text-gaia-silver mb-6 font-body">
+              Resumen
+            </h4>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center pb-4 border-b border-gaia-border">
+                <span className="text-gaia-silver text-sm font-body">Pedidos totales</span>
+                <span className="text-lg font-light font-body">{orders.length}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gaia-silver text-sm font-body">Estado</span>
+                <span className="text-gaia-crimson text-sm font-medium font-body">Activo</span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Historial de pedidos */}
+        {/* Historial de pedidos - Estilo Editorial */}
         <div>
-          <h3 className="text-2xl font-light mb-8">Pedidos</h3>
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-10 h-10 bg-gaia-charcoal rounded-sm flex items-center justify-center">
+              <Package size={20} className="text-gaia-white" />
+            </div>
+            <div>
+              <h3 className="text-2xl font-light mb-1 font-display">Historial de Pedidos</h3>
+              <p className="text-gaia-silver text-sm font-body">Tus compras en Gaia Six</p>
+            </div>
+          </div>
+
           {orders.length === 0 ? (
-            <p className="text-gray-500 text-center py-12">Sin pedidos</p>
+            <div className="text-center py-16 border border-gaia-border rounded-sm">
+              <Package size={48} className="mx-auto text-gaia-silver mb-4" />
+              <p className="text-gaia-silver text-lg mb-2 font-body">Aún no tienes pedidos</p>
+              <p className="text-gaia-silver text-sm font-body">
+                Descubre nuestra colección y encuentra tu estilo
+              </p>
+            </div>
           ) : (
             <div className="space-y-6">
               {orders.map((order: Order) => (
-                <div key={order.id} className="border-b border-gray-200 pb-6">
-                  <div className="flex justify-between mb-4">
-                    <span className="text-xs uppercase tracking-wide text-gray-500">
-                      {formatDate(order.date)}
-                    </span>
-                    <span className="text-xs uppercase tracking-wide text-green-600">
-                      {order.status === 'pending' ? 'Pendiente' : 'Completado'}
-                    </span>
+                <div 
+                  key={order.id} 
+                  className="border border-gaia-border rounded-sm p-6 hover:border-gaia-silver transition-colors duration-300 group"
+                >
+                  {/* Header del pedido */}
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+                    <div>
+                      <p className="label-gaia text-gaia-black mb-1">Pedido #{order.id}</p>
+                      <p className="text-sm text-gaia-silver font-body">
+                        {formatDate(order.date)}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className={`text-xs uppercase tracking-widest font-medium ${getStatusColor(order.status)} font-body`}>
+                        {getStatusText(order.status)}
+                      </span>
+                      <span className="text-lg font-light font-body">
+                        {formatPrice(order.total)}
+                      </span>
+                    </div>
                   </div>
                   
                   {/* Items del pedido */}
-                  {order.items.map((item: OrderItem, idx: number) => (
-                    <div key={idx} className="flex justify-between text-sm mb-2">
-                      <span>{item.name} ({item.size}) x{item.quantity}</span>
-                      <span>{formatPrice(item.price * item.quantity)}</span>
-                    </div>
-                  ))}
+                  <div className="space-y-3 mb-6">
+                    {order.items.map((item: OrderItem, idx: number) => (
+                      <div 
+                        key={idx} 
+                        className="flex justify-between items-center py-3 border-b border-gaia-border last:border-b-0 group-hover:border-gaia-silver transition-colors"
+                      >
+                        <div className="flex-1">
+                          <p className="font-light font-body">{item.name}</p>
+                          <p className="text-sm text-gaia-silver font-body">
+                            Talle: {item.size} • Cantidad: {item.quantity}
+                          </p>
+                        </div>
+                        <span className="font-light font-body">
+                          {formatPrice(item.price * item.quantity)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                   
-                  <div className="flex justify-between font-semibold mt-4">
-                    <span>Total</span>
-                    <span>{formatPrice(order.total)}</span>
+                  {/* Footer del pedido */}
+                  <div className="flex justify-between items-center pt-4 border-t border-gaia-border">
+                    <span className="text-sm text-gaia-silver font-body">
+                      {order.items.length} producto{order.items.length > 1 ? 's' : ''}
+                    </span>
+                    <div className="text-right">
+                      <p className="label-gaia text-gaia-black">Total</p>
+                      <p className="text-xl font-light font-body">{formatPrice(order.total)}</p>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           )}
         </div>
+
+        {/* Acciones adicionales */}
+        {orders.length > 0 && (
+          <div className="mt-12 pt-8 border-t border-gaia-border">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button className="btn-gaia-secondary text-sm">
+                Descargar historial
+              </button>
+              <button className="btn-gaia-secondary text-sm">
+                Contactar soporte
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

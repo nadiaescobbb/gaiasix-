@@ -1,4 +1,3 @@
-// app/auth/page.tsx
 "use client";
 
 import AuthPage from '../../components/auth/AuthPage';
@@ -20,7 +19,11 @@ export default function AuthRoute() {
 
   // Mostrar spinner mientras se inicializa
   if (isLoading) {
-    return <LoadingSpinner message="Cargando..." />;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gaia-white">
+        <LoadingSpinner message="Preparando tu experiencia..." />
+      </div>
+    );
   }
 
   return (
@@ -30,6 +33,9 @@ export default function AuthRoute() {
       onRegister={handleRegister}
       onToggleMode={handleToggleMode}
       error={error || undefined}
+      successMessage={successMessage || undefined}
+      onClearError={clearError}
+      onClearSuccess={clearSuccess}
     />
   );
 }

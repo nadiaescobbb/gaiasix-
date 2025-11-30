@@ -1,23 +1,22 @@
-// components/layout/cart/cartsidebar.tsx
-
+// components/layout/cart/CartSidebar.tsx - VERSIÓN CORREGIDA
 "use client";
 
 import { X, Trash2, Plus, Minus, ShoppingBag, Truck, Clock, Store, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { formatPrice } from '../../../utils/formatters';
+import { formatPrice } from '../../../lib/formatters';
 import { 
   calculateShipping, 
   getAvailableMethodsForProvince, 
   getEstimatedDelivery,
   type ShippingMethod,
   shippingConfig 
-} from '../../../config/shipping';
+} from '../../../config/shipping'; // ← CORREGIDO: ../../../config/shipping
 import { type CartItem as CartItemType, type User } from '../../../lib/types';
 
 // ===================================================
-// TYPES ACTUALIZADOS
+// TYPES
 // ===================================================
 
 interface CartSidebarProps {
@@ -50,10 +49,6 @@ interface ShippingSelectorProps {
   loadingShipping: boolean;
 }
 
-// ===================================================
-// LOADING BUTTON (ACTUALIZADO)
-// ===================================================
-
 interface LoadingButtonProps {
   loading: boolean;
   onClick: () => void;
@@ -62,15 +57,19 @@ interface LoadingButtonProps {
   children: React.ReactNode;
 }
 
+// ===================================================
+// LOADING BUTTON - ESTILO GAIA SIX
+// ===================================================
+
 function LoadingButton({ loading, onClick, disabled, className, children }: LoadingButtonProps) {
   return (
     <button
       onClick={onClick}
       disabled={disabled || loading}
-      className={`relative flex items-center justify-center gap-2 ${className}`}
+      className={`relative flex items-center justify-center gap-3 ${className}`}
     >
       {loading && (
-        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+        <div className="spinner-gaia w-4 h-4 border-2 border-gaia-white border-t-transparent" />
       )}
       {children}
     </button>
@@ -78,7 +77,7 @@ function LoadingButton({ loading, onClick, disabled, className, children }: Load
 }
 
 // ===================================================
-// CART SIDEBAR COMPONENT - CORREGIDO CON ASYNC/AWAIT
+// CART SIDEBAR COMPONENT - ESTILO GAIA SIX
 // ===================================================
 
 export default function CartSidebar({ 
@@ -100,7 +99,7 @@ export default function CartSidebar({
 
   const availableMethods = getAvailableMethodsForProvince(userProvince);
 
-  // Calcular costo de envío cuando cambia el método seleccionado o el carrito
+  // Calcular costo de envío
   useEffect(() => {
     const updateShippingCost = async () => {
       if (cart.length === 0) {
@@ -114,8 +113,7 @@ export default function CartSidebar({
         setShippingCost(cost);
       } catch (error) {
         console.error('Error calculando envío:', error);
-        // Fallback al precio fijo del método
-        const method = availableMethods.find(m => m.id === selectedShipping);
+        const method = availableMethods.find((m: ShippingMethod) => m.id === selectedShipping); // ← TIPO AGREGADO
         setShippingCost(method?.price || 0);
       } finally {
         setLoadingShipping(false);
@@ -150,17 +148,15 @@ export default function CartSidebar({
     return () => window.removeEventListener('keydown', handleEscapeWrapper);
   }, [isOpen, onClose]);
 
-  // ✅ FUNCIÓN ACTUALIZADA - Redirige al checkout
+  // ✅ FUNCIÓN CHECKOUT GAIA SIX
   const handleCheckout = async (): Promise<void> => {
     setIsCheckingOut(true);
     try {
       if (currentUser) {
-        // Redirigir al checkout
-        onClose(); // Cerrar sidebar primero
+        onClose();
         router.push('/checkout');
       } else {
-        // Redirigir al login
-        onClose(); // Cerrar sidebar primero
+        onClose();
         router.push('/auth');
       }
     } catch (error) {
@@ -174,7 +170,6 @@ export default function CartSidebar({
     setSelectedShipping(methodId);
   };
 
-  // Función para continuar comprando
   const handleContinueShopping = (): void => {
     onClose();
     router.push('/shop');
@@ -189,42 +184,42 @@ export default function CartSidebar({
 
   return (
     <>
-      {/* Overlay */}
+      {/* Overlay Gaia Six */}
       <div 
-        className={`fixed inset-0 bg-black z-50 transition-opacity duration-500 ${
-          isOpen ? 'bg-opacity-30' : 'bg-opacity-0'
+        className={`fixed inset-0 bg-gaia-black z-50 transition-opacity duration-500 ${
+          isOpen ? 'bg-opacity-50' : 'bg-opacity-0'
         }`}
         onClick={onClose}
         aria-hidden="true"
       />
       
-      {/* Sidebar */}
+      {/* Sidebar Gaia Six */}
       <div 
-        className={`fixed right-0 top-0 h-full w-full sm:w-96 bg-white z-50 flex flex-col transform transition-transform duration-500 ease-out ${
+        className={`fixed right-0 top-0 h-full w-full sm:w-96 bg-gaia-white z-50 flex flex-col transform transition-transform duration-500 ease-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="cart-title"
       >
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-white">
+        {/* Header - Estilo Gaia */}
+        <div className="flex items-center justify-between p-6 border-b border-gaia-border bg-gaia-white">
           <div>
-            <h2 id="cart-title" className="text-sm uppercase tracking-widest text-gray-600">
-              Tu Bolsa {itemCount > 0 && `(${itemCount})`}
+            <h2 id="cart-title" className="text-sm uppercase tracking-widest text-gaia-silver font-body">
+              Tu Selección {itemCount > 0 && `(${itemCount})`}
             </h2>
             {itemCount > 0 && (
-              <p className="text-xs text-gray-400 mt-1">
-                {itemCount} producto{itemCount > 1 ? 's' : ''} en tu carrito
+              <p className="text-xs text-gaia-silver mt-1 font-body">
+                {itemCount} pieza{itemCount > 1 ? 's' : ''} seleccionada{itemCount > 1 ? 's' : ''}
               </p>
             )}
           </div>
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-gray-50 rounded-lg transition-colors"
+            className="p-2 hover:bg-gaia-charcoal/5 rounded-lg transition-colors"
             aria-label="Cerrar carrito"
           >
-            <X size={20} className="text-gray-400" />
+            <X size={20} className="text-gaia-silver hover:text-gaia-crimson transition-colors" />
           </button>
         </div>
 
@@ -237,20 +232,20 @@ export default function CartSidebar({
             <EmptyCartState onClose={onClose} />
           ) : (
             <div className="p-6">
-              {/* Barra de envío gratis */}
+              {/* Barra de envío gratis - Estilo Gaia */}
               {!hasFreeShipping && freeShippingRemaining > 0 && (
-                <div className="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-amber-800">
-                      <strong>¡Envío gratis!</strong>
+                <div className="mb-6 p-4 bg-gaia-crimson/5 border border-gaia-crimson/20 rounded-lg">
+                  <div className="flex items-center justify-between text-sm font-body">
+                    <span className="text-gaia-crimson">
+                      <strong>Envío exclusivo</strong>
                     </span>
-                    <span className="text-amber-700">
+                    <span className="text-gaia-crimson">
                       Faltan {formatPrice(freeShippingRemaining)}
                     </span>
                   </div>
-                  <div className="w-full bg-amber-200 rounded-full h-2 mt-2">
+                  <div className="w-full bg-gaia-silver/30 rounded-full h-1.5 mt-3">
                     <div 
-                      className="bg-amber-500 h-2 rounded-full transition-all duration-500"
+                      className="bg-gaia-crimson h-1.5 rounded-full transition-all duration-500"
                       style={{ 
                         width: `${Math.min((cartTotal / shippingConfig.freeShippingThreshold) * 100, 100)}%` 
                       }}
@@ -274,9 +269,9 @@ export default function CartSidebar({
           )}
         </div>
 
-        {/* Footer - CORREGIDO */}
+        {/* Footer - Estilo Gaia Six */}
         {cart.length > 0 && (
-          <div className="border-t border-gray-100 bg-white p-6 space-y-4">
+          <div className="border-t border-gaia-border bg-gaia-white p-6 space-y-4">
             
             {/* Selector de Envío */}
             <ShippingSelector 
@@ -288,25 +283,25 @@ export default function CartSidebar({
               loadingShipping={loadingShipping}
             />
 
-            {/* Resumen de Totales */}
-            <div className="space-y-3 text-sm">
+            {/* Resumen de Totales - Estilo Minimal */}
+            <div className="space-y-3 text-sm font-body">
               <div className="flex justify-between">
-                <span className="text-gray-600">Subtotal</span>
+                <span className="text-gaia-silver">Subtotal</span>
                 <span className="font-medium">{formatPrice(cartTotal)}</span>
               </div>
               
               <div className="flex justify-between">
-                <span className="text-gray-600">
-                  Envío {hasFreeShipping && <span className="text-green-600 text-xs ml-1">(GRATIS)</span>}
+                <span className="text-gaia-silver">
+                  Envío {hasFreeShipping && <span className="text-gaia-crimson text-xs ml-1">(EXCLUSIVO)</span>}
                 </span>
-                <span className={hasFreeShipping ? 'text-green-600 font-semibold' : 'font-medium'}>
+                <span className={hasFreeShipping ? 'text-gaia-crimson font-medium' : 'font-medium'}>
                   {loadingShipping ? (
                     <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
-                      <span className="text-xs text-gray-500">Calculando...</span>
+                      <div className="spinner-gaia w-3 h-3 border-2 border-gaia-silver border-t-transparent" />
+                      <span className="text-xs text-gaia-silver">Calculando...</span>
                     </div>
                   ) : hasFreeShipping ? (
-                    'Gratis'
+                    'Exclusivo'
                   ) : (
                     formatPrice(shippingCost)
                   )}
@@ -314,27 +309,27 @@ export default function CartSidebar({
               </div>
               
               {hasFreeShipping && (
-                <div className="text-xs text-green-600 bg-green-50 p-2 rounded-lg text-center">
-                  🎉 ¡Felicitaciones! Tienes envío gratis
+                <div className="text-xs text-gaia-crimson bg-gaia-crimson/5 p-3 rounded-lg text-center border border-gaia-crimson/10">
+                  🌙 Envío exclusivo para tu compra
                 </div>
               )}
               
-              <div className="border-t border-gray-200 pt-3 flex justify-between items-baseline">
-                <span className="text-gray-800 font-semibold">Total</span>
-                <span className="text-lg font-bold text-gray-900">
+              <div className="border-t border-gaia-border pt-3 flex justify-between items-baseline">
+                <span className="text-gaia-black font-medium">Total</span>
+                <span className="text-lg font-medium text-gaia-black">
                   {loadingShipping ? 'Calculando...' : formatPrice(finalTotal)}
                 </span>
               </div>
             </div>
             
-            {/* Botones de Acción */}
+            {/* Botones de Acción - Estilo Gaia */}
             <div className="space-y-3">
               {/* Botón de Checkout */}
               <LoadingButton
                 loading={isCheckingOut || loadingShipping}
                 onClick={handleCheckout}
                 disabled={cart.length === 0 || loadingShipping}
-                className="w-full bg-black text-white py-4 rounded-lg font-semibold hover:bg-gray-800 transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="btn-gaia-primary w-full text-center py-4"
               >
                 {currentUser ? (
                   <>
@@ -342,28 +337,28 @@ export default function CartSidebar({
                     <ArrowRight size={16} />
                   </>
                 ) : (
-                  'Ingresá a tu cuenta'
+                  'Acceder para Comprar'
                 )}
               </LoadingButton>
 
               {/* Botón Seguir Comprando */}
               <button
                 onClick={handleContinueShopping}
-                className="w-full border border-gray-300 text-gray-700 py-3 rounded-lg font-medium hover:border-gray-400 hover:bg-gray-50 transition-all duration-300 flex items-center justify-center gap-2"
+                className="btn-gaia-secondary w-full text-center py-3"
               >
                 <ShoppingBag size={16} />
-                Seguir comprando
+                Explorar Colección
               </button>
             </div>
 
-            {/* Información de Seguridad */}
-            <div className="pt-4 border-t border-gray-100">
-              <div className="flex items-center justify-center gap-4 text-xs text-gray-400">
-                <span>🔒 Pago seguro</span>
+            {/* Información de Seguridad - Estilo Gaia */}
+            <div className="pt-4 border-t border-gaia-border">
+              <div className="flex items-center justify-center gap-4 text-xs text-gaia-silver font-body">
+                <span>🔒 Experiencia segura</span>
                 <span>•</span>
-                <span>🚚 Envíos a todo el país</span>
+                <span>🚚 Envíos nacionales</span>
                 <span>•</span>
-                <span>↩️ Devoluciones gratis</span>
+                <span>↩️ Devoluciones</span>
               </div>
             </div>
           </div>
@@ -374,7 +369,7 @@ export default function CartSidebar({
 }
 
 // ==========================================
-// SHIPPING SELECTOR COMPONENT - CORREGIDO
+// SHIPPING SELECTOR - ESTILO GAIA SIX
 // ==========================================
 
 function ShippingSelector({ 
@@ -394,88 +389,88 @@ function ShippingSelector({
       case 'correo-standard':
       case 'correo-express':
       case 'correo-priority':
-        return <Truck size={16} className="text-blue-600" />;
+        return <Truck size={16} className="text-gaia-crimson" />;
       case 'andreani-standard':
       case 'andreani-express':
       case 'andreani-urgent':
-        return <Clock size={16} className="text-green-600" />;
+        return <Clock size={16} className="text-gaia-crimson" />;
       case 'pickup-showroom':
       case 'pickup-point':
-        return <Store size={16} className="text-purple-600" />;
+        return <Store size={16} className="text-gaia-crimson" />;
       default: 
-        return <Truck size={16} className="text-gray-600" />;
+        return <Truck size={16} className="text-gaia-silver" />;
     }
   };
 
-  const getMethodDescription = (method: ShippingMethod) => {
+  const getMethodDescription = (method: ShippingMethod) => { // ← TIPO AGREGADO
     const isFree = method.freeThreshold && cartTotal >= method.freeThreshold;
-    const priceText = isFree ? 'Gratis' : formatPrice(method.price);
+    const priceText = isFree ? 'Exclusivo' : formatPrice(method.price);
     
     return `${method.deliveryTime} • ${priceText}`;
   };
 
   return (
-    <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-      <h3 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
-        <Truck size={16} className="text-gray-600" />
-        Método de envío
+    <div className="border border-gaia-border rounded-lg p-4 bg-gaia-charcoal/5">
+      <h3 className="text-sm font-medium text-gaia-black mb-3 flex items-center gap-2 font-body">
+        <Truck size={16} className="text-gaia-crimson" />
+        Método de entrega
         {loadingShipping && (
-          <div className="w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+          <div className="spinner-gaia w-3 h-3 border-2 border-gaia-silver border-t-transparent" />
         )}
       </h3>
       
       <div className="space-y-3">
-        {availableMethods.map((method) => {
-          const isFree = method.freeThreshold && cartTotal >= method.freeThreshold;
-          const isSelected = selectedMethod === method.id;
+        {availableMethods.map((m: ShippingMethod) => { // ← TIPO AGREGADO
+          const isFree = m.freeThreshold && cartTotal >= m.freeThreshold;
+          const isSelected = selectedMethod === m.id;
           
           return (
             <label 
-              key={method.id}
-              className={`flex items-start gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
+              key={m.id}
+              className={`flex items-start gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all font-body ${
                 isSelected 
-                  ? 'border-black bg-white shadow-sm' 
-                  : 'border-transparent bg-white hover:border-gray-300'
-              } ${!method.available ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  ? 'border-gaia-crimson bg-gaia-white shadow-sm' 
+                  : 'border-gaia-border bg-gaia-white hover:border-gaia-silver'
+              } ${!m.available ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <input
                 type="radio"
                 name="shipping-method"
-                value={method.id}
+                value={m.id}
                 checked={isSelected}
                 onChange={(e) => onMethodChange(e.target.value)}
-                disabled={!method.available || loadingShipping}
-                className="mt-1 text-black focus:ring-black"
+                disabled={!m.available || loadingShipping}
+                className="mt-1 text-gaia-crimson focus:ring-gaia-crimson"
               />
               
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  {getMethodIcon(method.id)}
+                  {getMethodIcon(m.id)}
                   <span className={`text-sm font-medium ${
-                    isSelected ? 'text-gray-900' : 'text-gray-800'
+                    isSelected ? 'text-gaia-black' : 'text-gaia-black'
                   }`}>
-                    {method.name}
+                    {m.name}
                   </span>
-                  {!method.available && (
-                    <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded">
+                  {!m.available && (
+                    <span className="text-xs bg-gaia-silver/20 text-gaia-silver px-2 py-1 rounded">
                       No disponible
                     </span>
                   )}
                 </div>
                 
-                <p className="text-xs text-gray-600">
-                  {getMethodDescription(method)}
+                <p className="text-xs text-gaia-silver">
+                  {getMethodDescription(m)}
                 </p>
                 
-                {isFree && method.freeThreshold && (
-                  <p className="text-xs text-green-600 font-medium mt-1 flex items-center gap-1">
-                    🎉 ¡Envío gratis aplicado!
+                {isFree && m.freeThreshold && (
+                  <p className="text-xs text-gaia-crimson font-medium mt-1 flex items-center gap-1">
+                    🌙 Entrega exclusiva
                   </p>
                 )}
                 
-                {method.description && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    {method.description}
+                {m.description && (
+                  <p className="text-xs text-gaia-silver mt-1">
+                    {m.description}
                   </p>
                 )}
               </div>
@@ -484,17 +479,12 @@ function ShippingSelector({
         })}
       </div>
 
-      {/* Info de ubicación */}
-      <div className="flex items-center gap-2 text-xs text-gray-500 mt-3 pt-3 border-t border-gray-200">
-        <span>📍</span>
-        <span>Envío a <strong>{province}</strong></span>
-      </div>
     </div>
   );
 }
 
 // ==========================================
-// CART ITEM COMPONENT - MANTENIDO
+// CART ITEM COMPONENT - ESTILO GAIA SIX
 // ==========================================
 
 function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartItemProps) {
@@ -507,8 +497,8 @@ function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartItemProps) {
 
   return (
     <div className="flex gap-4 group">
-      {/* Imagen del producto */}
-      <div className="relative w-20 h-20 flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden">
+      {/* Imagen del producto - Estilo Gaia */}
+      <div className="relative w-20 h-24 flex-shrink-0 bg-gaia-charcoal overflow-hidden rounded-sm">
         <Image
           src={imageError ? '/images/fallback-product.jpg' : item.image}
           alt={item.name}
@@ -523,55 +513,55 @@ function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartItemProps) {
         />
         
         {!imageLoaded && !imageError && (
-          <div className="absolute inset-0 bg-gray-100 animate-pulse rounded-lg" />
+          <div className="absolute inset-0 bg-gaia-charcoal animate-pulse rounded-sm" />
         )}
         
-        {/* Badge de cantidad en móvil */}
-        <div className="absolute -top-1 -left-1 bg-black text-white text-xs w-5 h-5 rounded-full flex items-center justify-center sm:hidden">
+        {/* Badge de cantidad */}
+        <div className="absolute -top-1 -left-1 bg-gaia-crimson text-gaia-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium">
           {item.quantity}
         </div>
       </div>
 
-      {/* Información del producto */}
+      {/* Información del producto - Estilo Gaia */}
       <div className="flex-1 min-w-0">
-        <div className="flex justify-between items-start mb-1">
-          <h3 className="text-sm font-medium text-gray-900 line-clamp-2 pr-2">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="text-sm font-light text-gaia-black line-clamp-2 pr-2 font-body">
             {item.name}
           </h3>
           <button
             onClick={() => onRemoveItem(item.id, item.size)}
-            className="p-1 text-gray-300 hover:text-red-600 transition-colors flex-shrink-0"
+            className="p-1 text-gaia-silver hover:text-gaia-crimson transition-colors flex-shrink-0"
             aria-label={`Eliminar ${item.name} talla ${item.size}`}
           >
             <Trash2 size={16} />
           </button>
         </div>
         
-        <div className="flex items-center gap-3 text-xs text-gray-500 mb-2">
-          <span>Talla: <strong>{item.size}</strong></span>
+        <div className="flex items-center gap-3 text-xs text-gaia-silver mb-3 font-body">
+          <span>Talle: <strong className="text-gaia-black">{item.size}</strong></span>
           <span>•</span>
-          <span>Precio: <strong>{formatPrice(item.price)}</strong></span>
+          <span>Precio: <strong className="text-gaia-black">{formatPrice(item.price)}</strong></span>
         </div>
         
         {/* Controles de cantidad y subtotal */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => onUpdateQuantity(item.id, item.size, item.quantity - 1)}
-              className="w-8 h-8 border border-gray-300 rounded-lg flex items-center justify-center hover:border-gray-400 hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              className="w-8 h-8 border border-gaia-border flex items-center justify-center hover:border-gaia-black transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               disabled={item.quantity <= 1}
               aria-label="Reducir cantidad"
             >
               <Minus size={14} />
             </button>
             
-            <span className="text-sm font-medium w-8 text-center">
+            <span className="text-sm font-medium w-8 text-center font-body">
               {item.quantity}
             </span>
             
             <button
               onClick={() => onUpdateQuantity(item.id, item.size, item.quantity + 1)}
-              className="w-8 h-8 border border-gray-300 rounded-lg flex items-center justify-center hover:border-gray-400 hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              className="w-8 h-8 border border-gaia-border flex items-center justify-center hover:border-gaia-black transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               disabled={isAtMaxStock}
               aria-label={isAtMaxStock ? `Stock máximo: ${maxStock}` : 'Aumentar cantidad'}
               title={isAtMaxStock ? `Stock máximo: ${maxStock}` : 'Agregar uno más'}
@@ -581,11 +571,11 @@ function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartItemProps) {
           </div>
           
           <div className="text-right">
-            <p className="text-sm font-semibold text-gray-900">
+            <p className="text-sm font-medium text-gaia-black font-body">
               {formatPrice(subtotal)}
             </p>
             {item.quantity > 1 && (
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gaia-silver font-body">
                 {formatPrice(item.price)} c/u
               </p>
             )}
@@ -594,8 +584,8 @@ function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartItemProps) {
 
         {/* Mensaje de stock máximo */}
         {isAtMaxStock && maxStock > 0 && (
-          <p className="text-xs text-amber-600 mt-2 bg-amber-50 px-2 py-1 rounded">
-            ⚠️ Stock máximo: {maxStock} unidades
+          <p className="text-xs text-gaia-crimson mt-2 bg-gaia-crimson/5 px-2 py-1 rounded border border-gaia-crimson/10 font-body">
+            Stock máximo: {maxStock} unidades
           </p>
         )}
       </div>
@@ -604,7 +594,7 @@ function CartItem({ item, onUpdateQuantity, onRemoveItem }: CartItemProps) {
 }
 
 // ==========================================
-// EMPTY STATE COMPONENT - MANTENIDO
+// EMPTY STATE - ESTILO GAIA SIX
 // ==========================================
 
 function EmptyCartState({ onClose }: EmptyCartStateProps) {
@@ -618,41 +608,41 @@ function EmptyCartState({ onClose }: EmptyCartStateProps) {
   return (
     <div className="flex flex-col items-center justify-center h-full text-center p-8">
       <div className="mb-6">
-        <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <ShoppingBag size={32} className="text-gray-300" strokeWidth={1} />
+        <div className="w-24 h-24 bg-gaia-charcoal/5 rounded-full flex items-center justify-center mx-auto mb-4">
+          <ShoppingBag size={32} className="text-gaia-silver" strokeWidth={1} />
         </div>
       </div>
       
-      <h3 className="text-lg font-semibold text-gray-900 mb-2">
-        Tu bolsa está vacía
+      <h3 className="text-lg font-light text-gaia-black mb-2 font-display">
+        Tu selección está vacía
       </h3>
       
-      <p className="text-gray-500 mb-8 max-w-xs">
-        Explora nuestra colección y descubre prendas únicas que reflejen tu estilo.
+      <p className="text-gaia-silver mb-8 max-w-xs font-body">
+        Descubre piezas esenciales que definen tu estilo nocturno.
       </p>
       
       <div className="space-y-3 w-full max-w-xs">
         <button 
           onClick={handleStartShopping}
-          className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors flex items-center justify-center gap-2"
+          className="btn-gaia-primary w-full text-center py-3"
         >
           <ShoppingBag size={16} />
-          Explorar colección
+          Explorar Colección
         </button>
         
         <button 
           onClick={onClose}
-          className="w-full border border-gray-300 text-gray-600 py-3 rounded-lg font-medium hover:border-gray-400 transition-colors"
+          className="btn-gaia-secondary w-full text-center py-3"
         >
-          Seguir explorando
+          Continuar Explorando
         </button>
       </div>
 
-      {/* Beneficios */}
-      <div className="mt-8 grid grid-cols-2 gap-4 text-xs text-gray-500 w-full max-w-xs">
+      {/* Beneficios Gaia Six */}
+      <div className="mt-8 grid grid-cols-2 gap-4 text-xs text-gaia-silver w-full max-w-xs font-body">
         <div className="text-center">
           <div className="text-lg mb-1">🚚</div>
-          <p>Envío gratis desde ${shippingConfig.freeShippingThreshold.toLocaleString()}</p>
+          <p>Envío desde ${shippingConfig.freeShippingThreshold.toLocaleString()}</p>
         </div>
         <div className="text-center">
           <div className="text-lg mb-1">↩️</div>

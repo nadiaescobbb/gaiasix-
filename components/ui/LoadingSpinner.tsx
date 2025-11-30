@@ -1,25 +1,39 @@
+"use client";
+
 interface LoadingSpinnerProps {
-  message?: string;
   size?: 'sm' | 'md' | 'lg';
+  variant?: 'default' | 'primary' | 'white';
+  className?: string;
 }
 
 export default function LoadingSpinner({ 
-  message = "Cargando...", 
-  size = "md" 
+  size = 'md', 
+  variant = 'default',
+  className = '' 
 }: LoadingSpinnerProps) {
-  const sizeClasses = {
-    sm: 'w-6 h-6',
-    md: 'w-12 h-12', 
-    lg: 'w-16 h-16'
+  
+  const sizes = {
+    sm: 'w-4 h-4 border-2',
+    md: 'w-8 h-8 border-3',
+    lg: 'w-12 h-12 border-4'
+  };
+
+  const variants = {
+    default: 'border-gaia-silver border-t-gaia-black',
+    primary: 'border-gaia-crimson/30 border-t-gaia-crimson',
+    white: 'border-gaia-white/30 border-t-gaia-white'
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <div className="text-center">
-        <div className={`${sizeClasses[size]} border-4 border-gray-200 border-t-black rounded-full animate-spin mx-auto mb-4`}></div>
-        <div className="text-xl font-light text-gray-600">GAIA SIX</div>
-        <div className="text-sm text-gray-500 mt-2">{message}</div>
-      </div>
-    </div>
+    <div 
+      className={`
+        ${sizes[size]}
+        ${variants[variant]}
+        rounded-full animate-spin
+        ${className}
+      `}
+      aria-label="Cargando..."
+      role="status"
+    />
   );
 }

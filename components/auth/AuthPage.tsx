@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, ChangeEvent, FormEvent, useCallback } from 'react';
+import { useState, ChangeEvent, FormEvent, useCallback, useMemo } from 'react';
 import { Mail, Lock, User, Phone, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react';
-import { useDebouncedCallback } from 'use-debounce';
 import { type LoginResult, type RegisterResult, type RegisterUserData } from '../../lib/types';
 
 interface AuthPageProps {
@@ -21,43 +20,38 @@ interface FormData {
   confirmPassword?: string;
 }
 
-interface FormErrors {
-  email?: string;
-  password?: string;
-  name?: string;
-  phone?: string;
-  confirmPassword?: string;
-  submit?: string;
-}
-
-// Validaciones mejoradas
-const validateEmail = (email: string): boolean => {
+// Validaciones simplificadas y optimizadas
+const validateEmail = (email: string): string => {
+  if (!email.trim()) return 'El email es requerido';
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return regex.test(email);
+  return regex.test(email) ? '' : 'Email inválido';
 };
 
-const validatePhone = (phone: string): boolean => {
+const validatePassword = (password: string): string => {
+  if (!password) return 'La contraseña es requerida';
+  if (password.length < 6) return 'Mínimo 6 caracteres';
+  return '';
+};
+
+const validateName = (name: string): string => {
+  if (!name.trim()) return 'El nombre es requerido';
+  if (name.trim().length < 2) return 'Mínimo 2 caracteres';
+  return '';
+};
+
+const validatePhone = (phone: string): string => {
+  if (!phone.trim()) return 'El teléfono es requerido';
   const cleaned = phone.replace(/\D/g, '');
-  return cleaned.length >= 8 && cleaned.length <= 15 && /^[0-9]+$/.test(cleaned);
+  return cleaned.length >= 8 && cleaned.length <= 15 ? '' : 'Teléfono inválido';
 };
 
-const validatePassword = (password: string): { valid: boolean; error?: string } => {
-  if (password.length < 6) {
-    return { valid: false, error: 'Mínimo 6 caracteres' };
-  }
-  if (!/(?=.*[a-z])/.test(password)) {
-    return { valid: false, error: 'Al menos una minúscula' };
-  }
-  if (!/(?=.*[A-Z])/.test(password)) {
-    return { valid: false, error: 'Al menos una mayúscula' };
-  }
-  if (!/(?=.*\d)/.test(password)) {
-    return { valid: false, error: 'Al menos un número' };
-  }
-  return { valid: true };
+const validateConfirmPassword = (password: string, confirmPassword: string): string => {
+  if (!confirmPassword) return 'Confirma tu contraseña';
+  return password === confirmPassword ? '' : 'Las contraseñas no coinciden';
 };
 
 export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, error }: AuthPageProps) {
+  // Estado simplificado - sin debounce
   const [formData, setFormData] = useState<FormData>({ 
     email: '', 
     password: '', 
@@ -65,65 +59,70 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
     phone: '',
     confirmPassword: ''
   });
-  const [errors, setErrors] = useState<FormErrors>({});
+  
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
-  // Debounce para mejor performance
-  const debouncedSetFormData = useDebouncedCallback((field: keyof FormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  }, 300);
-
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-
-    // Validación de email
-    if (!formData.email.trim()) {
-      newErrors.email = 'El email es requerido';
-    } else if (!validateEmail(formData.email)) {
-      newErrors.email = 'Email inválido';
-    }
-
-    // Validación de contraseña
-    if (!formData.password) {
-      newErrors.password = 'La contraseña es requerida';
-    } else {
-      const passwordValidation = validatePassword(formData.password);
-      if (!passwordValidation.valid) {
-        newErrors.password = passwordValidation.error;
-      }
-    }
-
-    // Validaciones específicas de registro
+  // Validaciones en tiempo real optimizadas
+  const errors = useMemo(() => {
+    const newErrors: Record<string, string> = {};
+    
+    // Solo validar campos con contenido
+    if (formData.email) newErrors.email = validateEmail(formData.email);
+    if (formData.password) newErrors.password = validatePassword(formData.password);
+    
     if (mode === 'register') {
-      if (!formData.name.trim()) {
-        newErrors.name = 'El nombre es requerido';
-      } else if (formData.name.trim().length < 2) {
-        newErrors.name = 'Mínimo 2 caracteres';
-      }
-
-      if (!formData.phone.trim()) {
-        newErrors.phone = 'El teléfono es requerido';
-      } else if (!validatePhone(formData.phone)) {
-        newErrors.phone = 'Teléfono inválido (8-15 dígitos)';
-      }
-
-      if (!formData.confirmPassword) {
-        newErrors.confirmPassword = 'Confirma tu contraseña';
-      } else if (formData.password !== formData.confirmPassword) {
-        newErrors.confirmPassword = 'Las contraseñas no coinciden';
+      if (formData.name) newErrors.name = validateName(formData.name);
+      if (formData.phone) newErrors.phone = validatePhone(formData.phone);
+      if (formData.confirmPassword) {
+        newErrors.confirmPassword = validateConfirmPassword(formData.password, formData.confirmPassword);
       }
     }
+    
+    // Remover errores vacíos
+    Object.keys(newErrors).forEach(key => {
+      if (!newErrors[key]) delete newErrors[key];
+    });
+    
+    return newErrors;
+  }, [formData, mode]);
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  // Handler de cambio directo y rápido
+  const handleChange = useCallback((field: keyof FormData, value: string): void => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  }, []);
+
+  // Validación solo al submit
+  const validateForm = (): boolean => {
+    const submitErrors: Record<string, string> = {};
+    
+    submitErrors.email = validateEmail(formData.email);
+    submitErrors.password = validatePassword(formData.password);
+    
+    if (mode === 'register') {
+      submitErrors.name = validateName(formData.name);
+      submitErrors.phone = validatePhone(formData.phone);
+      submitErrors.confirmPassword = validateConfirmPassword(formData.password, formData.confirmPassword || '');
+    }
+    
+    // Solo mostrar errores que existen
+    const hasErrors = Object.values(submitErrors).some(error => error !== '');
+    
+    if (hasErrors) {
+      // Mostrar solo errores relevantes en la UI
+      Object.keys(submitErrors).forEach(key => {
+        if (!submitErrors[key]) delete submitErrors[key];
+      });
+      return false;
+    }
+    
+    return true;
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    setErrors({});
     setSuccessMessage('');
     
     if (!validateForm()) return;
@@ -137,9 +136,9 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
         result = await onLogin(formData.email, formData.password);
         if (result.success) {
           setSuccessMessage('¡Bienvenida de nuevo! 👋');
-          setFormData({ email: '', password: '', name: '', phone: '', confirmPassword: '' });
+          // No limpiar form inmediatamente para mejor UX
         } else {
-          setErrors({ submit: result.error });
+          // El error se maneja desde el prop
         }
       } else {
         const { confirmPassword, ...userData } = formData;
@@ -147,35 +146,17 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
         
         if (result.success) {
           setSuccessMessage('¡Cuenta creada exitosamente! 🎊');
-          setFormData({ email: '', password: '', name: '', phone: '', confirmPassword: '' });
-        } else {
-          setErrors({ submit: result.error });
         }
       }
     } catch (error) {
       console.error('Auth error:', error);
-      setErrors({ submit: 'Error de conexión. Intenta nuevamente.' });
+      // El error se maneja desde el contexto
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleChange = useCallback((field: keyof FormData, value: string): void => {
-    debouncedSetFormData(field, value);
-    
-    // Limpiar error específico inmediatamente
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
-    
-    // Limpiar error general al modificar cualquier campo
-    if (errors.submit) {
-      setErrors(prev => ({ ...prev, submit: '' }));
-    }
-  }, [errors, debouncedSetFormData]);
-
   const handleToggleMode = (): void => {
-    setErrors({});
     setSuccessMessage('');
     setFormData({ email: '', password: '', name: '', phone: '', confirmPassword: '' });
     onToggleMode();
@@ -189,26 +170,38 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
     setShowConfirmPassword(prev => !prev);
   };
 
+  // Determinar si el formulario puede enviarse
+  const canSubmit = mode === 'login' 
+    ? formData.email && formData.password && !errors.email && !errors.password
+    : formData.email && formData.password && formData.name && formData.phone && formData.confirmPassword &&
+      !errors.email && !errors.password && !errors.name && !errors.phone && !errors.confirmPassword;
+
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-6 py-12">
+    <div className="min-h-screen bg-gaia-white flex items-center justify-center px-6 py-12 pt-24">
       <div className="max-w-md w-full">
-        <h2 className="text-3xl font-light text-center mb-12">
-          {mode === 'login' ? 'Ingresar' : 'Crear cuenta'}
-        </h2>
+        {/* Header Gaia Six */}
+        <div className="text-center mb-12">
+          <div className="logo-gaia text-3xl mb-4">
+            GAIA<span className="text-gaia-crimson">SIX</span>
+          </div>
+          <h2 className="text-2xl font-light font-display">
+            {mode === 'login' ? 'Acceder' : 'Unirse'}
+          </h2>
+        </div>
         
         {/* Mensaje de error general */}
-        {(errors.submit || error) && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded flex items-start gap-3 animate-fade-in">
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-sm flex items-start gap-3">
             <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
-            <p className="text-sm text-red-800">{errors.submit || error}</p>
+            <p className="text-sm text-red-800 font-body">{error}</p>
           </div>
         )}
 
         {/* Mensaje de éxito */}
         {successMessage && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded flex items-start gap-3 animate-fade-in">
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-sm flex items-start gap-3">
             <CheckCircle className="text-green-600 flex-shrink-0 mt-0.5" size={20} />
-            <p className="text-sm text-green-800">{successMessage}</p>
+            <p className="text-sm text-green-800 font-body">{successMessage}</p>
           </div>
         )}
 
@@ -218,40 +211,36 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
               {/* Campo Nombre */}
               <div>
                 <div className="relative">
-                  <User className="absolute left-0 top-3 text-gray-400" size={18} />
+                  <User className="absolute left-3 top-3 text-gaia-silver" size={18} />
                   <input
                     type="text"
                     placeholder="Nombre completo"
                     value={formData.name}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange('name', e.target.value)}
-                    className={`w-full pl-8 pr-4 py-3 border-b transition-colors outline-none ${
-                      errors.name ? 'border-red-500' : 'border-gray-300 focus:border-black'
-                    }`}
+                    className={`input-gaia pl-12 ${errors.name ? 'border-red-500' : ''}`}
                     disabled={isSubmitting}
                   />
                 </div>
                 {errors.name && (
-                  <p className="mt-1 text-xs text-red-600 animate-fade-in">{errors.name}</p>
+                  <p className="mt-2 text-xs text-red-600 font-body">{errors.name}</p>
                 )}
               </div>
 
               {/* Campo Teléfono */}
               <div>
                 <div className="relative">
-                  <Phone className="absolute left-0 top-3 text-gray-400" size={18} />
+                  <Phone className="absolute left-3 top-3 text-gaia-silver" size={18} />
                   <input
                     type="tel"
-                    placeholder="Teléfono (ej: 11 1234-5678)"
+                    placeholder="Teléfono"
                     value={formData.phone}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange('phone', e.target.value)}
-                    className={`w-full pl-8 pr-4 py-3 border-b transition-colors outline-none ${
-                      errors.phone ? 'border-red-500' : 'border-gray-300 focus:border-black'
-                    }`}
+                    className={`input-gaia pl-12 ${errors.phone ? 'border-red-500' : ''}`}
                     disabled={isSubmitting}
                   />
                 </div>
                 {errors.phone && (
-                  <p className="mt-1 text-xs text-red-600 animate-fade-in">{errors.phone}</p>
+                  <p className="mt-2 text-xs text-red-600 font-body">{errors.phone}</p>
                 )}
               </div>
             </>
@@ -260,48 +249,44 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
           {/* Campo Email */}
           <div>
             <div className="relative">
-              <Mail className="absolute left-0 top-3 text-gray-400" size={18} />
+              <Mail className="absolute left-3 top-3 text-gaia-silver" size={18} />
               <input
                 type="email"
                 placeholder="Email"
                 value={formData.email}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange('email', e.target.value)}
-                className={`w-full pl-8 pr-4 py-3 border-b transition-colors outline-none ${
-                  errors.email ? 'border-red-500' : 'border-gray-300 focus:border-black'
-                }`}
+                className={`input-gaia pl-12 ${errors.email ? 'border-red-500' : ''}`}
                 disabled={isSubmitting}
               />
             </div>
             {errors.email && (
-              <p className="mt-1 text-xs text-red-600 animate-fade-in">{errors.email}</p>
+              <p className="mt-2 text-xs text-red-600 font-body">{errors.email}</p>
             )}
           </div>
           
           {/* Campo Contraseña */}
           <div>
             <div className="relative">
-              <Lock className="absolute left-0 top-3 text-gray-400" size={18} />
+              <Lock className="absolute left-3 top-3 text-gaia-silver" size={18} />
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Contraseña (mín. 6 caracteres)"
+                placeholder="Contraseña"
                 value={formData.password}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange('password', e.target.value)}
-                className={`w-full pl-8 pr-12 py-3 border-b transition-colors outline-none ${
-                  errors.password ? 'border-red-500' : 'border-gray-300 focus:border-black'
-                }`}
+                className={`input-gaia pl-12 pr-12 ${errors.password ? 'border-red-500' : ''}`}
                 disabled={isSubmitting}
               />
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
-                className="absolute right-0 top-3 text-gray-400 hover:text-gray-600 transition-colors"
+                className="absolute right-3 top-3 text-gaia-silver hover:text-gaia-black transition-colors"
                 disabled={isSubmitting}
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
             {errors.password && (
-              <p className="mt-1 text-xs text-red-600 animate-fade-in">{errors.password}</p>
+              <p className="mt-2 text-xs text-red-600 font-body">{errors.password}</p>
             )}
           </div>
 
@@ -309,55 +294,53 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
           {mode === 'register' && (
             <div>
               <div className="relative">
-                <Lock className="absolute left-0 top-3 text-gray-400" size={18} />
+                <Lock className="absolute left-3 top-3 text-gaia-silver" size={18} />
                 <input
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirmar contraseña"
                   value={formData.confirmPassword}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange('confirmPassword', e.target.value)}
-                  className={`w-full pl-8 pr-12 py-3 border-b transition-colors outline-none ${
-                    errors.confirmPassword ? 'border-red-500' : 'border-gray-300 focus:border-black'
-                  }`}
+                  className={`input-gaia pl-12 pr-12 ${errors.confirmPassword ? 'border-red-500' : ''}`}
                   disabled={isSubmitting}
                 />
                 <button
                   type="button"
                   onClick={toggleConfirmPasswordVisibility}
-                  className="absolute right-0 top-3 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute right-3 top-3 text-gaia-silver hover:text-gaia-black transition-colors"
                   disabled={isSubmitting}
                 >
                   {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className="mt-1 text-xs text-red-600 animate-fade-in">{errors.confirmPassword}</p>
+                <p className="mt-2 text-xs text-red-600 font-body">{errors.confirmPassword}</p>
               )}
             </div>
           )}
           
           <button
             type="submit"
-            disabled={isSubmitting}
-            className="w-full border border-black py-4 text-sm uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300 mt-8 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            disabled={isSubmitting || !canSubmit}
+            className="btn-gaia-primary w-full disabled:bg-gaia-silver disabled:cursor-not-allowed mt-8"
           >
             {isSubmitting ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Procesando...
-              </>
+              <div className="flex items-center justify-center gap-2">
+                <div className="spinner-gaia w-4 h-4 border-2 border-gaia-white border-t-transparent" />
+                {mode === 'login' ? 'Accediendo...' : 'Creando cuenta...'}
+              </div>
             ) : (
-              mode === 'login' ? 'Ingresar' : 'Registrarse'
+              mode === 'login' ? 'Acceder' : 'Crear cuenta'
             )}
           </button>
         </form>
         
-        <div className="mt-8 text-center">
+        <div className="mt-8 text-center pt-6 border-t border-gaia-border">
           <button
             onClick={handleToggleMode}
             disabled={isSubmitting}
-            className="text-sm text-gray-600 hover:text-black transition-colors disabled:opacity-50"
+            className="text-sm text-gaia-silver hover:text-gaia-black transition-colors font-body disabled:opacity-50"
           >
-            {mode === 'login' ? '¿No tenés cuenta? Crear una' : '¿Ya tenés cuenta? Ingresar'}
+            {mode === 'login' ? '¿Nuevo en Gaia Six? Crear cuenta' : '¿Ya tienes cuenta? Acceder'}
           </button>
         </div>
 

@@ -1,270 +1,334 @@
+/* ───────────────────────────────────────────────────────────────
+   1. FUENTES — Inter (fallback) + fuentes locales
+   ─────────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ========================================================================
-   GAIA SIX — CORE BRAND VARIABLES
-   ======================================================================== */
-:root {
-  /* BRAND COLORS */
-  --color-primary: #AF161F;        /* crimson boho-rock-glam */
-  --color-primary-hover: #B91C1C;
+/* ───────────────────────────────────────────────────────────────
+   2. FUENTES LOCALES — Galiscka (Display) y CSTunker (UI)
+   ─────────────────────────────────────────────────────────────── */
 
-  --color-black: #000000;
-  --color-charcoal: #111111;
-  --color-white: #FFFFFF;
-  --color-silver: #C9C9C9;
-
-  /* SHADOWS */
-  --shadow-soft: 0 4px 14px rgba(0, 0, 0, 0.08);
-  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.12);
-  --shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.18);
-
-  /* TRANSITIONS */
-  --transition-standard: all 0.3s ease;
-
-  /* TYPOGRAPHY: MAIN BRAND FONTS */
-  --font-title: var(--font-galiscka), Georgia, serif;
-  --font-display: var(--font-galiscka), Georgia, serif;
-  --font-body: var(--font-galiscka), Georgia, serif;
+/* Galiscka — Para títulos y hero */
+@font-face {
+  font-family: 'Galiscka';
+  src: url('/fonts/Galiscka.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
 }
 
-/* ========================================================================
-   BASE STYLES — EDITORIAL LOOK
-   ======================================================================== */
+/* CSTunker — Para UI y cuerpo de texto */
+@font-face {
+  font-family: 'CSTunker';
+  src: url('/fonts/CSTunker.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ───────────────────────────────────────────────────────────────
+   3. VARIABLES CSS — Sincronizadas con tailwind.config.js
+   ─────────────────────────────────────────────────────────────── */
+:root {
+  /* Colores principales */
+  --gaia-black: #000000;
+  --gaia-white: #FFFFFF;
+  --gaia-crimson: #DC143C; 
+  
+  /* Grises */
+  --gaia-charcoal: #111111;
+  --gaia-silver: #C9C9C9;
+  --gaia-ash: #666666;
+  
+  /* Utilidades */
+  --gaia-overlay: rgba(0, 0, 0, 0.85);
+  --gaia-overlay-light: rgba(0, 0, 0, 0.40);
+  --gaia-border: rgba(201, 201, 201, 0.15);
+  --gaia-border-solid: rgba(201, 201, 201, 0.3);
+  
+  /* Tipografía */
+  --font-display: 'Galiscka', 'Inter', 'Georgia', serif;
+  --font-body: 'Galiscka', 'Inter', system-ui, sans-serif;
+}
+
+/* ───────────────────────────────────────────────────────────────
+   4. ESTILOS BASE — Minimalista, no sobreescribe Tailwind
+   ─────────────────────────────────────────────────────────────── */
 @layer base {
-
-  /* BODY */
-  body {
-    @apply bg-white text-gray-900 antialiased;
-    font-family: var(--font-body);
-    line-height: 1.6;
-    letter-spacing: 0.25px;
-  }
-
-  /* TITLES — GAIA SIX SIGNATURE STYLE */
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-title);
-    font-weight: normal;
-    line-height: 1.2;
-    text-wrap: balance;
-  }
-
-  /* SCROLL BEHAVIOR */
   html {
     scroll-behavior: smooth;
+    font-size: 16px;
   }
-
-  /* ACCESSIBILITY FOCUS */
-  button:focus-visible,
-  a:focus-visible {
-    @apply outline-2 outline-offset-2 outline-black;
-  }
-}
-
-/* ========================================================================
-   COMPONENTS — PREMIUM UI (BUTTONS, CARDS, ETC.)
-   ======================================================================== */
-@layer components {
-  /* -------------------------
-     PRIMARY BUTTON (BLACK)
-     ------------------------- */
-  .btn-primary {
-    @apply bg-black text-white px-6 py-3 text-xs tracking-widest uppercase;
-    @apply hover:bg-gray-800 transition-all duration-300;
-    @apply disabled:opacity-50 disabled:cursor-not-allowed;
-    letter-spacing: 0.15em;
-  }
-
-  /* -------------------------
-     SECONDARY BUTTON (OUTLINE)
-     ------------------------- */
-  .btn-secondary {
-    @apply border border-black text-black px-6 py-3 text-xs uppercase tracking-widest;
-    @apply hover:bg-black hover:text-white transition-all duration-300;
-    letter-spacing: 0.15em;
-  }
-
-  /* -------------------------
-     GHOST BUTTON
-     ------------------------- */
-  .btn-ghost {
-    @apply text-gray-600 hover:text-black transition-colors duration-300;
-  }
-
-  /* -------------------------
-     PREMIUM PRODUCT CARD
-     ------------------------- */
-  .product-card {
-    @apply relative bg-white overflow-hidden rounded-none;
-    box-shadow: var(--shadow-soft);
-    transition: var(--transition-standard);
-  }
-
-  .product-card:hover {
-    box-shadow: var(--shadow-card);
-  }
-
-  .product-card-image {
-    @apply aspect-[3/4] bg-gray-50 overflow-hidden;
-  }
-
-  .product-card-image img {
-    @apply w-full h-full object-cover transition-transform duration-300;
-  }
-
-  .product-card:hover .product-card-image img {
-    transform: scale(1.04);
-  }
-
-  .product-card-content {
-    @apply p-4 space-y-2;
-  }
-
-  /* Price text */
-  .price-tag {
-    @apply text-sm tracking-wide font-normal;
-  }
-
-  /* Labels tipo “New In” / “Limited” */
-  .product-label {
-    @apply absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 uppercase tracking-widest;
-  }
-}
-
-/* ========================================================================
-   UTILITIES — TYPOGRAPHY, SCROLLBAR, ANIMATIONS
-   ======================================================================== */
-@layer utilities {
-
-  /* BRAND TYPOGRAPHY HELPERS */
-  .font-title {
-    font-family: var(--font-title);
-  }
-
-  .font-body {
+  
+  body {
+    @apply bg-white text-black antialiased;
     font-family: var(--font-body);
+    font-weight: 300;
+    line-height: 1.6;
   }
 
-  /* SCROLLBAR */
-  .scrollbar-thin {
-    scrollbar-width: thin;
-    scrollbar-color: theme('colors.gray.300') transparent;
+  /* Selection personalizado */
+  ::selection {
+    @apply bg-gaia-crimson text-white;
   }
 
-  .scrollbar-thin::-webkit-scrollbar {
-    width: 6px;
-  }
-  .scrollbar-thin::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: theme('colors.gray.300');
-    border-radius: 3px;
+  /* Focus visible para accesibilidad */
+  :focus-visible {
+    @apply outline-2 outline-gaia-crimson outline-offset-2;
   }
 
-  /* TEXT-BALANCE */
+  /* Imágenes responsivas */
+  img {
+    @apply max-w-full h-auto;
+  }
+
+  /* Scrollbar personalizado */
+  ::-webkit-scrollbar {
+    @apply w-1.5;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gaia-crimson rounded;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gaia-crimson/80;
+  }
+
+  /* Placeholder styles */
+  ::placeholder {
+    @apply text-gaia-silver opacity-100 font-light;
+  }
+
+  /* Disabled states */
+  :disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────
+   5. COMPONENTES REUTILIZABLES — Sistema Gaia Six
+   ─────────────────────────────────────────────────────────────── */
+@layer components {
+  
+  /* ─── CONTENEDORES ─── */
+  .container-gaia {
+    @apply max-w-[1400px] mx-auto px-6 md:px-12;
+  }
+  
+  .section-gaia {
+    @apply py-24 md:py-32;
+  }
+  
+  /* ─── TIPOGRAFÍA ─── */
+  .title-hero {
+    @apply font-display text-7xl md:text-9xl tracking-tight font-light leading-none;
+  }
+  
+  .title-section {
+    @apply font-display text-5xl md:text-7xl tracking-tight font-light;
+  }
+  
+  .label-gaia {
+    @apply font-body text-[10px] tracking-ultra uppercase;
+  }
+  
+  /* ─── BOTONES ─── */
+  .btn-gaia {
+    @apply px-8 py-3 text-xs tracking-wider uppercase transition-all duration-300 inline-flex items-center justify-center min-h-[48px] font-body font-medium;
+  }
+  
+  .btn-primary {
+    @apply btn-gaia bg-gaia-black text-gaia-white hover:bg-gaia-crimson;
+  }
+  
+  .btn-secondary {
+    @apply btn-gaia bg-gaia-white text-gaia-black border border-gaia-black hover:bg-gaia-black hover:text-gaia-white;
+  }
+  
+  /* ─── PRODUCT CARDS ─── */
+  .product-card {
+    @apply cursor-pointer transition-transform duration-500 hover:-translate-y-2;
+  }
+  
+  .product-image {
+    @apply relative aspect-[3/4] overflow-hidden bg-gaia-charcoal;
+  }
+  
+  .product-overlay-base {
+    @apply absolute inset-0 bg-gaia-overlay opacity-0 transition-opacity duration-500 flex items-center justify-center;
+  }
+  
+  .product-overlay-btn {
+    @apply bg-white text-black px-6 py-3 text-xs tracking-wider uppercase transition-all duration-300 hover:bg-black hover:text-white font-body font-medium;
+  }
+  
+  /* ─── BADGES ─── */
+  .badge-new {
+    @apply absolute top-4 left-4 bg-gaia-black text-white px-3 py-1 text-[9px] tracking-[0.25em] uppercase font-body font-medium z-10;
+  }
+  
+  /* ─── NAVEGACIÓN ─── */
+  .nav-gaia {
+    @apply sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gaia-border transition-all duration-300;
+  }
+  
+  .nav-scrolled {
+    @apply bg-white/95 backdrop-blur-lg shadow-sm;
+  }
+  
+  .logo-gaia {
+    @apply font-display text-2xl tracking-tight;
+  }
+  
+  /* ─── LINKS ─── */
+  .link-gaia {
+    @apply transition-colors duration-300 hover:text-gaia-crimson font-body;
+  }
+  
+  /* ─── INPUTS ─── */
+  .input-gaia {
+    @apply w-full px-4 py-3 bg-white border border-gaia-border-solid focus:border-gaia-black focus:outline-none transition-colors duration-300 font-body text-sm;
+  }
+  
+  .textarea-gaia {
+    @apply input-gaia min-h-[120px] resize-none;
+  }
+  
+  /* ─── DIVIDERS ─── */
+  .divider-gaia {
+    @apply border-t border-gaia-border my-12;
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────
+   6. UTILIDADES PERSONALIZADAS
+   ─────────────────────────────────────────────────────────────── */
+@layer utilities {
+  /* Ocultar scrollbar pero mantener funcionalidad */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Text balance para títulos */
   .text-balance {
     text-wrap: balance;
   }
-
-  /* SKELETON STATES */
-  .skeleton {
-    @apply bg-gray-200 animate-pulse rounded;
+  
+  /* Gradientes Gaia */
+  .gradient-overlay-gaia {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2), transparent);
   }
-
-  .skeleton-text {
-    @apply h-4 bg-gray-200 animate-pulse rounded;
+  
+  .gradient-fade-gaia {
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4));
   }
 }
 
-/* ========================================================================
-   EMBLA CAROUSEL — CLEANED + OPTIMIZED
-   ======================================================================== */
-.embla {
-  overflow: hidden;
+/* ───────────────────────────────────────────────────────────────
+   7. ANIMACIONES — Minimalista, sin efectos pesados
+   ─────────────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.embla__container {
-  display: flex;
-  touch-action: pan-y pinch-zoom;
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.embla__slide {
-  flex: 0 0 100%;
-  min-width: 0;
-  position: relative;
-  user-select: none;
-  cursor: grab;
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.embla__slide:active {
-  cursor: grabbing;
+/* Clases de animación */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
 }
 
-.embla__slide img {
-  transition: transform 0.4s ease;
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
 }
 
-.embla:hover .embla__slide:not(.is-dragging) img {
-  transform: scale(1.02);
+.animate-scale-in {
+  animation: scaleIn 0.4s ease-out forwards;
 }
 
-/* Focus improvements */
-.embla__prev:focus,
-.embla__next:focus,
-.embla__dot:focus {
-  outline: 2px solid black;
-  outline-offset: 2px;
-}
-
-/* ========================================================================
-   ANIMATIONS — PREMIUM, MINIMAL, EDITORIAL
-   ======================================================================== */
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slide-in-right {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes scale-in {
-  from { transform: scale(0.92); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-.animate-fade-in { animation: fade-in 0.5s ease-out; }
-.animate-slide-in-right { animation: slide-in-right 0.3s ease-out; }
-.animate-scale-in { animation: scale-in 0.3s ease-out; }
-
-/* ========================================================================
-   RESPONSIVE — CLEAN MOBILE-FIRST
-   ======================================================================== */
+/* ───────────────────────────────────────────────────────────────
+   8. RESPONSIVE — Mobile first
+   ─────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
-  .embla__slide img {
-    transform: none !important;
+  .btn-gaia {
+    @apply px-6 py-2.5 text-[11px] min-h-[44px];
+  }
+  
+  .product-card {
+    @apply hover:translate-y-0; /* Desactivar hover en mobile */
+  }
+  
+  .container-gaia {
+    @apply px-4;
+  }
+  
+  .section-gaia {
+    @apply py-16;
   }
 }
 
-/* ========================================================================
-   DARK MODE (optional)
-   ======================================================================== */
-@media (prefers-color-scheme: dark) {
-  .dark-mode-support {
-    @apply bg-gray-900 text-white;
-  }
-}
-
-/* ========================================================================
-   PRINT STYLES
-   ======================================================================== */
+/* ───────────────────────────────────────────────────────────────
+   9. PRINT STYLES 
+   ─────────────────────────────────────────────────────────────── */
 @media print {
-  .no-print { display: none !important; }
-  .print-break { page-break-before: always; }
+  .nav-gaia,
+  .product-overlay-base,
+  .btn-gaia {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
 }

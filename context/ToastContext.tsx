@@ -26,13 +26,13 @@ export const useToast = (): ToastContextType => {
 };
 
 // ==========================================
-// TOAST PROVIDER
+// TOAST PROVIDER (MANTENIDO - SOLO ESTILOS CAMBIAN)
 // ==========================================
 
 export function ToastProvider({ children }: ToastProviderProps) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const addToast = useCallback((message: string, type: ToastType = 'success', duration: number = 3000): number => {
+  const addToast = useCallback((message: string, type: ToastType = 'success', duration: number = 4000): number => {
     const id = Date.now();
     const toast: Toast = { id, message, type, duration };
     
@@ -60,16 +60,19 @@ export function ToastProvider({ children }: ToastProviderProps) {
   const warning = useCallback((message: string, duration?: number): number => 
     addToast(message, 'warning', duration), [addToast]);
 
-const contextValue: ToastContextType = {
-  success,
-  error,
-  warning,
-  info: useCallback((message: string, duration?: number) => 
-    addToast(message, 'info', duration), [addToast]), 
-  addToast,
-  removeToast,
-  toasts, 
-};
+  const info = useCallback((message: string, duration?: number): number => 
+    addToast(message, 'info', duration), [addToast]);
+
+  const contextValue: ToastContextType = {
+    success,
+    error,
+    warning,
+    info,
+    addToast,
+    removeToast,
+    toasts, 
+  };
+
   return (
     <ToastContext.Provider value={contextValue}>
       {children}
@@ -79,7 +82,7 @@ const contextValue: ToastContextType = {
 }
 
 // ==========================================
-// TOAST CONTAINER
+// TOAST CONTAINER GAIA SIX
 // ==========================================
 
 interface ToastContainerProps {
@@ -91,7 +94,7 @@ function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed top-4 right-4 z-[9999] space-y-2 pointer-events-none">
+    <div className="fixed top-6 right-6 z-[9999] space-y-3 pointer-events-none">
       {toasts.map((toast) => (
         <Toast key={toast.id} toast={toast} onRemove={onRemove} />
       ))}
@@ -100,7 +103,7 @@ function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
 }
 
 // ==========================================
-// TOAST COMPONENT (CON LUCIDE-REACT)
+// TOAST COMPONENT - ESTILO GAIA SIX
 // ==========================================
 
 interface ToastComponentProps {
@@ -109,45 +112,87 @@ interface ToastComponentProps {
 }
 
 function Toast({ toast, onRemove }: ToastComponentProps) {
+  // Iconos Gaia Six
   const icons = {
-    success: <CheckCircle size={20} className="text-green-600" />,
-    error: <XCircle size={20} className="text-red-600" />,
-    warning: <AlertCircle size={20} className="text-yellow-600" />,
-    info: <Info size={20} />, //
+    success: <CheckCircle size={20} className="text-gaia-crimson" />,
+    error: <XCircle size={20} className="text-gaia-crimson" />,
+    warning: <AlertCircle size={20} className="text-gaia-crimson" />,
+    info: <Info size={20} className="text-gaia-crimson" />,
   };
 
+  // Colores Gaia Six
   const colors = {
-    success: 'bg-green-50 border-green-200',
-    error: 'bg-red-50 border-red-200',
-    warning: 'bg-yellow-50 border-yellow-200',
-    info: 'bg-blue-50 border-blue-500 text-blue-700',
+    success: 'bg-gaia-white border-gaia-border shadow-lg',
+    error: 'bg-gaia-white border-gaia-border shadow-lg',
+    warning: 'bg-gaia-white border-gaia-border shadow-lg',
+    info: 'bg-gaia-white border-gaia-border shadow-lg',
   };
-  
+
+  // Títulos por tipo - Copywriting Editorial
+  const titles = {
+    success: 'Completado',
+    error: 'Atención',
+    warning: 'Importante', 
+    info: 'Información',
+  };
 
   return (
     <div 
       className={`
         ${colors[toast.type]}
-        border rounded-lg shadow-lg p-4 pr-12 
-        min-w-[300px] max-w-md
+        border rounded-sm p-4 pr-12 
+        min-w-[320px] max-w-md
         pointer-events-auto
-        animate-slide-in-right
+        animate-slide-in-right-gaia
+        backdrop-blur-sm
+        relative
+        group
       `}
       role="alert"
     >
-      <div className="flex items-start gap-3">
+      {/* Barra de progreso sutil */}
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gaia-crimson/20 overflow-hidden">
+        <div 
+          className="h-full bg-gaia-crimson transition-all duration-linear"
+          style={{ 
+            animation: `shrinkWidth ${toast.duration}ms linear forwards` 
+          }}
+        />
+      </div>
+
+      <div className="flex items-start gap-4">
+        {/* Icono */}
         <div className="flex-shrink-0 mt-0.5">
           {icons[toast.type]}
         </div>
-        <p className="text-sm text-gray-800 flex-1">{toast.message}</p>
+        
+        {/* Contenido */}
+        <div className="flex-1 min-w-0">
+          <h4 className="text-xs uppercase tracking-widest text-gaia-silver font-medium mb-1 font-body">
+            {titles[toast.type]}
+          </h4>
+          <p className="text-sm text-gaia-black leading-relaxed font-body">
+            {toast.message}
+          </p>
+        </div>
+        
+        {/* Botón cerrar - Estilo Gaia */}
         <button
           onClick={() => onRemove(toast.id)}
-          className="absolute top-2 right-2 p-1 hover:bg-gray-200 rounded transition-colors"
+          className="absolute top-3 right-3 p-1 hover:bg-gaia-charcoal/5 rounded-sm transition-all duration-200 group-hover:opacity-100 opacity-70"
           aria-label="Cerrar notificación"
         >
-          <X size={16} />
+          <X size={16} className="text-gaia-silver hover:text-gaia-crimson transition-colors" />
         </button>
       </div>
+
+      {/* Estilos de animación para la barra de progreso */}
+      <style jsx>{`
+        @keyframes shrinkWidth {
+          from { width: 100%; }
+          to { width: 0%; }
+        }
+      `}</style>
     </div>
   );
 }
