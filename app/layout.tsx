@@ -4,6 +4,7 @@ import { AppProvider } from '../context/AppContext'
 import { ToastProvider } from '../context/ToastContext'
 import ClientLayout from '../components/layout/ClientLayout'
 
+
 // ═══════════════════════════════════════════════════════════════
 // FUENTES LOCALES — Gaia Six Sistema Tipográfico
 // ═══════════════════════════════════════════════════════════════

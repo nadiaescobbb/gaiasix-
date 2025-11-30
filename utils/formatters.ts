@@ -3,17 +3,9 @@
  * @param price - El precio a formatear
  * @returns El precio formateado (ej: "$1.234")
  */
-export function formatPrice(price: number): string {
-  if (typeof price !== 'number' || isNaN(price)) {
-    return '$0';
-  }
-  
-  return new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price);
+
+export const formatPrice = (price: number): string => {
+  return `$${price.toLocaleString('es-AR')}`;
 }
 
 /**
@@ -174,3 +166,4 @@ export function formatPercentage(value: number, decimals: number = 0): string {
     maximumFractionDigits: decimals,
   }).format(value);
 }
+

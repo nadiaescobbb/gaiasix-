@@ -1,198 +1,19 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
-import { Grid, List, ChevronDown } from 'lucide-react';
+import { Grid, List, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Product, Category, SortOption, ViewMode } from '../types/shop.types';
+import { mockProducts, categories } from '../data/shop-products';
+import { formatPrice } from '../../utils/formatters';
+import { Pagination } from '@/components/ui/Pagination';
 
-// ═══════════════════════════════════════════════
-// TIPOS
-// ═══════════════════════════════════════════════
-interface Product {
-  id: number;
-  name: string;
-  category: string;
-  price: number;
-  image: string;
-  isNew: boolean;
-  slug: string;
-  stock: number;
-  sizes?: string[];
-  description?: string;
-}
-
-interface Category {
-  id: string;
-  name: string;
-}
-
-type SortOption = 'default' | 'price-asc' | 'price-desc' | 'newest';
-type ViewMode = 'grid' | 'list';
-
-// ═══════════════════════════════════════════════
-// DATOS MOCK
-// ═══════════════════════════════════════════════
-const categories: Category[] = [
-  { id: 'all', name: 'Todo' },
-  { id: 'vestidos', name: 'Vestidos' },
-  { id: 'short', name: 'Short' },
-  { id: 'faldas', name: 'Faldas' },
-  { id: 'tops', name: 'Tops' },
-];
-
-const mockProducts: Product[] = [
-  {
-    id: 1,
-    name: "vestido isla",
-    category: "vestidos",
-    price: 31500,
-    image: "/images/boho/vestido-isla.avif",
-    isNew: true,
-    slug: "vestido-isla",
-    stock: 1,
-    sizes: ['s'],
-  },
-  {
-    id: 2,
-    name: "pollera nala",
-    category: "faldas",
-    price: 33440,
-    image: "/images/boho/pollera-nala-ang.avif",
-    isNew: true,
-    slug: "pollera-nala",
-    stock: 1,
-    sizes: ['s'],
-  },
-  {
-    id: 3,
-    name: "vestido esme",
-    category: "vestidos",
-    price: 29500,
-    image: "/images/boho/vestido-esme-fr.avif",
-    isNew: true,
-    slug: "vestido-esme",
-    stock: 1,
-    sizes: ['s'],
-  },
-  {
-    id: 4,
-    name: "top mallorca",
-    category: "tops",
-    price: 13550,
-    image: "/images/fotoproducto/top-mallorca.avif",
-    isNew: true,
-    slug: "top-mallorca",
-    stock: 1,
-    sizes: ['s'],
-  },
-
-  {
-    id: 5,
-    name: "top kira",
-    category: "tops",
-    price: 13550,
-    image: "/images/fotoproducto/top-kira.avif",
-    isNew: true,
-    slug: "top-kira",
-    stock: 2,
-    sizes: ['s'],
-  },
-
-  {
-    id: 6,
-    name: "vestido leria",
-    category: "vestidos",
-    price: 13550,
-    image: "/images/fotoproducto/vestido-leria.avif",
-    isNew: true,
-    slug: "vestido-leria",
-    stock: 1,
-    sizes: ['s'],
-  },
-
-  {
-    id: 6,
-    name: "vestido rio",
-    category: "vestidos",
-    price: 13550,
-    image: "/images/fotoproducto/vestido-rio-negro.avif",
-    isNew: true,
-    slug: "vestido-rio",
-    stock: 2,
-    sizes: ['s'],
-  },
-
-  {
-    id: 7,
-    name: "short texas",
-    category: "short",
-    price: 13550,
-    image: "/images/fotoproducto/short-texas-camel.avif",
-    isNew: true,
-    slug: "short-texas",
-    stock: 2,
-    sizes: ['m','l'],
-  },
-
-  {
-    id: 8,
-    name: "short print",
-    category: "short",
-    price: 13550,
-    image: "/images/fotoproducto/short-print.avif",
-    isNew: true,
-    slug: "short-print",
-    stock: 1,
-    sizes: ['m'],
-  },
-
-  {
-    id: 9,
-    name: "short ibiza",
-    category: "short",
-    price: 13550,
-    image: "/images/fotoproducto/short-ibiza.avif",
-    isNew: true,
-    slug: "short-ibiza",
-    stock: 1,
-    sizes: ['s'],
-  },
-
-  {
-    id: 10,
-    name: "short bri",
-    category: "short",
-    price: 13550,
-    image: "/images/fotoproducto/short-bri.avif",
-    isNew: true,
-    slug: "short-bri",
-    stock: 1,
-    sizes: ['s'],
-  },
-
-   {
-    id: 10,
-    name: "pollera bri",
-    category: "pollera",
-    price: 13550,
-    image: "/images/fotoproducto/pollera-bri.avif",
-    isNew: true,
-    slug: "pollera-bri",
-    stock: 1,
-    sizes: ['s'],
-  },
-];
-
-// ═══════════════════════════════════════════════
-// COMPONENTE PRINCIPAL
-// ═══════════════════════════════════════════════
 export default function ShopPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<SortOption>('default');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
-
-  const formatPrice = (price: number): string => {
-    return `$${price.toLocaleString('es-AR')}`;
-  };
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 12;
 
   // Filtrar y ordenar
   const filteredProducts = useMemo(() => {
@@ -213,6 +34,20 @@ export default function ShopPage() {
     }
 
     return filtered;
+  }, [selectedCategory, sortBy]);
+
+  // Calcular productos paginados
+  const paginatedProducts = useMemo(() => {
+    const startIndex = (currentPage - 1) * productsPerPage;
+    return filteredProducts.slice(startIndex, startIndex + productsPerPage);
+  }, [filteredProducts, currentPage]);
+
+  // Calcular total de páginas
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+  // Resetear a página 1 cuando cambian filtros
+  useEffect(() => {
+    setCurrentPage(1);
   }, [selectedCategory, sortBy]);
 
   return (
@@ -306,15 +141,16 @@ export default function ShopPage() {
       <section className="section-gaia">
         <div className="container-gaia">
           
-          {/* Contador de resultados */}
+          {/* Contador mejorado con paginación */}
           <div className="mb-12 text-sm text-gaia-ash font-body">
-            {filteredProducts.length} {filteredProducts.length === 1 ? 'pieza' : 'piezas'}
+            Mostrando {paginatedProducts.length} de {filteredProducts.length} piezas
+            {totalPages > 1 && ` - Página ${currentPage} de ${totalPages}`}
           </div>
 
           {/* Vista Grid */}
           {viewMode === 'grid' ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
-              {filteredProducts.map((product, idx) => (
+              {paginatedProducts.map((product, idx) => (
                 <ProductCardGrid 
                   key={product.id} 
                   product={product}
@@ -325,7 +161,7 @@ export default function ShopPage() {
             </div>
           ) : (
             <div className="space-y-8">
-              {filteredProducts.map((product) => (
+              {paginatedProducts.map((product) => (
                 <ProductCardList 
                   key={product.id} 
                   product={product}
@@ -348,6 +184,15 @@ export default function ShopPage() {
                 ver todo
               </button>
             </div>
+          )}
+
+          {/* Componente de paginación */}
+          {totalPages > 1 && (
+            <Pagination 
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
           )}
         </div>
       </section>

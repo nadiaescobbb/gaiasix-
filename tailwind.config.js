@@ -14,8 +14,8 @@ module.exports = {
         gaia: {
           // Colores principales
           black: '#000000',
-          white: '#FFFFFF',
-          crimson: '#DC143C', 
+          white: '#F0F3F4',
+          crimson: '#AF161F', 
           
           // Grises
           charcoal: '#111111',
