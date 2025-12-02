@@ -21,12 +21,12 @@ const galiscka = localFont({
       style: 'normal',
     },
     {
-      path: '../public/fonts/Galiscka.woff2', // Mismo archivo, diferentes pesos
-      weight: '400', // Regular
+      path: '../public/fonts/Galiscka.woff2', 
+      weight: '400', 
       style: 'normal',
     },
     {
-      path: '../public/fonts/Galiscka.woff2', // Mismo archivo
+      path: '../public/fonts/Galiscka.woff2', 
       weight: '700', // Bold
       style: 'normal',
     },
@@ -48,12 +48,12 @@ const cstunker = localFont({
       style: 'normal',
     },
     {
-      path: '../public/fonts/CSTunker.woff2', // Mismo archivo
+      path: '../public/fonts/CSTunker.woff2', 
       weight: '400', // Regular
       style: 'normal',
     },
     {
-      path: '../public/fonts/CSTunker.woff2', // Mismo archivo
+      path: '../public/fonts/CSTunker.woff2', 
       weight: '700', // Bold
       style: 'normal',
     },
@@ -78,26 +78,17 @@ export const metadata = {
     type: 'website',
     locale: 'es_AR',
     url: 'https://gaiasix.com',
-    title: 'GAIA SIX — Boho Rock Glam',
+    title: 'gaia six - showroom online',
     description: 'Siluetas nocturnas. Diseños que definen.',
     siteName: 'GAIA SIX',
     images: [
       {
-        url: '/og-image.jpg', // Crear esta imagen 1200x630px
+        url: '/logo.jpg', 
         width: 1200,
         height: 630,
         alt: 'GAIA SIX',
       },
     ],
-  },
-  
-  // Twitter Card
-  twitter: {
-    card: 'summary_large_image',
-    title: 'GAIA SIX — Boho Rock Glam',
-    description: 'Siluetas nocturnas. Diseños que definen.',
-    images: ['/og-image.jpg'],
-    creator: '@gaiasix',
   },
   
   // Favicons

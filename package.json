@@ -13,6 +13,7 @@
     "critters": "^0.0.23",
     "lucide-react": "latest",
     "next": "^16.0.3",
+    "postcss-js": "^4.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "use-debounce": "latest"
@@ -22,7 +23,7 @@
     "@types/react": "^19.2.6",
     "@types/react-dom": "^19.2.3",
     "autoprefixer": "10.4.0",
-    "postcss": "8.4.0",
+    "postcss": "^8.5.6",
     "tailwindcss": "3.3.0",
     "typescript": "^5.9.3"
   }

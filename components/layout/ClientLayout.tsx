@@ -82,6 +82,20 @@ export default function ClientLayout({
     }
   };
 
+  // Agregar este useEffect para manejar el evento de navegación desde page.tsx
+  useEffect(() => {
+    const handleNavigateToShop = () => {
+      console.log('Evento navigateToShop recibido, navegando a shop...');
+      handleNavigate('shop');
+    };
+
+    window.addEventListener('navigateToShop', handleNavigateToShop);
+    
+    return () => {
+      window.removeEventListener('navigateToShop', handleNavigateToShop);
+    };
+  }, [handleNavigate]); // Dependencia de handleNavigate
+
   const handleCartToggle = () => {
     setIsCartOpen(!isCartOpen);
   };

@@ -1,13 +1,11 @@
-// components/layout/Header.tsx - VERSIÓN MEJORADA
 'use client'
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { Search, User, Heart, ShoppingBag, Menu, X } from 'lucide-react';
-import { type User as UserType, type Page } from '../../lib/types';
+import { type Page } from '../../lib/types';
 
 interface HeaderProps {
-  currentUser: UserType | null;
+  currentUser: any | null;
   cartItemsCount: number;
   wishlistItemsCount: number;
   onNavigate: (page: Page) => void;
@@ -22,73 +20,73 @@ export default function Header({
   wishlistItemsCount,
   onNavigate,
   onCartToggle,
-  onLogout,
-  currentPage
+  currentPage,
+  onLogout
 }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // Efecto para detectar scroll
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      setIsScrolled(window.scrollY > 20);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
-  };
-
-  const handleNavClick = (page: Page) => {
-    onNavigate(page);
-    closeMobileMenu();
-  };
-
   const navItems = [
-    { id: 'shop', label: 'Colección' },
-    { id: 'collections', label: 'Ediciones' },
-    { id: 'about', label: 'Esencia' }
-  ] as const;
+    { id: 'home' as Page, label: 'Inicio' },
+    { id: 'shop' as Page, label: 'Prendas' },
+    { id: 'about' as Page, label: 'Esencia' },
+    { id: 'contact' as Page, label: 'Contacto' }
+  ];
 
   return (
     <>
-      {/* HEADER GAIA SIX - ESTILO EDITORIAL */}
+      {/* HEADER */}
       <header className={`
-        fixed top-0 left-0 right-0 z-50 transition-all duration-500
+        fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-white
         ${isScrolled 
-          ? 'bg-gaia-white/95 backdrop-blur-md border-b border-gaia-border py-3 shadow-sm' 
-          : 'bg-gaia-white py-5'
+          ? 'bg-white/95 backdrop-blur-md shadow-sm py-3' 
+          : 'bg-white py-6'
         }
       `}>
-        <div className="container-gaia">
+        <div className="max-w-7xl mx-auto px-8 md:px-16">
           <div className="flex items-center justify-between">
             
-            {/* LOGO - CENTRALIZADO EN MOBILE */}
-            <div className="flex-1 md:flex-none">
-              <Link 
-                href="/" 
-                className="logo-gaia text-xl md:text-2xl tracking-tight hover:opacity-70 transition-opacity inline-block"
-                onClick={() => handleNavClick('home')}
-              >
-                GAIA<span className="text-gaia-crimson font-light">SIX</span>
-              </Link>
-            </div>
+            {/* LOGO CON IMAGEN */}
+         {/* LOGO CON IMAGEN */}
+          <div className="flex-1 md:flex-none">
+            <button 
+              onClick={() => onNavigate('home')}
+              className="hover:opacity-80 transition-opacity flex items-center"
+            >
+              <img 
+                src="/logo.avif" 
+                alt="Gaia Six"
+                className={`transition-all duration-500 object-contain ${
+                  isScrolled ? 'h-10 md:h-12' : 'h-14 md:h-16'
+                }`}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = "/logo.avif";
+                }}
+              />
+            </button>
+          </div>
 
-            {/* NAVEGACIÓN CENTRAL - ESTILO EDITORIAL */}
-            <nav className="hidden md:flex items-center gap-8 lg:gap-12 absolute left-1/2 transform -translate-x-1/2">
+            {/* NAVEGACIÓN CENTRAL */}
+            <nav className="hidden md:flex items-center gap-10 absolute left-1/2 transform -translate-x-1/2">
               {navItems.map((item) => (
                 <button 
                   key={item.id}
-                  onClick={() => handleNavClick(item.id as Page)}
+                  onClick={() => onNavigate(item.id)}
                   className={`
-                    nav-link-gaia text-xs uppercase tracking-[0.2em] transition-all duration-300
+                    text-xs uppercase tracking-[0.25em] transition-all duration-300 font-light
                     ${currentPage === item.id 
-                      ? 'text-gaia-crimson font-medium' 
-                      : 'text-gaia-black hover:text-gaia-crimson font-light'
+                      ? 'text-red-500' 
+                      : 'text-neutral-600 hover:text-black'
                     }
                   `}
                 >
@@ -97,85 +95,85 @@ export default function Header({
               ))}
             </nav>
 
-            {/* ICONOS DERECHA - MINIMALISTAS */}
-            <div className="flex items-center gap-3 md:gap-4 flex-1 justify-end">
+            {/* ICONOS */}
+            <div className="flex items-center gap-4 flex-1 justify-end">
               
-              {/* Buscador Elegante */}
+              {/* Buscador */}
               <button 
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
-                className="p-2 hover:text-gaia-crimson transition-colors group relative"
+                className="p-2 hover:text-red-500 transition-colors group"
                 aria-label="Buscar"
               >
-                <Search size={18} className="text-gaia-silver group-hover:text-gaia-crimson transition-colors" />
+                <Search size={18} className="text-neutral-500 group-hover:text-red-500 transition-colors" />
               </button>
 
-              {/* Cuenta - Icono Sutil */}
+              {/* Cuenta */}
               <button 
-                onClick={() => handleNavClick(currentUser ? 'profile' : 'auth')}
-                className="p-2 hover:text-gaia-crimson transition-colors group"
-                aria-label={currentUser ? 'Mi cuenta' : 'Iniciar sesión'}
+                onClick={() => onNavigate(currentUser ? 'profile' : 'auth')}
+                className="hidden md:block p-2 hover:text-red-500 transition-colors group"
+                aria-label="Cuenta"
               >
-                <User size={18} className="text-gaia-silver group-hover:text-gaia-crimson transition-colors" />
+                <User size={18} className="text-neutral-500 group-hover:text-red-500 transition-colors" />
               </button>
 
-              {/* Favoritos - Con Badge Sutil */}
+              {/* Favoritos */}
               <button 
-                onClick={() => handleNavClick('wishlist')}
-                className="p-2 hover:text-gaia-crimson transition-colors group relative"
+                onClick={() => onNavigate('wishlist')}
+                className="hidden md:block p-2 hover:text-red-500 transition-colors group relative"
                 aria-label="Favoritos"
               >
-                <Heart size={18} className="text-gaia-silver group-hover:text-gaia-crimson transition-colors" />
+                <Heart size={18} className="text-neutral-500 group-hover:text-red-500 transition-colors" />
                 {wishlistItemsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gaia-crimson text-gaia-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-medium">
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-medium">
                     {wishlistItemsCount}
                   </span>
                 )}
               </button>
 
-              {/* Carrito - Con Badge Elegante */}
+              {/* Carrito */}
               <button 
                 onClick={onCartToggle}
-                className="p-2 hover:text-gaia-crimson transition-colors group relative"
+                className="p-2 hover:text-red-500 transition-colors group relative"
                 aria-label="Carrito"
               >
-                <ShoppingBag size={18} className="text-gaia-silver group-hover:text-gaia-crimson transition-colors" />
+                <ShoppingBag size={18} className="text-neutral-500 group-hover:text-red-500 transition-colors" />
                 {cartItemsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gaia-crimson text-gaia-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-medium">
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-medium">
                     {cartItemsCount}
                   </span>
                 )}
               </button>
 
-              {/* Menú Mobile - Icono Minimal */}
+              {/* Menú Mobile */}
               <button 
-                className="md:hidden p-2 hover:text-gaia-crimson transition-colors"
+                className="md:hidden p-2 hover:text-red-500 transition-colors"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 aria-label="Menú"
               >
                 {isMobileMenuOpen ? (
-                  <X size={20} className="text-gaia-crimson" />
+                  <X size={20} className="text-red-500" />
                 ) : (
-                  <Menu size={20} className="text-gaia-silver" />
+                  <Menu size={20} className="text-neutral-500" />
                 )}
               </button>
             </div>
           </div>
 
-          {/* BUSCADOR EXPANDIBLE - ESTILO EDITORIAL */}
+          {/* BUSCADOR EXPANDIBLE */}
           {isSearchOpen && (
-            <div className="mt-4 animate-fade-in-gaia">
-              <div className="relative">
+            <div className="mt-6 animate-fade-in">
+              <div className="relative max-w-2xl mx-auto">
                 <input
                   type="text"
-                  placeholder="Buscar siluetas, texturas, momentos..."
-                  className="w-full bg-transparent border-0 border-b border-gaia-border py-2 px-0 text-gaia-black placeholder-gaia-silver focus:outline-none focus:border-gaia-crimson transition-colors text-sm font-light"
+                  placeholder="Buscar prendas, estilos, colecciones..."
+                  className="w-full bg-transparent border-0 border-b border-neutral-200 py-3 px-0 text-black placeholder-neutral-400 focus:outline-none focus:border-red-500 transition-colors text-sm"
                   autoFocus
                 />
                 <button 
                   onClick={() => setIsSearchOpen(false)}
-                  className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gaia-silver hover:text-gaia-crimson transition-colors"
+                  className="absolute right-0 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-red-500 transition-colors"
                 >
-                  <X size={16} />
+                  <X size={18} />
                 </button>
               </div>
             </div>
@@ -183,61 +181,63 @@ export default function Header({
         </div>
       </header>
 
-      {/* MENÚ MÓVIL - ESTILO GALERÍA EDITORIAL */}
+      {/* MENÚ MÓVIL */}
       <div className={`
-        fixed inset-0 z-40 bg-gaia-white transform transition-transform duration-500 ease-out md:hidden
+        fixed inset-0 z-40 bg-white transform transition-transform duration-500 ease-out md:hidden
         ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}
       `}>
-        <div className="pt-20 pb-8 px-6 h-full flex flex-col">
+        <div className="pt-24 pb-8 px-8 h-full flex flex-col">
           
-          {/* Header móvil minimalista */}
-          <div className="flex items-center justify-between mb-12">
-            <div className="logo-gaia text-xl">
-              GAIA<span className="text-gaia-crimson">SIX</span>
-            </div>
-            <button 
-              onClick={closeMobileMenu}
-              className="p-2 text-gaia-silver hover:text-gaia-crimson transition-colors"
-            >
-              <X size={20} />
-            </button>
-          </div>
-
-          {/* Navegación móvil - Tipografía elegante */}
+          {/* Navegación móvil */}
           <nav className="flex-1">
-            <div className="space-y-1">
+            <div className="space-y-2">
               {navItems.map((item) => (
                 <button 
                   key={item.id}
-                  onClick={() => handleNavClick(item.id as Page)}
+                  onClick={() => {
+                    onNavigate(item.id);
+                    setIsMobileMenuOpen(false);
+                  }}
                   className={`
-                    block w-full text-left py-4 border-b border-gaia-border transition-all duration-300
+                    block w-full text-left py-4 text-xl font-light tracking-tight transition-colors
                     ${currentPage === item.id 
-                      ? 'text-gaia-crimson font-medium' 
-                      : 'text-gaia-black hover:text-gaia-crimson font-light'
+                      ? 'text-red-500' 
+                      : 'text-black hover:text-red-500'
                     }
                   `}
                 >
-                  <span className="text-lg tracking-wide">{item.label}</span>
+                  {item.label}
                 </button>
               ))}
               
-              {/* Acciones de usuario en móvil */}
-              <div className="pt-6 space-y-4">
+              {/* Sección de usuario móvil */}
+              <div className="pt-8 mt-8 border-t border-neutral-200 space-y-4">
                 <button 
-                  onClick={() => handleNavClick(currentUser ? 'profile' : 'auth')}
-                  className="block w-full text-left py-3 text-gaia-silver hover:text-gaia-crimson transition-colors text-sm uppercase tracking-widest"
+                  onClick={() => {
+                    onNavigate(currentUser ? 'profile' : 'auth');
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-3 text-neutral-600 hover:text-red-500 transition-colors"
                 >
-                  {currentUser ? 'Mi Cuenta' : 'Ingresar'}
+                  <User size={18} />
+                  <span className="text-sm uppercase tracking-widest">
+                    {currentUser ? 'Mi Cuenta' : 'Ingresar'}
+                  </span>
                 </button>
                 
                 <button 
-                  onClick={() => handleNavClick('wishlist')}
-                  className="flex items-center justify-between w-full text-left py-3 text-gaia-silver hover:text-gaia-crimson transition-colors text-sm uppercase tracking-widest"
+                  onClick={() => {
+                    onNavigate('wishlist');
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="flex items-center justify-between w-full text-neutral-600 hover:text-red-500 transition-colors"
                 >
-                  <span>Favoritos</span>
+                  <div className="flex items-center gap-3">
+                    <Heart size={18} />
+                    <span className="text-sm uppercase tracking-widest">Favoritos</span>
+                  </div>
                   {wishlistItemsCount > 0 && (
-                    <span className="bg-gaia-crimson text-gaia-white text-xs px-2 py-1 rounded-full">
+                    <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
                       {wishlistItemsCount}
                     </span>
                   )}
@@ -246,27 +246,9 @@ export default function Header({
             </div>
           </nav>
 
-          {/* Información de contacto móvil - Estilo minimal */}
-          {currentUser && (
-            <div className="pt-6 border-t border-gaia-border">
-              <div className="text-xs text-gaia-silver mb-3">
-                Conectado como <span className="text-gaia-black">{currentUser.email}</span>
-              </div>
-              <button 
-                onClick={() => {
-                  onLogout();
-                  closeMobileMenu();
-                }}
-                className="text-xs text-gaia-crimson hover:underline uppercase tracking-widest"
-              >
-                Cerrar sesión
-              </button>
-            </div>
-          )}
-
-          {/* Footer móvil - Texto sutil */}
-          <div className="pt-8 border-t border-gaia-border">
-            <div className="text-xs text-gaia-silver space-y-2 font-light">
+          {/* Footer móvil */}
+          <div className="pt-8 border-t border-neutral-200">
+            <div className="text-xs text-neutral-500 space-y-2">
               <p>gaiashowroom@gmail.com</p>
               <p>+54 9 2964 479923</p>
               <p className="uppercase tracking-widest">@gaiasix</p>
@@ -275,13 +257,16 @@ export default function Header({
         </div>
       </div>
 
-      {/* OVERLAY PARA MENÚ MÓVIL */}
+      {/* OVERLAY */}
       {isMobileMenuOpen && (
         <div 
-          className="fixed inset-0 z-30 bg-gaia-black/20 backdrop-blur-sm md:hidden"
-          onClick={closeMobileMenu}
+          className="fixed inset-0 z-30 bg-black/20 backdrop-blur-sm md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
+
+      {/* SPACER para compensar el header fixed */}
+      <div className={isScrolled ? 'h-16' : 'h-20'}></div>
     </>
   );
 }
