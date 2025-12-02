@@ -1,190 +1,144 @@
-// components/layout/Footer.tsx - SECCIÓN CORREGIDA
 "use client";
 
-import { useRouter } from "next/navigation";
-import Image from 'next/image';
-import { Instagram, Mail, Phone, MapPin, Package, CreditCard, Repeat, ExternalLink } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function Footer() {
   const router = useRouter();
-  const [isNavigating, setIsNavigating] = useState<boolean>(false);
+  const [isNavigating, setIsNavigating] = useState(false);
 
-  const handleNavigation = (path: string): void => {
+  const handleNavigation = (path: string) => {
     if (isNavigating) return;
     setIsNavigating(true);
-    router.push(path);
-    setTimeout(() => setIsNavigating(false), 1000);
+    
+    // Rutas existentes en tu app
+    const existingPaths = ['/', '/shop', '/about', '/contact'];
+    const targetPath = existingPaths.includes(path) ? path : '/';
+    
+    router.push(targetPath);
+    setTimeout(() => setIsNavigating(false), 300);
   };
 
   return (
-    <footer className="bg-gaia-white border-t border-gaia-border py-16 px-6">
-      <div className="container-gaia">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-          
-          {/* Columna 1: Marca y Esencia */}
-          <div className="lg:col-span-1">
+    <footer className="bg-black text-white py-20 border-t border-white/10">
+      <div className="max-w-7xl mx-auto px-8 md:px-16">
+        <div className="grid md:grid-cols-4 gap-12 mb-12 pb-12 border-b border-white/10">
+          {/* Columna 1: Logo y descripción */}
+          <div>
             <button 
               onClick={() => handleNavigation('/')}
-              className="transition-opacity hover:opacity-80 flex items-center mb-4"
-              aria-label="Ir al inicio"
               disabled={isNavigating}
+              className="text-2xl font-light tracking-wider mb-3 hover:opacity-80 transition-opacity disabled:opacity-50 text-left"
             >
-              <div className="logo-gaia text-2xl tracking-tight">
-                GAIA<span className="text-gaia-crimson">SIX</span>
-              </div>
+              GAIA<span className="italic font-serif text-red-500">SIX</span>
             </button>
-            <p className="text-sm text-gaia-silver leading-relaxed font-body max-w-xs">
-              Elegancia nocturna. Siluetas que definen momentos. Minimalismo con actitud.
+            <p className="text-xs text-neutral-500 leading-relaxed">
+              ropa para salir
             </p>
           </div>
 
-          {/* Columna 2: Contacto Editorial */}
+          {/* Columna 2: Contacto */}
           <div>
-            <h3 className="label-gaia text-gaia-black mb-6">CONEXIÓN</h3>
-            <div className="space-y-4 text-sm text-gaia-silver font-body">
+            <h4 className="text-xs tracking-[0.3em] uppercase font-light text-neutral-400 mb-4">
+              contacto
+            </h4>
+            <div className="space-y-2 text-sm text-neutral-400">
               <a 
                 href="mailto:gaiashowroom@gmail.com"
-                className="flex items-center gap-3 hover:text-gaia-crimson transition-colors duration-300 group"
+                className="hover:text-white transition-colors cursor-pointer block hover:text-red-400"
               >
-                <Mail size={16} className="flex-shrink-0" />
-                <span className="break-all">gaiashowroom@gmail.com</span>
-                <ExternalLink size={12} className="text-gaia-silver opacity-0 group-hover:opacity-100 transition-opacity" />
+                gaiashowroom@gmail.com
               </a>
-              
               <a 
                 href="https://wa.me/5492964479923"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 hover:text-gaia-crimson transition-colors duration-300 group"
+                className="hover:text-white transition-colors cursor-pointer block hover:text-red-400"
               >
-                <Phone size={16} className="flex-shrink-0" />
-                <span>+54 9 2964 479923</span>
-                <ExternalLink size={12} className="text-gaia-silver opacity-0 group-hover:opacity-100 transition-opacity" />
+                +54 9 2964 479923
               </a>
-              
-              <div className="flex items-center gap-3 opacity-80">
-                <MapPin size={16} className="flex-shrink-0" />
-                <span>Tierra del Fuego, Argentina</span>
-              </div>
-
               <a 
-                href="https://instagram.com/gaiasix" 
+                href="https://instagram.com/gaiasix"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 hover:text-gaia-crimson transition-colors duration-300 group"
+                className="hover:text-white transition-colors cursor-pointer block hover:text-red-400"
               >
-                <Instagram size={16} className="flex-shrink-0" />
-                <span>@gaiasix</span>
-                <ExternalLink size={12} className="text-gaia-silver opacity-0 group-hover:opacity-100 transition-opacity" />
+                @gaiasix
               </a>
             </div>
           </div>
 
-          {/* Columna 3: Experiencia Gaia */}
+          {/* Columna 3: Servicios */}
           <div>
-            <h3 className="label-gaia text-gaia-black mb-6">EXPERIENCIA</h3>
-            <div className="space-y-4 text-sm text-gaia-silver font-body">
-              <div className="flex items-start gap-3">
-                <Package size={16} className="flex-shrink-0 mt-0.5 text-gaia-crimson" />
-                <div>
-                  <p className="font-medium text-gaia-black">Envíos Exclusivos</p>
-                  <p className="text-xs mt-1">Entrega prioritaria 24-48hs</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-3">
-                <CreditCard size={16} className="flex-shrink-0 mt-0.5 text-gaia-crimson" />
-                <div>
-                  <p className="font-medium text-gaia-black">Plan Sixer</p>
-                  <p className="text-xs mt-1">6 cuotas sin interés</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-3">
-                <Repeat size={16} className="flex-shrink-0 mt-0.5 text-gaia-crimson" />
-                <div>
-                  <p className="font-medium text-gaia-black">Cambios Premium</p>
-                  <p className="text-xs mt-1">Devoluciones en 7 días</p>
-                </div>
-              </div>
+            <h4 className="text-xs tracking-[0.3em] uppercase font-light text-neutral-400 mb-4">
+              compras
+            </h4>
+            <div className="space-y-2 text-sm text-neutral-400">
+              <p className="hover:text-white transition-colors cursor-default">
+                envíos gratis en compras superiores a $150.000
+              </p>
+              <p className="hover:text-white transition-colors cursor-default">
+                6 cuotas sin interés
+              </p>
+              <p className="hover:text-white transition-colors cursor-default">
+                cambios dentro de los 7 días
+              </p>
             </div>
           </div>
 
-          {/* Columna 4: Navegación Minimal */}
+          {/* Columna 4: Navegación */}
           <div>
-            <h3 className="label-gaia text-gaia-black mb-6">EXPLORAR</h3>
-            <div className="space-y-3 text-sm font-body">
+            <h4 className="text-xs tracking-[0.3em] uppercase font-light text-neutral-400 mb-4">
+              navegación
+            </h4>
+            <div className="space-y-2 text-sm text-neutral-400">
               <button 
-                onClick={() => handleNavigation('/shop')}
-                className="block text-gaia-silver hover:text-gaia-crimson transition-colors duration-300 text-left disabled:opacity-50 w-full"
+                onClick={() => handleNavigation('/')}
                 disabled={isNavigating}
-                aria-label="Explorar colección"
+                className="hover:text-white transition-colors cursor-pointer block text-left hover:text-red-400 disabled:opacity-50"
               >
-                Colección
+                inicio
               </button>
               <button 
-                onClick={() => handleNavigation('/collections')}
-                className="block text-gaia-silver hover:text-gaia-crimson transition-colors duration-300 text-left disabled:opacity-50 w-full"
+                onClick={() => handleNavigation('/shop')}
                 disabled={isNavigating}
-                aria-label="Ver colecciones"
+                className="hover:text-white transition-colors cursor-pointer block text-left hover:text-red-400 disabled:opacity-50"
               >
-                Ediciones
+                prendas
               </button>
               <button 
                 onClick={() => handleNavigation('/about')}
-                className="block text-gaia-silver hover:text-gaia-crimson transition-colors duration-300 text-left disabled:opacity-50 w-full"
                 disabled={isNavigating}
-                aria-label="Conocer nuestra esencia"
+                className="hover:text-white transition-colors cursor-pointer block text-left hover:text-red-400 disabled:opacity-50"
               >
-                Esencia
+                nosotras
               </button>
               <button 
                 onClick={() => handleNavigation('/contact')}
-                className="block text-gaia-silver hover:text-gaia-crimson transition-colors duration-300 text-left disabled:opacity-50 w-full"
                 disabled={isNavigating}
-                aria-label="Contactar"
+                className="hover:text-white transition-colors cursor-pointer block text-left hover:text-red-400 disabled:opacity-50"
               >
-                Contacto
+                contacto
               </button>
             </div>
           </div>
         </div>
 
-        {/* Separador Elegante */}
-        <div className="divider-gaia"></div>
-
-        {/* Footer Inferior */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-gaia-silver font-body">
-          <div className="text-center md:text-left">
-            <p className="text-xs tracking-wide">
-              © {new Date().getFullYear()} GAIA SIX — ELEGANCIA NOCTURNA
-            </p>
-          </div>
-          
-          <div className="flex items-center gap-6 text-xs">
+        {/* Footer inferior */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-neutral-500">
+          <p>© {new Date().getFullYear()} GAIA SIX</p>
+          <div className="flex gap-6">
             <button 
-              onClick={() => handleNavigation('/privacy')}
-              className="hover:text-gaia-black transition-colors duration-300 disabled:opacity-50"
-              disabled={isNavigating}
+              onClick={() => window.open('/terms', '_blank')}
+              className="hover:text-white transition-colors hover:text-red-400"
             >
-              Privacidad
+              términos
             </button>
-            <span className="text-gaia-border">•</span>
             <button 
-              onClick={() => handleNavigation('/terms')}
-              className="hover:text-gaia-black transition-colors duration-300 disabled:opacity-50"
-              disabled={isNavigating}
+              onClick={() => window.open('/privacy', '_blank')}
+              className="hover:text-white transition-colors hover:text-red-400"
             >
-              Términos
-            </button>
-            <span className="text-gaia-border">•</span>
-            <button 
-              onClick={() => handleNavigation('/shipping')}
-              className="hover:text-gaia-black transition-colors duration-300 disabled:opacity-50"
-              disabled={isNavigating}
-            >
-              Envíos
+              privacidad
             </button>
           </div>
         </div>

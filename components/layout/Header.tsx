@@ -27,9 +27,17 @@ export default function Header({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+  // DEBUG: Mostrar valores actuales
+  useEffect(() => {
+    console.log('=== HEADER DEBUG ===');
+    console.log('wishlistItemsCount:', wishlistItemsCount);
+    console.log('cartItemsCount:', cartItemsCount);
+    console.log('currentUser:', currentUser);
+  }, [wishlistItemsCount, cartItemsCount, currentUser]);
+
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 32);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -39,147 +47,175 @@ export default function Header({
   const navItems = [
     { id: 'home' as Page, label: 'Inicio' },
     { id: 'shop' as Page, label: 'Prendas' },
-    { id: 'about' as Page, label: 'Esencia' },
+    { id: 'about' as Page, label: 'Nosotras' },
     { id: 'contact' as Page, label: 'Contacto' }
   ];
 
   return (
     <>
-      {/* HEADER */}
-      <header className={`
-        fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-white
-        ${isScrolled 
-          ? 'bg-white/95 backdrop-blur-md shadow-sm py-3' 
-          : 'bg-white py-6'
-        }
-      `}>
-        <div className="max-w-7xl mx-auto px-8 md:px-16">
-          <div className="flex items-center justify-between">
-            
-            {/* LOGO CON IMAGEN */}
-         {/* LOGO CON IMAGEN */}
-          <div className="flex-1 md:flex-none">
-            <button 
-              onClick={() => onNavigate('home')}
-              className="hover:opacity-80 transition-opacity flex items-center"
-            >
-              <img 
-                src="/logo.avif" 
-                alt="Gaia Six"
-                className={`transition-all duration-500 object-contain ${
-                  isScrolled ? 'h-10 md:h-12' : 'h-14 md:h-16'
-                }`}
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = "/logo.avif";
-                }}
-              />
-            </button>
-          </div>
-
-            {/* NAVEGACIÓN CENTRAL */}
-            <nav className="hidden md:flex items-center gap-10 absolute left-1/2 transform -translate-x-1/2">
-              {navItems.map((item) => (
-                <button 
-                  key={item.id}
-                  onClick={() => onNavigate(item.id)}
-                  className={`
-                    text-xs uppercase tracking-[0.25em] transition-all duration-300 font-light
-                    ${currentPage === item.id 
-                      ? 'text-red-500' 
-                      : 'text-neutral-600 hover:text-black'
-                    }
-                  `}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </nav>
-
-            {/* ICONOS */}
-            <div className="flex items-center gap-4 flex-1 justify-end">
-              
-              {/* Buscador */}
-              <button 
-                onClick={() => setIsSearchOpen(!isSearchOpen)}
-                className="p-2 hover:text-red-500 transition-colors group"
-                aria-label="Buscar"
-              >
-                <Search size={18} className="text-neutral-500 group-hover:text-red-500 transition-colors" />
-              </button>
-
-              {/* Cuenta */}
-              <button 
-                onClick={() => onNavigate(currentUser ? 'profile' : 'auth')}
-                className="hidden md:block p-2 hover:text-red-500 transition-colors group"
-                aria-label="Cuenta"
-              >
-                <User size={18} className="text-neutral-500 group-hover:text-red-500 transition-colors" />
-              </button>
-
-              {/* Favoritos */}
-              <button 
-                onClick={() => onNavigate('wishlist')}
-                className="hidden md:block p-2 hover:text-red-500 transition-colors group relative"
-                aria-label="Favoritos"
-              >
-                <Heart size={18} className="text-neutral-500 group-hover:text-red-500 transition-colors" />
-                {wishlistItemsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-medium">
-                    {wishlistItemsCount}
-                  </span>
-                )}
-              </button>
-
-              {/* Carrito */}
-              <button 
-                onClick={onCartToggle}
-                className="p-2 hover:text-red-500 transition-colors group relative"
-                aria-label="Carrito"
-              >
-                <ShoppingBag size={18} className="text-neutral-500 group-hover:text-red-500 transition-colors" />
-                {cartItemsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-medium">
-                    {cartItemsCount}
-                  </span>
-                )}
-              </button>
-
-              {/* Menú Mobile */}
-              <button 
-                className="md:hidden p-2 hover:text-red-500 transition-colors"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                aria-label="Menú"
-              >
-                {isMobileMenuOpen ? (
-                  <X size={20} className="text-red-500" />
-                ) : (
-                  <Menu size={20} className="text-neutral-500" />
-                )}
-              </button>
+      {/* HEADER CON BANNER SUPERIOR */}
+      <div className="fixed top-0 left-0 right-0 z-50">
+        {/* BANNER DE DESPLAZAMIENTO CONTINUO */}
+        <div className="bg-black text-white py-2 overflow-hidden">
+          <div className="max-w-7xl mx-auto px-8 md:px-16">
+            <div className="flex items-center justify-between whitespace-nowrap">
+              <div className="flex space-x-8 animate-marquee">
+                {/* Contenido del banner que se repite para el efecto continuo */}
+                {[...Array(4)].map((_, blockIndex) => (
+                  <div key={blockIndex} className="flex items-center">
+                    <span className="text-xs font-semibold uppercase tracking-wider">
+                      15% OFF x TRANSFERENCIA
+                    </span>
+                    <span className="mx-8 text-gray-400">•</span>
+                    <span className="text-xs font-semibold uppercase tracking-wider">
+                      ENVÍO GRATIS A PARTIR DE $150.000
+                    </span>
+                    <span className="mx-8 text-gray-400">•</span>
+                    <span className="text-xs font-semibold uppercase tracking-wider">
+                      3 & 6  CUOTAS SIN INTERÉS
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
+        </div>
 
-          {/* BUSCADOR EXPANDIBLE */}
-          {isSearchOpen && (
-            <div className="mt-6 animate-fade-in">
-              <div className="relative max-w-2xl mx-auto">
-                <input
-                  type="text"
-                  placeholder="Buscar prendas, estilos, colecciones..."
-                  className="w-full bg-transparent border-0 border-b border-neutral-200 py-3 px-0 text-black placeholder-neutral-400 focus:outline-none focus:border-red-500 transition-colors text-sm"
-                  autoFocus
-                />
+        {/* HEADER PRINCIPAL */}
+        <header className={`
+          transition-all duration-500 bg-white
+          ${isScrolled 
+            ? 'bg-white/95 backdrop-blur-md shadow-sm py-3' 
+            : 'bg-white py-6'
+          }
+        `}>
+          <div className="max-w-7xl mx-auto px-8 md:px-16">
+            <div className="flex items-center justify-between">
+              
+              {/* LOGO MÁS GRANDE */}
+              <div className="flex-1 md:flex-none">
                 <button 
-                  onClick={() => setIsSearchOpen(false)}
-                  className="absolute right-0 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-red-500 transition-colors"
+                  onClick={() => onNavigate('home')}
+                  className="hover:opacity-80 transition-opacity flex items-center"
                 >
-                  <X size={18} />
+                  <img 
+                    src="/logo.avif" 
+                    alt="Gaia Six"
+                    className={`transition-all duration-500 object-contain ${
+                      isScrolled ? 'h-20 md:h-24' : 'h-24 md:h-28'  // LOGO MÁS GRANDE
+                    }`}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "/logo.avif";
+                    }}
+                  />
+                </button>
+              </div>
+
+              {/* NAVEGACIÓN CENTRAL */}
+              <nav className="hidden md:flex items-center gap-10 absolute left-1/2 transform -translate-x-1/2">
+                {navItems.map((item) => (
+                  <button 
+                    key={item.id}
+                    onClick={() => onNavigate(item.id)}
+                    className={`
+                      text-xs uppercase tracking-[0.25em] transition-all duration-300 font-light
+                      ${currentPage === item.id 
+                        ? 'text-red-500' 
+                        : 'text-neutral-600 hover:text-black'
+                      }
+                    `}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
+
+              {/* ICONOS */}
+              <div className="flex items-center gap-4 flex-1 justify-end">
+                
+                {/* Buscador */}
+                <button 
+                  onClick={() => setIsSearchOpen(!isSearchOpen)}
+                  className="p-2 hover:text-red-500 transition-colors group"
+                  aria-label="Buscar"
+                >
+                  <Search size={18} className="text-neutral-500 group-hover:text-red-500 transition-colors" />
+                </button>
+
+                {/* Cuenta */}
+                <button 
+                  onClick={() => onNavigate(currentUser ? 'profile' : 'auth')}
+                  className="hidden md:block p-2 hover:text-red-500 transition-colors group"
+                  aria-label="Cuenta"
+                >
+                  <User size={18} className="text-neutral-500 group-hover:text-red-500 transition-colors" />
+                </button>
+
+                {/* Favoritos */}
+                <button 
+                  onClick={() => onNavigate('wishlist')}
+                  className="hidden md:block p-2 hover:text-red-500 transition-colors group relative"
+                  aria-label="Favoritos"
+                >
+                  <Heart size={18} className="text-neutral-500 group-hover:text-red-500 transition-colors" />
+                  {wishlistItemsCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-medium">
+                      {wishlistItemsCount}
+                    </span>
+                  )}
+                </button>
+
+                {/* Carrito */}
+                <button 
+                  onClick={onCartToggle}
+                  className="p-2 hover:text-red-500 transition-colors group relative"
+                  aria-label="Carrito"
+                >
+                  <ShoppingBag size={18} className="text-neutral-500 group-hover:text-red-500 transition-colors" />
+                  {cartItemsCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-medium">
+                      {cartItemsCount}
+                    </span>
+                  )}
+                </button>
+
+                {/* Menú Mobile */}
+                <button 
+                  className="md:hidden p-2 hover:text-red-500 transition-colors"
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  aria-label="Menú"
+                >
+                  {isMobileMenuOpen ? (
+                    <X size={20} className="text-red-500" />
+                  ) : (
+                    <Menu size={20} className="text-neutral-500" />
+                  )}
                 </button>
               </div>
             </div>
-          )}
-        </div>
-      </header>
+
+            {/* BUSCADOR EXPANDIBLE */}
+            {isSearchOpen && (
+              <div className="mt-6 animate-fade-in">
+                <div className="relative max-w-2xl mx-auto">
+                  <input
+                    type="text"
+                    placeholder="Buscar prendas, estilos, colecciones..."
+                    className="w-full bg-transparent border-0 border-b border-neutral-200 py-3 px-0 text-black placeholder-neutral-400 focus:outline-none focus:border-red-500 transition-colors text-sm"
+                    autoFocus
+                  />
+                  <button 
+                    onClick={() => setIsSearchOpen(false)}
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-red-500 transition-colors"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </header>
+      </div>
 
       {/* MENÚ MÓVIL */}
       <div className={`
@@ -265,8 +301,8 @@ export default function Header({
         />
       )}
 
-      {/* SPACER para compensar el header fixed */}
-      <div className={isScrolled ? 'h-16' : 'h-20'}></div>
+      {/* SPACER para compensar el header fixed CON BANNER */}
+      <div className={isScrolled ? 'h-[100px]' : 'h-[140px]'}></div>
     </>
   );
 }

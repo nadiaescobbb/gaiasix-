@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAppContext } from '../../context/AppContext';
 import Header from './Header';
+import HomeFooter from './Footer'; // IMPORTAR EL FOOTER
 import CartSidebar from './cart/CartSidebar';
 import { type Page } from '../../lib/types';
 
@@ -151,6 +152,9 @@ export default function ClientLayout({
       <main className="flex-1 w-full">
         {children}
       </main>
+
+      {/* AQUÍ AGREGAMOS EL FOOTER */}
+      <HomeFooter />
 
       <CartSidebar 
         isOpen={isCartOpen}

@@ -115,12 +115,6 @@ export const metadata = {
       'max-snippet': -1,
     },
   },
-  
-  // Verificación (agregar cuando tengas)
-  // verification: {
-  //   google: 'tu-codigo-google',
-  //   yandex: 'tu-codigo-yandex',
-  // },
 }
 
 // ═══════════════════════════════════════════════════════════════

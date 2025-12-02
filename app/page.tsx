@@ -1,25 +1,39 @@
 "use client";
 
+import { useRouter } from 'next/navigation';
 import { HeroProduct, Product, Look } from './types/home.types';
 import { heroProduct, collectionProducts, shopTheLook } from './data/home-data';
-import { formatPrice } from './../utils/formatters';
+import { formatPrice } from '../utils/formatters';
 
 export default function GaiaSixHome() {
+  const router = useRouter();
+
   const handleExploreClick = () => {
-    // Este evento será capturado por el ClientLayout para navegar
-    const event = new CustomEvent('navigateToShop');
-    window.dispatchEvent(event);
+    router.push('/shop');
   };
 
   const handleProductClick = (productId: number) => {
-    // Para navegar a detalles del producto
-    console.log('Ver producto:', productId);
-    // Aquí podrías navegar a /shop/product/[id]
+    // Redirigir a la tienda con scroll suave
+    router.push('/shop');
+    // Opcional: puedes usar query params para destacar un producto
+    // router.push(`/shop?highlight=${productId}`);
   };
 
   const handleLookClick = (lookId: number) => {
-    console.log('Adquirir look:', lookId);
-    // Lógica para agregar look al carrito
+    // Aquí podrías implementar lógica para agregar el look al carrito
+    // Por ahora, redirigimos a la tienda
+    console.log(`Agregar look ${lookId} al carrito`);
+    // router.push('/cart');
+  };
+
+  // Función para navegar desde la sección de contacto
+  const handleContactClick = () => {
+    router.push('/contact');
+  };
+
+  // Función para ver más productos
+  const handleViewMoreClick = () => {
+    router.push('/shop');
   };
 
   return (
@@ -36,7 +50,7 @@ export default function GaiaSixHome() {
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent"></div>
         </div>
 
-        <div className="relative h-full flex flex-col justify-between pt-20"> {/* pt-20 para compensar el Header */}
+        <div className="relative h-full flex flex-col justify-between pt-20">
           <div className="px-8 md:px-16 pb-20 md:pb-32">
             <div className="max-w-3xl">
               <div className="mb-6 flex items-center gap-3">
@@ -64,7 +78,7 @@ export default function GaiaSixHome() {
                   onClick={handleExploreClick}
                   className="group relative px-8 py-4 bg-white text-black text-sm tracking-widest uppercase font-medium overflow-hidden hover:text-white transition-colors duration-300"
                 >
-                  <span className="relative z-10">Explorar</span>
+                  <span className="relative z-10">Explorar colección</span>
                   <div className="absolute inset-0 bg-red-600 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
                 </button>
                 
@@ -147,6 +161,16 @@ export default function GaiaSixHome() {
               </div>
             ))}
           </div>
+
+          <div className="text-center mt-20">
+            <button 
+              onClick={handleViewMoreClick}
+              className="group relative inline-flex items-center gap-2 text-black text-sm tracking-widest uppercase font-medium hover:text-red-500 transition-colors"
+            >
+              <span>Ver todas las prendas</span>
+              <div className="h-px w-8 bg-black group-hover:bg-red-500 transition-colors"></div>
+            </button>
+          </div>
         </div>
       </section>
 
@@ -174,6 +198,7 @@ export default function GaiaSixHome() {
                     alt={look.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
 
                 <div>
@@ -208,63 +233,6 @@ export default function GaiaSixHome() {
           </div>
         </div>
       </section>
-
-      {/* FOOTER SECTION */}
-      <footer className="bg-black text-white py-20 border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-8 md:px-16">
-          <div className="grid md:grid-cols-4 gap-12 mb-12 pb-12 border-b border-white/10">
-            <div>
-              <h3 className="text-2xl font-light tracking-wider mb-3">
-                GAIA<span className="italic font-serif text-red-500">SIX</span>
-              </h3>
-              <p className="text-xs text-neutral-500 leading-relaxed">
-                ropa para salir
-              </p>
-            </div>
-
-            <div>
-              <h4 className="text-xs tracking-[0.3em] uppercase font-light text-neutral-400 mb-4">
-                contacto
-              </h4>
-              <div className="space-y-2 text-sm text-neutral-400">
-                <p className="hover:text-white transition-colors cursor-pointer">gaiashowrrom@gmail.com</p>
-                <p>+54 9 2964 479923</p>
-                <p>@gaiasix</p>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="text-xs tracking-[0.3em] uppercase font-light text-neutral-400 mb-4">
-                compras
-              </h4>
-              <div className="space-y-2 text-sm text-neutral-400">
-                <p>envíos gratis en compras superiores a $150.000</p>
-                <p>6 cuotas sin interés</p>
-                <p>cambios dentro de los 7 días</p>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="text-xs tracking-[0.3em] uppercase font-light text-neutral-400 mb-4">
-                navegación
-              </h4>
-              <div className="space-y-2 text-sm text-neutral-400">
-                <p className="hover:text-white transition-colors cursor-pointer">prendas</p>
-                <p className="hover:text-white transition-colors cursor-pointer">nosotras</p>
-                <p className="hover:text-white transition-colors cursor-pointer">contacto</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-neutral-500">
-            <p>© 2025 GAIA SIX</p>
-            <div className="flex gap-6">
-              <span className="hover:text-white transition-colors cursor-pointer">términos</span>
-              <span className="hover:text-white transition-colors cursor-pointer">privacidad</span>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

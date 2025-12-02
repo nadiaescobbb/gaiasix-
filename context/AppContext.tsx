@@ -2,8 +2,6 @@
 
 import { createContext, useContext, useEffect, useState, useCallback, useMemo, ReactNode } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
-
-// Utils mejorados
 import { hashPassword, verifyPassword, validatePasswordStrength, migrateUserPassword } from '../lib/auth';
 import { generateId } from '../lib/utils';
 import { logger } from '../lib/logger';
@@ -22,7 +20,7 @@ import {
 } from '../lib/types';
 
 // ==========================================
-// STORAGE HELPERS MEJORADOS
+// STORAGE HELPERS 
 // ==========================================
 
 const isBrowser = typeof window !== 'undefined';
@@ -113,6 +111,150 @@ export function AppProvider({ children }: AppProviderProps) {
   }, 600);
 
   // ==========================================
+  // FUNCIONES DE VALIDACIÓN MEJORADAS
+  // ==========================================
+
+  const isValidUser = (user: any): user is User => {
+    if (!user || typeof user !== 'object') return false;
+    
+    const required = {
+      'id': 'number',
+      'email': 'string',
+      'password': 'string'
+    };
+    
+    for (const [field, type] of Object.entries(required)) {
+      if (!(field in user) || typeof user[field] !== type) return false;
+    }
+    
+    return user.email.includes('@') && user.password.length > 0;
+  };
+
+  const isValidCartItem = (item: any): item is CartItem => {
+    if (!item || typeof item !== 'object') return false;
+    
+    const required = {
+      'id': 'number',
+      'name': 'string',
+      'price': 'number',
+      'image': 'string',
+      'size': 'string',
+      'quantity': 'number',
+      'stock': 'number'
+    };
+    
+    for (const [field, type] of Object.entries(required)) {
+      if (!(field in item) || typeof item[field] !== type) return false;
+    }
+    
+    return item.price > 0 && item.quantity > 0 && item.quantity <= 99 && item.stock >= 0;
+  };
+
+  const isValidWishlistItem = (item: any): item is WishlistItem => {
+    console.log('🔍 Validando item de wishlist:', item);
+    
+    // Verificación básica
+    if (!item || typeof item !== 'object' || Array.isArray(item)) {
+      console.log('❌ No es un objeto válido');
+      return false;
+    }
+    
+    // Campos obligatorios según Product
+    const requiredFields = {
+      'id': 'number',
+      'name': 'string', 
+      'price': 'number',
+      'image': 'string',
+      'slug': 'string',
+      'stock': 'number'
+    };
+    
+    // Verificar cada campo
+    for (const [field, type] of Object.entries(requiredFields)) {
+      if (!(field in item)) {
+        console.log(`❌ Campo faltante: ${field}`);
+        return false;
+      }
+      
+      if (typeof item[field] !== type) {
+        console.log(`❌ Tipo inválido para ${field}: esperado ${type}, obtenido ${typeof item[field]}`);
+        return false;
+      }
+      
+      // Validaciones específicas
+      if (field === 'id' && (item.id <= 0 || !Number.isInteger(item.id))) {
+        console.log(`❌ ID inválido: ${item.id}`);
+        return false;
+      }
+      
+      if (field === 'price' && item.price <= 0) {
+        console.log(`❌ Precio inválido: ${item.price}`);
+        return false;
+      }
+      
+      if (field === 'stock' && item.stock < 0) {
+        console.log(`❌ Stock inválido: ${item.stock}`);
+        return false;
+      }
+      
+      if ((field === 'name' || field === 'image' || field === 'slug') && 
+          item[field].trim() === '') {
+        console.log(`❌ Campo vacío: ${field}`);
+        return false;
+      }
+    }
+    
+    // Campo específico de WishlistItem (opcional)
+    if ('addedAt' in item && typeof item.addedAt !== 'string') {
+      console.log('❌ Tipo inválido para addedAt');
+      return false;
+    }
+    
+    console.log('✅ Item de wishlist válido');
+    return true;
+  };
+
+  // ==========================================
+  // LIMPIAR DATOS CORRUPTOS
+  // ==========================================
+  
+  const cleanCorruptedData = (): void => {
+    if (!isBrowser) return;
+    
+    console.log('🧹 Limpiando datos potencialmente corruptos...');
+    
+    // Limpiar wishlist
+    const storedWishlist = getStorageItem<any[]>('gaia-wishlist', []);
+    console.log(`📦 Wishlist almacenada: ${storedWishlist.length} items`);
+    
+    const cleanedWishlist = storedWishlist.filter(isValidWishlistItem);
+    console.log(`✅ Wishlist limpia: ${cleanedWishlist.length} items válidos`);
+    
+    if (cleanedWishlist.length !== storedWishlist.length) {
+      console.log(`🧽 Removidos ${storedWishlist.length - cleanedWishlist.length} items corruptos de wishlist`);
+      setStorageItem('gaia-wishlist', cleanedWishlist);
+    }
+    
+    // Limpiar carrito
+    const storedCart = getStorageItem<any[]>('gaia-cart', []);
+    const cleanedCart = storedCart.filter(isValidCartItem);
+    
+    if (cleanedCart.length !== storedCart.length) {
+      console.log(`🧽 Removidos ${storedCart.length - cleanedCart.length} items corruptos del carrito`);
+      setStorageItem('gaia-cart', cleanedCart);
+    }
+    
+    // Limpiar usuarios
+    const storedUsers = getStorageItem<any[]>('gaia-users', []);
+    const cleanedUsers = storedUsers.filter(isValidUser);
+    
+    if (cleanedUsers.length !== storedUsers.length) {
+      console.log(`🧽 Removidos ${storedUsers.length - cleanedUsers.length} usuarios corruptos`);
+      setStorageItem('gaia-users', cleanedUsers);
+    }
+  };
+
+  // ==========================================
   // INICIALIZACIÓN MEJORADA
   // ==========================================
   
@@ -125,11 +267,20 @@ export function AppProvider({ children }: AppProviderProps) {
     const initializeData = async () => {
       try {
         logger.info('🔧 Inicializando datos de la aplicación...');
+        
+        // PRIMERO LIMPIAR DATOS CORRUPTOS
+        cleanCorruptedData();
 
         const storedUser = getStorageItem<User | null>('gaia-current-user', null);
         const storedUsers = getStorageItem<User[]>('gaia-users', []);
         const storedCart = getStorageItem<CartItem[]>('gaia-cart', []);
         const storedWishlist = getStorageItem<WishlistItem[]>('gaia-wishlist', []);
+
+        console.log('📊 Datos cargados:', {
+          wishlistItems: storedWishlist.length,
+          cartItems: storedCart.length,
+          users: storedUsers.length
+        });
 
         // Validar usuario actual
         if (storedUser && isValidUser(storedUser)) {
@@ -163,9 +314,17 @@ export function AppProvider({ children }: AppProviderProps) {
           logger.info(`Carrito: ${validCart.length} items válidos`);
         }
 
-        // Validar wishlist
+        // Validar wishlist CON DEBUG DETALLADO
         if (Array.isArray(storedWishlist)) {
+          console.log('🔍 Filtrando wishlist...');
           const validWishlist = storedWishlist.filter(isValidWishlistItem);
+          console.log(`✅ Wishlist después de filtrar: ${validWishlist.length} items`);
+          
+          // DEBUG: Mostrar IDs de los items en wishlist
+          if (validWishlist.length > 0) {
+            console.log('📋 IDs en wishlist:', validWishlist.map(item => item.id));
+          }
+          
           setWishlist(validWishlist);
           logger.info(`Wishlist: ${validWishlist.length} items válidos`);
         }
@@ -189,43 +348,6 @@ export function AppProvider({ children }: AppProviderProps) {
 
     initializeData();
   }, []);
-
-  // ==========================================
-  // FUNCIONES DE VALIDACIÓN
-  // ==========================================
-
-  const isValidUser = (user: any): user is User => {
-    return user &&
-      typeof user === 'object' &&
-      typeof user.id === 'number' &&
-      typeof user.email === 'string' &&
-      user.email.includes('@') &&
-      typeof user.password === 'string' &&
-      user.password.length > 0;
-  };
-
-  const isValidCartItem = (item: any): item is CartItem => {
-    return item &&
-      typeof item === 'object' &&
-      typeof item.id === 'number' &&
-      typeof item.name === 'string' &&
-      typeof item.price === 'number' &&
-      item.price > 0 &&
-      typeof item.quantity === 'number' &&
-      item.quantity > 0 &&
-      item.quantity <= 99 &&
-      typeof item.size === 'string' &&
-      typeof item.stock === 'number';
-  };
-
-  const isValidWishlistItem = (item: any): item is WishlistItem => {
-    return item &&
-      typeof item === 'object' &&
-      typeof item.id === 'number' &&
-      typeof item.name === 'string' &&
-      typeof item.price === 'number' &&
-      item.price > 0;
-  };
 
   // ==========================================
   // PERSISTENCIA CON DEBOUNCE
@@ -252,7 +374,7 @@ export function AppProvider({ children }: AppProviderProps) {
   }, [wishlist, isInitialized, debouncedSaveWishlist]);
 
   // ==========================================
-  // AUTH ACTIONS MEJORADAS
+  // AUTH ACTIONS 
   // ==========================================
   
   const login = useCallback(async (email: string, password: string): Promise<LoginResult> => {
@@ -368,7 +490,7 @@ export function AppProvider({ children }: AppProviderProps) {
   }, [currentUser, users]);
 
   // ==========================================
-  // CART ACTIONS MEJORADAS
+  // CART ACTIONS 
   // ==========================================
   
   const addToCart = useCallback((product: Product, size: string): void => {
@@ -485,6 +607,7 @@ export function AppProvider({ children }: AppProviderProps) {
         };
         
         logger.success(`Agregado a favoritos: ${product.name}`);
+        console.log('➕ Wishlist después de agregar:', [...prevWishlist, wishlistItem].length);
         return [...prevWishlist, wishlistItem];
       });
     } catch (error) {
@@ -499,7 +622,9 @@ export function AppProvider({ children }: AppProviderProps) {
         if (item) {
           logger.info(`Removido de favoritos: ${item.name}`);
         }
-        return prevWishlist.filter(item => item.id !== productId);
+        const newWishlist = prevWishlist.filter(item => item.id !== productId);
+        console.log('➖ Wishlist después de remover:', newWishlist.length);
+        return newWishlist;
       });
     } catch (error) {
       logger.error('Error removiendo de favoritos:', error);
@@ -507,7 +632,9 @@ export function AppProvider({ children }: AppProviderProps) {
   }, []);
 
   const isInWishlist = useCallback((productId: number): boolean => {
-    return wishlist.some(item => item.id === productId);
+    const result = wishlist.some(item => item.id === productId);
+    console.log(`🔍 Producto ${productId} en wishlist: ${result}`);
+    return result;
   }, [wishlist]);
 
   const moveToCart = useCallback((productId: number, size: string): void => {
@@ -525,28 +652,32 @@ export function AppProvider({ children }: AppProviderProps) {
 
   const clearWishlist = useCallback((): void => {
     logger.info('Wishlist vaciada');
+    console.log('🗑️ Limpiando wishlist completa');
     setWishlist([]);
     removeStorageItem('gaia-wishlist');
   }, []);
 
   // ==========================================
-  // COMPUTED VALUES
+  // COMPUTED VALUES CON DEBUG
   // ==========================================
   
-  const cartTotal = useMemo(() => 
-    cart.reduce((total, item) => total + (item.price * item.quantity), 0), 
-    [cart]
-  );
+  const cartTotal = useMemo(() => {
+    const total = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    console.log('💰 Total carrito calculado:', total);
+    return total;
+  }, [cart]);
   
-  const cartItemsCount = useMemo(() => 
-    cart.reduce((total, item) => total + item.quantity, 0), 
-    [cart]
-  );
+  const cartItemsCount = useMemo(() => {
+    const count = cart.reduce((total, item) => total + item.quantity, 0);
+    console.log('🛒 Items en carrito:', count);
+    return count;
+  }, [cart]);
 
-  const wishlistItemsCount = useMemo(() => 
-    wishlist.length, 
-    [wishlist]
-  );
+  const wishlistItemsCount = useMemo(() => {
+    console.log('❤️ Wishlist actual:', wishlist);
+    console.log('❤️ Contador de wishlist calculando:', wishlist.length);
+    return wishlist.length;
+  }, [wishlist]);
 
   // ==========================================
   // UTILS
@@ -623,4 +754,4 @@ export function AppProvider({ children }: AppProviderProps) {
       {children}
     </AppContext.Provider>
   );
-} 
+}

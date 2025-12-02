@@ -2,8 +2,8 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
-import { Grid, List, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Product, Category, SortOption, ViewMode } from '../types/shop.types';
+import { ChevronDown, ChevronRight, Heart } from 'lucide-react';
+import { Product, Category, SortOption } from '../types/shop.types';
 import { mockProducts, categories } from '../data/shop-products';
 import { formatPrice } from '../../utils/formatters';
 import { Pagination } from '@/components/ui/Pagination';
@@ -11,9 +11,15 @@ import { Pagination } from '@/components/ui/Pagination';
 export default function ShopPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<SortOption>('default');
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
+
+  // Productos destacados (vamos a usar los primeros 8 productos nuevos)
+  const featuredProducts = useMemo(() => {
+    return mockProducts
+      .filter(product => product.isNew)
+      .slice(0, 8);
+  }, []);
 
   // Filtrar y ordenar
   const filteredProducts = useMemo(() => {
@@ -29,7 +35,15 @@ export default function ShopPage() {
         filtered.sort((a, b) => b.price - a.price);
         break;
       case 'newest':
-        filtered.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+        // Ordenar por nuevos primero
+        filtered.sort((a, b) => {
+          if (a.isNew && !b.isNew) return -1;
+          if (!a.isNew && b.isNew) return 1;
+          return 0;
+        });
+        break;
+      default:
+        // Por defecto, mantener orden original o destacados
         break;
     }
 
@@ -42,157 +56,167 @@ export default function ShopPage() {
     return filteredProducts.slice(startIndex, startIndex + productsPerPage);
   }, [filteredProducts, currentPage]);
 
-  // Calcular total de páginas
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-
   // Resetear a página 1 cuando cambian filtros
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedCategory, sortBy]);
 
   return (
-    <div className="min-h-screen bg-white">
-      
-      {/* HERO MINIMALISTA */}
-      <section className="section-gaia border-b border-gaia-border bg-gaia-charcoal/[0.02]">
-        <div className="container-gaia text-center">
-          <span className="label-gaia text-gaia-crimson mb-4">colección</span>
-          <h1 className="title-section font-display mb-6">
-            todas las piezas
-          </h1>
-          <p className="text-lg text-gaia-ash max-w-xl mx-auto font-body font-light">
-            nocturno · minimalista · atemporal
-          </p>
+    <div className="min-h-screen bg-white pt-4">
+      {/* CATEGORÍAS */}
+      <section className="section-gaia py-12">
+        <div className="container-gaia">
+          <h2 className="text-2xl font-bold text-center mb-8">CATEGORÍAS DESTACADAS</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {categories.slice(0, 4).map((category) => (
+              <div 
+                key={category.id}
+                className="relative h-64 overflow-hidden group cursor-pointer bg-gray-100"
+                onClick={() => setSelectedCategory(category.id)}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent z-10" />
+                <div className="relative z-20 h-full flex items-end p-6">
+                  <h3 className="text-white text-lg font-semibold uppercase tracking-wider">
+                    {category.name}
+                  </h3>
+                </div>
+                <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* BARRA DE CONTROLES */}
-      <div className="sticky top-0 z-40 bg-white border-b border-gaia-border">
+      {/* PRODUCTOS DESTACADOS */}
+      <section className="section-gaia py-12 bg-gray-50">
+        <div className="container-gaia">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-2xl font-bold">PRODUCTOS DESTACADOS</h2>
+            <button 
+              className="text-sm font-semibold flex items-center gap-2 hover:text-red-500 transition-colors"
+              onClick={() => {
+                setSelectedCategory('all');
+                setSortBy('newest');
+              }}
+            >
+              VER TODO <ChevronRight size={16} />
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {featuredProducts.map((product) => (
+              <ProductCard 
+                key={product.id}
+                product={product}
+                formatPrice={formatPrice}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FILTROS Y ORDEN */}
+      <div className="sticky top-[90px] z-40 bg-white border-y border-gray-200">
         <div className="container-gaia">
           <div className="flex items-center justify-between py-4">
             
-            {/* Filtros de categoría */}
-            <div className="flex items-center gap-8">
+            {/* Filtros */}
+            <div className="flex items-center gap-4 overflow-x-auto">
+              <button
+                onClick={() => setSelectedCategory('all')}
+                className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
+                  selectedCategory === 'all'
+                    ? 'bg-black text-white'
+                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                }`}
+              >
+                TODOS
+              </button>
+              
               {categories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`text-sm font-body transition-colors pb-1 ${
+                  className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
                     selectedCategory === cat.id
-                      ? 'text-gaia-black border-b border-gaia-black'
-                      : 'text-gaia-ash hover:text-gaia-black'
+                      ? 'bg-black text-white'
+                      : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
                   }`}
                 >
-                  {cat.name}
+                  {cat.name.toUpperCase()}
                 </button>
               ))}
             </div>
 
-            {/* Controles derecha */}
-            <div className="flex items-center gap-4">
-              
-              {/* Vista Grid/List */}
-              <div className="flex border border-gaia-border">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`p-2 transition-colors ${
-                    viewMode === 'grid' 
-                      ? 'bg-gaia-black text-white' 
-                      : 'text-gaia-silver hover:text-gaia-black'
-                  }`}
-                >
-                  <Grid size={16} />
-                </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`p-2 transition-colors ${
-                    viewMode === 'list' 
-                      ? 'bg-gaia-black text-white' 
-                      : 'text-gaia-silver hover:text-gaia-black'
-                  }`}
-                >
-                  <List size={16} />
-                </button>
-              </div>
-
-              {/* Ordenar */}
-              <div className="relative">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className="appearance-none bg-white border border-gaia-border px-4 py-2 pr-8 text-sm focus:outline-none focus:border-gaia-black font-body cursor-pointer"
-                >
-                  <option value="default">destacados</option>
-                  <option value="newest">nuevos</option>
-                  <option value="price-asc">precio ↑</option>
-                  <option value="price-desc">precio ↓</option>
-                </select>
-                <ChevronDown 
-                  size={14} 
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gaia-silver pointer-events-none" 
-                />
-              </div>
+            {/* Ordenar */}
+            <div className="relative">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="appearance-none bg-white border border-gray-300 px-4 py-2 pr-10 text-sm focus:outline-none focus:border-black font-medium cursor-pointer transition-colors"
+              >
+                <option value="newest">NUEVOS</option>
+                <option value="price-asc">PRECIO: BAJO A ALTO</option>
+                <option value="price-desc">PRECIO: ALTO A BAJO</option>
+              </select>
+              <ChevronDown 
+                size={14} 
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" 
+              />
             </div>
           </div>
         </div>
       </div>
 
-      {/* GRID DE PRODUCTOS */}
-      <section className="section-gaia">
+      {/* TODOS LOS PRODUCTOS */}
+      <section className="section-gaia py-12">
         <div className="container-gaia">
-          
-          {/* Contador mejorado con paginación */}
-          <div className="mb-12 text-sm text-gaia-ash font-body">
-            Mostrando {paginatedProducts.length} de {filteredProducts.length} piezas
-            {totalPages > 1 && ` - Página ${currentPage} de ${totalPages}`}
+          <div className="flex items-center justify-between mb-6">
+            <div className="text-sm text-gray-600">
+              Mostrando {paginatedProducts.length} de {filteredProducts.length} productos
+            </div>
+            {filteredProducts.length > 0 && (
+              <div className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                {selectedCategory === 'all' ? 'TODAS LAS CATEGORÍAS' : 
+                 categories.find(c => c.id === selectedCategory)?.name.toUpperCase()}
+              </div>
+            )}
           </div>
 
-          {/* Vista Grid */}
-          {viewMode === 'grid' ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
-              {paginatedProducts.map((product, idx) => (
-                <ProductCardGrid 
-                  key={product.id} 
+          {/* Grid de productos */}
+          {filteredProducts.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {paginatedProducts.map((product) => (
+                <ProductCard 
+                  key={product.id}
                   product={product}
-                  offset={idx % 2 === 1}
                   formatPrice={formatPrice}
                 />
               ))}
             </div>
           ) : (
-            <div className="space-y-8">
-              {paginatedProducts.map((product) => (
-                <ProductCardList 
-                  key={product.id} 
-                  product={product}
-                  formatPrice={formatPrice}
-                />
-              ))}
-            </div>
-          )}
-
-          {/* Estado vacío */}
-          {filteredProducts.length === 0 && (
             <div className="text-center py-20">
-              <p className="text-gaia-silver font-body mb-6">
-                no hay piezas en esta categoría
+              <p className="text-gray-400 mb-6">
+                No hay productos en esta categoría
               </p>
               <button
                 onClick={() => setSelectedCategory('all')}
-                className="btn-secondary"
+                className="bg-black text-white px-6 py-2 font-semibold hover:bg-gray-900 transition-colors"
               >
-                ver todo
+                VER TODOS LOS PRODUCTOS
               </button>
             </div>
           )}
 
-          {/* Componente de paginación */}
-          {totalPages > 1 && (
-            <Pagination 
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
+          {/* Paginación */}
+          {filteredProducts.length > productsPerPage && (
+            <div className="mt-12">
+              <Pagination 
+                currentPage={currentPage}
+                totalPages={Math.ceil(filteredProducts.length / productsPerPage)}
+                onPageChange={setCurrentPage}
+              />
+            </div>
           )}
         </div>
       </section>
@@ -201,150 +225,82 @@ export default function ShopPage() {
 }
 
 // ═══════════════════════════════════════════════
-// CARD GRID
+// COMPONENTE PRODUCT CARD ACTUALIZADO
 // ═══════════════════════════════════════════════
-interface CardProps {
+interface ProductCardProps {
   product: Product;
   formatPrice: (price: number) => string;
-  offset?: boolean;
 }
 
-function ProductCardGrid({ product, formatPrice, offset = false }: CardProps) {
+function ProductCard({ product, formatPrice }: ProductCardProps) {
+  const isFreeShipping = product.price > 30000; 
+  
   return (
-    <div className={`product-card ${offset ? 'md:mt-16' : ''}`}>
-      
-      {/* Imagen */}
-      <div className="product-image">
-        <Image
-          src={product.image}
-          alt={product.name}
-          width={400}
-          height={533}
-          className="w-full h-full object-cover"
-        />
-        
+    <div className="group">
+      {/* Contenedor de imagen */}
+      <div className="relative overflow-hidden mb-4 bg-gray-100 aspect-[3/4] rounded-sm">
         {/* Badge nuevo */}
         {product.isNew && (
-          <div className="badge-new">nuevo</div>
-        )}
-
-        {/* Badge agotado */}
-        {product.stock === 0 && (
-          <div className="absolute top-4 left-4 bg-gaia-silver text-gaia-black px-3 py-1 text-[9px] tracking-[0.25em] uppercase font-body z-10">
-            agotado
+          <div className="absolute top-3 left-3 z-20">
+            <span className="bg-black text-white px-2 py-1 text-xs font-semibold uppercase tracking-wider">
+              Nuevo
+            </span>
           </div>
         )}
+      
+        
+        {/* Imagen del producto */}
+        <div className="relative h-full">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          />
+        </div>
+        
+        {/* Botón corazón */}
+        <div className="absolute top-3 right-3 z-10">
+          <button className="bg-white/80 backdrop-blur-sm p-2 rounded-full hover:bg-white transition-colors">
+            <Heart size={16} className="text-gray-700 hover:text-red-500 transition-colors" />
+          </button>
+        </div>
 
-        {/* Overlay */}
-        <div className="product-overlay">
-          <button className="product-overlay-btn">
-            ver prenda
+        {/* Overlay para hover */}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-end justify-center pb-6">
+          <button className="translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 bg-black text-white px-6 py-3 text-sm font-semibold hover:bg-gray-800">
+            VER PRODUCTO
           </button>
         </div>
       </div>
 
-      {/* Info */}
-      <div className="pt-6">
-        <div className="flex justify-between items-start mb-2">
-          <div className="flex-1">
-            <h3 className="text-base font-light capitalize font-body mb-1">
-              {product.name}
-            </h3>
-            {product.description && (
-              <p className="text-xs text-gaia-silver font-body">
-                {product.description}
-              </p>
-            )}
-          </div>
-          <p className="text-lg font-light font-body ml-4">
+      {/* Información del producto */}
+      <div>
+        <h3 className="font-semibold text-lg mb-1 uppercase tracking-tight text-gray-800">
+          {product.name}
+        </h3>
+        
+        <div className="flex justify-between items-center">
+          <p className="text-lg font-bold text-gray-900">
             {formatPrice(product.price)}
           </p>
         </div>
         
-        {/* Tallas */}
-        {product.sizes && product.sizes.length > 0 && (
-          <div className="flex gap-1.5 mt-3">
-            {product.sizes.map((size) => (
-              <span 
-                key={size}
-                className="text-[10px] text-gaia-ash uppercase tracking-wider font-body"
-              >
-                {size}
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// ═══════════════════════════════════════════════
-// CARD LIST
-// ═══════════════════════════════════════════════
-function ProductCardList({ product, formatPrice }: Omit<CardProps, 'offset'>) {
-  return (
-    <div className="flex gap-8 group pb-8 border-b border-gaia-border last:border-0">
-      
-      {/* Imagen */}
-      <div className="w-32 h-44 flex-shrink-0 relative overflow-hidden">
-        <Image
-          src={product.image}
-          alt={product.name}
-          width={128}
-          height={176}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        {product.isNew && (
-          <div className="absolute top-2 left-2 bg-gaia-black text-white px-2 py-1 text-[9px] tracking-[0.25em] uppercase font-body">
-            nuevo
-          </div>
-        )}
-      </div>
-
-      {/* Info */}
-      <div className="flex-1 min-w-0">
-        <div className="flex justify-between items-start mb-3">
-          <div className="flex-1">
-            <h3 className="text-lg font-light capitalize font-body mb-1">
-              {product.name}
-            </h3>
-            <p className="text-xs text-gaia-silver uppercase tracking-wider font-body">
-              {product.category}
+        {/* Información adicional */}
+        <div className="mt-2 space-y-1">
+          <p className="text-xs text-gray-500">
+            15% OFF en transferencia
+          </p>
+          
+        
+          
+          {product.stock === 0 && (
+            <p className="text-xs text-red-600 font-medium">
+              AGOTADO
             </p>
-          </div>
-          <p className="text-xl font-light font-body ml-6">
-            {formatPrice(product.price)}
-          </p>
+          )}
         </div>
-
-        {product.description && (
-          <p className="text-sm text-gaia-ash mb-4 font-body font-light">
-            {product.description}
-          </p>
-        )}
-
-        {/* Tallas */}
-        {product.sizes && product.sizes.length > 0 && (
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-xs text-gaia-silver font-body">tallas:</span>
-            <div className="flex gap-2">
-              {product.sizes.map((size) => (
-                <span 
-                  key={size}
-                  className="text-xs text-gaia-ash uppercase font-body"
-                >
-                  {size}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* CTA */}
-        <button className="btn-primary text-sm py-2 px-6">
-          ver prenda
-        </button>
       </div>
     </div>
   );
