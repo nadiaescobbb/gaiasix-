@@ -26,6 +26,7 @@
    3. VARIABLES CSS — Paleta Gaia Six
    ─────────────────────────────────────────────────────────────── */
 :root {
+<<<<<<< HEAD
   /* Paleta principal — Cálida y elegante */
   --gaia-bone: #F8F5F0;           /* Blanco hueso cálido (fondo principal) */
   --gaia-cream: #EDE7DD;          /* Crema secundario (fondos suaves) */
@@ -48,6 +49,27 @@
   /* Tipografía — Jerarquía clara */
   --font-display: 'Galiska', 'Georgia', 'Playfair Display', serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+=======
+  --gaia-bone: #F8F5F0;           
+  --gaia-cream: #EDE7DD;        
+  --gaia-concrete: #7A7D7F;       
+  --gaia-black-soft: #1A1A1A;     
+  --gaia-crimson: #AF161F;     
+  
+  /* Grises auxiliares */
+  --gaia-charcoal: #2B2B2B;       
+  --gaia-silver: #C9C9C9;         
+  --gaia-ash: #666666;            
+  
+  /* Utilidades */
+  --gaia-overlay: rgba(26, 26, 26, 0.50);      
+  --gaia-overlay-light: rgba(26, 26, 26, 0.15); 
+  --gaia-overlay-hover: rgba(26, 26, 26, 0.60); 
+  
+  /* Tipografía */
+--font-display: 'Galiska', 'Georgia', 'Playfair Display', serif;
+--font-body: 'CSTunker', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+>>>>>>> e02b70d389afb9e84f0dc3d55a7c4a2cc74749c2
 }
 
 /* ───────────────────────────────────────────────────────────────
@@ -63,9 +85,12 @@
     @apply antialiased;
     background-color: var(--gaia-bone);
     color: var(--gaia-black-soft);
+<<<<<<< HEAD
     font-family: var(--font-body);
     font-weight: 300;
     line-height: 1.6;
+=======
+>>>>>>> e02b70d389afb9e84f0dc3d55a7c4a2cc74749c2
   }
 
   /* Selección de texto personalizada */
@@ -239,6 +264,7 @@
   
   /* ─── BADGES ─── */
   .badge-new {
+<<<<<<< HEAD
     font-family: var(--font-body);
     @apply absolute top-4 left-4 px-3 py-1.5 text-[9px] tracking-[0.25em] uppercase font-medium z-10;
     background-color: var(--gaia-crimson);
@@ -258,6 +284,11 @@
     @apply absolute top-4 left-4 px-3 py-1.5 text-[9px] tracking-[0.25em] uppercase font-medium z-10 bg-transparent border-2;
     border-color: var(--gaia-crimson);
     color: var(--gaia-crimson);
+=======
+   @apply absolute top-4 left-4 bg-gaia-crimson px-3 py-1.5 text-[9px] tracking-[0.25em] uppercase font-body font-medium z-10;
+    color: var(--gaia-bone);
+    box-shadow: 0 2px 8px rgba(175, 22, 31, 0.3);
+>>>>>>> e02b70d389afb9e84f0dc3d55a7c4a2cc74749c2
   }
   
   /* ─── NAVEGACIÓN ─── */
@@ -331,6 +362,15 @@
   .text-balance {
     text-wrap: balance;
   }
+   
+  .gradient-hero-gaia {
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 40%,
+      var(--gaia-overlay-light) 80%,
+      rgba(26, 26, 26, 0.25) 100%
+    );
   
   /* ─── GRADIENTES SIGNATURE GAIA SIX ─── */
   
@@ -491,4 +531,21 @@
   .product-card {
     break-inside: avoid;
   }
+<<<<<<< HEAD
 }
+=======
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+  display: flex;
+  width: max-content;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+>>>>>>> e02b70d389afb9e84f0dc3d55a7c4a2cc74749c2
