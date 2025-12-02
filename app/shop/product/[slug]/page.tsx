@@ -14,7 +14,7 @@ interface ProductPageProps {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// STATIC PARAMS — Pre-renderizar todas las páginas de producto
+// STATIC PARAMS 
 // ═══════════════════════════════════════════════════════════════
 export async function generateStaticParams() {
   // Generar paths para todos los productos activos
@@ -80,15 +80,6 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
       locale: 'es_AR',
     },
     
-    // Twitter Card
-    twitter: {
-      card: 'summary_large_image',
-      title: product.name,
-      description,
-      images: [product.image],
-      creator: '@gaiasix',
-    },
-    
     // Canonical URL
     alternates: {
       canonical: `/shop/product/${slug}`,
@@ -134,8 +125,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     }
     notFound();
   }
-  
-  // Obtener productos relacionados (misma categoría, excluir actual)
+
   const relatedProducts = getRelatedProducts(product.category, product.id, 3);
   
   // Renderizar

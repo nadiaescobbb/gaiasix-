@@ -7,38 +7,37 @@ module.exports = {
   ],
   theme: {
     extend: {
-      // ═══════════════════════════════════════════════
-      // 🎨 PALETA GAIA SIX 
-      // ═══════════════════════════════════════════════
       colors: {
         gaia: {
-          // Colores principales
-          black: '#000000',
-          white: '#F0F3F4',
-          crimson: '#AF161F', 
+          // Paleta principal — Cálida
+          'bone': '#F8F5F0',           // Blanco hueso cálido (reemplaza white)
+          'cream': '#EDE7DD',          // Crema secundario
+          'concrete': '#7A7D7F',       // Gris microcemento
+          'black-soft': '#1A1A1A',     // Negro suave (reemplaza black puro)
+          'crimson': '#AF161F',        // Acento signature
           
-          // Grises
-          charcoal: '#111111',
-          silver: '#C9C9C9',
-          ash: '#666666',
+          // Grises auxiliares
+          'charcoal': '#2B2B2B',       // Charcoal suave
+          'silver': '#C9C9C9',         // Silver (placeholders)
+          'ash': '#666666',            // Ash (texto secundario)
           
-          // Utilidades
-          overlay: 'rgba(0, 0, 0, 0.85)',
-          'overlay-light': 'rgba(0, 0, 0, 0.40)',
-          border: 'rgba(201, 201, 201, 0.15)',
-          'border-solid': 'rgba(201, 201, 201, 0.3)',
+          // Overlays — Actualizados a negro suave
+          'overlay': 'rgba(26, 26, 26, 0.50)',
+          'overlay-light': 'rgba(26, 26, 26, 0.15)',
+          'overlay-hover': 'rgba(26, 26, 26, 0.60)',
+          
+          // Borders — Actualizados a concrete
+          'border': 'rgba(122, 125, 127, 0.15)',
+          'border-solid': 'rgba(122, 125, 127, 0.3)',
         }
       },
       
       // ═══════════════════════════════════════════════
-      // 🔤 SISTEMA TIPOGRÁFICO — Solo 2 familias
+      // 🔤 SISTEMA TIPOGRÁFICO
       // ═══════════════════════════════════════════════
       fontFamily: {
-      display: ['Galiska', 'Inter', 'serif'],
-      body: ['Galiska', 'Inter', 'system-ui', 'sans-serif'],
-
-      
-
+        display: ['Galiska', 'Georgia', 'Playfair Display', 'serif'],
+        body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       },
 
       // ═══════════════════════════════════════════════
@@ -54,53 +53,36 @@ module.exports = {
       },
       
       // ═══════════════════════════════════════════════
-      // 📐 ESCALA TIPOGRÁFICA — Editorial
+      // 📐 ESCALA TIPOGRÁFICA — Editorial + Optimizada
       // ═══════════════════════════════════════════════
       fontSize: {
-        // Micro (labels, tags)
-        'micro': ['0.625rem', { lineHeight: '0.875rem', letterSpacing: '0.3em' }], // 10px
+        // Micro (labels, tags, badges)
+        'micro': ['0.625rem', { lineHeight: '0.875rem', letterSpacing: '0.3em', fontWeight: '500' }], // 10px
         
-        // Base
-        'xs': ['0.75rem', { lineHeight: '1rem' }],      // 12px
-        'sm': ['0.875rem', { lineHeight: '1.25rem' }],  // 14px  
-        'base': ['1rem', { lineHeight: '1.5rem' }],     // 16px
-        'lg': ['1.125rem', { lineHeight: '1.75rem' }],  // 18px
-        'xl': ['1.25rem', { lineHeight: '1.75rem' }],   // 20px
+        // Base — Body text
+        'xs': ['0.75rem', { lineHeight: '1rem', fontWeight: '400' }],      // 12px
+        'sm': ['0.875rem', { lineHeight: '1.25rem', fontWeight: '300' }],  // 14px  
+        'base': ['1rem', { lineHeight: '1.5rem', fontWeight: '300' }],     // 16px (body default)
+        'lg': ['1.125rem', { lineHeight: '1.75rem', fontWeight: '300' }],  // 18px
+        'xl': ['1.25rem', { lineHeight: '1.75rem', fontWeight: '400' }],   // 20px
         
-        // Display
-        '2xl': ['1.5rem', { lineHeight: '2rem' }],       // 24px
-        '3xl': ['1.875rem', { lineHeight: '2.25rem' }],  // 30px
-        '4xl': ['2.25rem', { lineHeight: '2.5rem' }],    // 36px
-        '5xl': ['3rem', { lineHeight: '1.1' }],          // 48px
-        '6xl': ['3.75rem', { lineHeight: '1.05' }],      // 60px
-        '7xl': ['4.5rem', { lineHeight: '1' }],          // 72px
-        '8xl': ['6rem', { lineHeight: '1' }],            // 96px
-        '9xl': ['8rem', { lineHeight: '1' }],            // 128px
+        // Display — Títulos (usar font-display)
+        '2xl': ['1.5rem', { lineHeight: '2rem', letterSpacing: '-0.01em' }],       // 24px
+        '3xl': ['1.875rem', { lineHeight: '2.25rem', letterSpacing: '-0.01em' }],  // 30px
+        '4xl': ['2.25rem', { lineHeight: '2.5rem', letterSpacing: '-0.02em' }],    // 36px
+        '5xl': ['3rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],          // 48px
+        '6xl': ['3.75rem', { lineHeight: '1.05', letterSpacing: '-0.02em' }],      // 60px
+        '7xl': ['4.5rem', { lineHeight: '1', letterSpacing: '-0.03em' }],          // 72px
+        '8xl': ['6rem', { lineHeight: '1', letterSpacing: '-0.03em' }],            // 96px
+        '9xl': ['8rem', { lineHeight: '1', letterSpacing: '-0.04em' }],            // 128px
       },
       
       // ═══════════════════════════════════════════════
-      // 📏 ESPACIADO — Sistema editorial completo
+      // 📏 ESPACIADO — Sistema 4px + específicos Gaia
       // ═══════════════════════════════════════════════
       spacing: {
-        // Base (4px increments)
-        '0': '0',
-        '1': '0.25rem',   // 4px
-        '2': '0.5rem',    // 8px
-        '3': '0.75rem',   // 12px
-        '4': '1rem',      // 16px
-        '5': '1.25rem',   // 20px
-        '6': '1.5rem',    // 24px
-        '8': '2rem',      // 32px
-        '10': '2.5rem',   // 40px
-        '12': '3rem',     // 48px
-        '16': '4rem',     // 64px
-        '20': '5rem',     // 80px
-        '24': '6rem',     // 96px
-        '32': '8rem',     // 128px
-        '40': '10rem',    // 160px
-        '48': '12rem',    // 192px
-        
-        // Específicos Gaia
+        // Base (4px increments) — Ya incluidos por defecto en Tailwind
+        // Solo agregamos los específicos
         'section': '6rem',      // 96px — padding vertical secciones
         'section-lg': '8rem',   // 128px — secciones grandes
         'gutter': '1.5rem',     // 24px — espaciado interno cards
@@ -113,6 +95,7 @@ module.exports = {
         'fade-in': 'fadeIn 0.5s ease-out forwards',
         'slide-up': 'slideUp 0.6s ease-out forwards',
         'scale-in': 'scaleIn 0.4s ease-out forwards',
+        'marquee': 'marquee 30s linear infinite',
       },
       
       keyframes: {
@@ -128,13 +111,17 @@ module.exports = {
           '0%': { opacity: '0', transform: 'scale(0.95)' },
           '100%': { opacity: '1', transform: 'scale(1)' },
         },
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
       },
       
       // ═══════════════════════════════════════════════
       // 🖼 ASPECT RATIOS — Formatos fotográficos
       // ═══════════════════════════════════════════════
       aspectRatio: {
-        'product': '3/4',     // Producto vertical
+        'product': '3/4',     // Producto vertical (principal)
         'editorial': '4/5',   // Editorial vertical
         'square': '1/1',      // Cuadrado
         'landscape': '4/3',   // Horizontal
@@ -160,6 +147,15 @@ module.exports = {
       // ═══════════════════════════════════════════════
       maxWidth: {
         'gaia': '1400px', // Max container width
+      },
+      
+      // ═══════════════════════════════════════════════
+      // 🎨 BACKGROUND IMAGES — Gradientes Gaia
+      // ═══════════════════════════════════════════════
+      backgroundImage: {
+        'gradient-hero': 'linear-gradient(to bottom, transparent 0%, transparent 40%, rgba(26, 26, 26, 0.15) 80%, rgba(26, 26, 26, 0.25) 100%)',
+        'gradient-overlay': 'linear-gradient(to top, rgba(26, 26, 26, 0.7) 0%, rgba(26, 26, 26, 0.2) 50%, transparent 100%)',
+        'gradient-radial': 'radial-gradient(circle at center, #EDE7DD 0%, #F8F5F0 100%)',
       },
     },
   },

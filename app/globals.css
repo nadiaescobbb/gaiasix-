@@ -1,5 +1,5 @@
 /* ───────────────────────────────────────────────────────────────
-   1. FUENTES + fuentes locales
+   1. FUENTES EXTERNAS
    ─────────────────────────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
@@ -8,10 +8,10 @@
 @tailwind utilities;
 
 /* ───────────────────────────────────────────────────────────────
-   2. FUENTES LOCALES — Galiska (Display) y CSTunker (UI)
+   2. FUENTES LOCALES — Galiska (Display)
    ─────────────────────────────────────────────────────────────── */
 
-/* Galiska — Display (títulos) */
+/* Galiska — Display (títulos grandes, hero) */
 @font-face {
   font-family: 'Galiska';
   src: url('/fonts/Galiska.woff2') format('woff2');
@@ -20,42 +20,38 @@
   font-display: swap;
 }
 
-/* CSTunker — UI (cuerpo de texto) */
-@font-face {
-  font-family: 'CSTunker';
-  src: url('/fonts/CSTunker.woff2') format('woff2');
-  font-weight: 300 700;
-  font-style: normal;
-  font-display: swap;
-}
+
 
 /* ───────────────────────────────────────────────────────────────
-   3. VARIABLES CSS — Sincronizadas con tailwind.config.js
+   3. VARIABLES CSS — Paleta Gaia Six
    ─────────────────────────────────────────────────────────────── */
 :root {
-  /* Colores principales */
-  --gaia-black: #000000;
-  --gaia-white: #F0F3F4;
-  --gaia-crimson: #AF161F; 
+  /* Paleta principal — Cálida y elegante */
+  --gaia-bone: #F8F5F0;           /* Blanco hueso cálido (fondo principal) */
+  --gaia-cream: #EDE7DD;          /* Crema secundario (fondos suaves) */
+  --gaia-concrete: #7A7D7F;       /* Gris microcemento (bordes, separadores) */
+  --gaia-black-soft: #1A1A1A;     /* Negro suave (texto, botones) */
+  --gaia-crimson: #AF161F;        /* Acento signature (hover, badges, micro-momentos) */
   
-  /* Grises */
-  --gaia-charcoal: #111111;
-  --gaia-silver: #C9C9C9;
-  --gaia-ash: #666666;
+  /* Grises auxiliares */
+  --gaia-charcoal: #2B2B2B;       /* Charcoal suave (fondos oscuros) */
+  --gaia-silver: #C9C9C9;         /* Silver (placeholders, borders ligeros) */
+  --gaia-ash: #666666;            /* Ash (texto secundario) */
   
-  /* Utilidades */
-  --gaia-overlay: rgba(0, 0, 0, 0.85);
-  --gaia-overlay-light: rgba(0, 0, 0, 0.40);
-  --gaia-border: rgba(201, 201, 201, 0.15);
-  --gaia-border-solid: rgba(201, 201, 201, 0.3);
+  /* Overlays y sombras */
+  --gaia-overlay: rgba(26, 26, 26, 0.50);       /* Overlay medio (product cards hover) */
+  --gaia-overlay-light: rgba(26, 26, 26, 0.15); /* Overlay suave (hero gradient) */
+  --gaia-overlay-hover: rgba(26, 26, 26, 0.60); /* Overlay intenso (modals) */
+  --gaia-border: rgba(122, 125, 127, 0.15);     /* Border transparente */
+  --gaia-border-solid: rgba(122, 125, 127, 0.3); /* Border sólido */
   
-  /* Tipografía */
-  --font-display: 'Galiska', 'Inter', 'Georgia', serif;
-  --font-body: 'Galiska', 'Inter', system-ui, sans-serif;
+  /* Tipografía — Jerarquía clara */
+  --font-display: 'Galiska', 'Georgia', 'Playfair Display', serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* ───────────────────────────────────────────────────────────────
-   4. ESTILOS BASE — Minimalista, no sobreescribe Tailwind
+   4. ESTILOS BASE — Fundamentos del sistema
    ─────────────────────────────────────────────────────────────── */
 @layer base {
   html {
@@ -64,55 +60,63 @@
   }
   
   body {
-    @apply bg-white text-black antialiased;
+    @apply antialiased;
+    background-color: var(--gaia-bone);
+    color: var(--gaia-black-soft);
     font-family: var(--font-body);
     font-weight: 300;
     line-height: 1.6;
   }
 
-  /* Selection personalizado */
+  /* Selección de texto personalizada */
   ::selection {
-    @apply bg-gaia-crimson text-white;
+    background-color: var(--gaia-crimson);
+    color: var(--gaia-bone);
   }
 
-  /* Focus visible para accesibilidad */
+  /* Focus visible para accesibilidad (WCAG 2.1) */
   :focus-visible {
-    @apply outline-2 outline-gaia-crimson outline-offset-2;
+    outline: 2px solid var(--gaia-crimson);
+    outline-offset: 2px;
   }
 
-  /* Imágenes responsivas */
+  /* Imágenes responsivas por defecto */
   img {
     @apply max-w-full h-auto;
   }
 
-  /* Scrollbar personalizado */
+  /* Scrollbar personalizado (Webkit browsers) */
   ::-webkit-scrollbar {
-    @apply w-1.5;
+    width: 6px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-gray-100;
+    background: var(--gaia-cream);
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-gaia-crimson rounded;
+    background: var(--gaia-crimson);
+    border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gaia-crimson/80;
+    background: #8B1218; /* Crimson más oscuro */
   }
 
-  /* Placeholder styles */
+  /* Placeholders suaves */
   ::placeholder {
-    @apply text-gaia-silver opacity-100 font-light;
+    color: var(--gaia-silver);
+    opacity: 1;
+    font-weight: 300;
   }
 
-  /* Disabled states */
+  /* Estados disabled */
   :disabled {
-    @apply opacity-50 cursor-not-allowed;
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 
-  /* Reduced motion */
+  /* Respeto por preferencias de movimiento reducido */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -141,28 +145,65 @@
   
   /* ─── TIPOGRAFÍA ─── */
   .title-hero {
-    @apply font-display text-7xl md:text-9xl tracking-tight font-light leading-none;
+    font-family: var(--font-display);
+    @apply text-7xl md:text-9xl tracking-tight font-light leading-none;
   }
   
   .title-section {
-    @apply font-display text-5xl md:text-7xl tracking-tight font-light;
+    font-family: var(--font-display);
+    @apply text-5xl md:text-7xl tracking-tight font-light;
+  }
+  
+  .title-subsection {
+    font-family: var(--font-display);
+    @apply text-3xl md:text-5xl tracking-tight font-light;
   }
   
   .label-gaia {
-    @apply font-body text-[10px] tracking-ultra uppercase;
+    font-family: var(--font-body);
+    @apply text-[10px] tracking-[0.2em] uppercase font-medium;
+  }
+  
+  .body-gaia {
+    font-family: var(--font-body);
+    @apply text-base leading-relaxed font-light;
   }
   
   /* ─── BOTONES ─── */
   .btn-gaia {
-    @apply px-8 py-3 text-xs tracking-wider uppercase transition-all duration-300 inline-flex items-center justify-center min-h-[48px] font-body font-medium;
+    font-family: var(--font-body);
+    @apply px-8 py-3 text-xs tracking-wider uppercase transition-all duration-300 inline-flex items-center justify-center min-h-[48px] font-medium;
   }
   
   .btn-primary {
-    @apply btn-gaia bg-gaia-black text-gaia-white hover:bg-gaia-crimson;
+    @apply btn-gaia text-white transition-all duration-300;
+    background-color: var(--gaia-black-soft);
+  }
+  
+  .btn-primary:hover {
+    background-color: var(--gaia-crimson);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(175, 22, 31, 0.3);
   }
   
   .btn-secondary {
-    @apply btn-gaia bg-gaia-white text-gaia-black border border-gaia-black hover:bg-gaia-black hover:text-gaia-white;
+    @apply btn-gaia bg-transparent border transition-all duration-300;
+    color: var(--gaia-black-soft);
+    border-color: var(--gaia-black-soft);
+  }
+  
+  .btn-secondary:hover {
+    background-color: var(--gaia-black-soft);
+    color: var(--gaia-bone);
+  }
+  
+  .btn-ghost {
+    @apply btn-gaia bg-transparent underline-offset-4 hover:underline transition-all duration-300;
+    color: var(--gaia-black-soft);
+  }
+  
+  .btn-ghost:hover {
+    color: var(--gaia-crimson);
   }
   
   /* ─── PRODUCT CARDS ─── */
@@ -171,43 +212,93 @@
   }
   
   .product-image {
-    @apply relative aspect-[3/4] overflow-hidden bg-gaia-charcoal;
+    @apply relative aspect-[3/4] overflow-hidden;
+    background-color: var(--gaia-charcoal);
   }
   
   .product-overlay-base {
-    @apply absolute inset-0 bg-gaia-overlay opacity-0 transition-opacity duration-500 flex items-center justify-center;
+    @apply absolute inset-0 opacity-0 transition-opacity duration-500 flex items-center justify-center;
+    background-color: var(--gaia-overlay-hover);
+  }
+  
+  .product-card:hover .product-overlay-base {
+    @apply opacity-100;
   }
   
   .product-overlay-btn {
-    @apply bg-white text-black px-6 py-3 text-xs tracking-wider uppercase transition-all duration-300 hover:bg-black hover:text-white font-body font-medium;
+    font-family: var(--font-body);
+    @apply px-6 py-3 text-xs tracking-wider uppercase transition-all duration-300 font-medium;
+    background-color: var(--gaia-bone);
+    color: var(--gaia-black-soft);
+  }
+  
+  .product-overlay-btn:hover {
+    background-color: var(--gaia-crimson);
+    color: var(--gaia-bone);
   }
   
   /* ─── BADGES ─── */
   .badge-new {
-    @apply absolute top-4 left-4 bg-gaia-black text-white px-3 py-1 text-[9px] tracking-[0.25em] uppercase font-body font-medium z-10;
+    font-family: var(--font-body);
+    @apply absolute top-4 left-4 px-3 py-1.5 text-[9px] tracking-[0.25em] uppercase font-medium z-10;
+    background-color: var(--gaia-crimson);
+    color: var(--gaia-bone);
+    box-shadow: 0 2px 8px rgba(175, 22, 31, 0.3);
+  }
+  
+  .badge-sale {
+    font-family: var(--font-body);
+    @apply absolute top-4 left-4 px-3 py-1.5 text-[9px] tracking-[0.25em] uppercase font-medium z-10;
+    background-color: var(--gaia-black-soft);
+    color: var(--gaia-bone);
+  }
+  
+  .badge-limited {
+    font-family: var(--font-body);
+    @apply absolute top-4 left-4 px-3 py-1.5 text-[9px] tracking-[0.25em] uppercase font-medium z-10 bg-transparent border-2;
+    border-color: var(--gaia-crimson);
+    color: var(--gaia-crimson);
   }
   
   /* ─── NAVEGACIÓN ─── */
   .nav-gaia {
-    @apply sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gaia-border transition-all duration-300;
+    @apply sticky top-0 z-50 backdrop-blur-md border-b transition-all duration-300;
+    background-color: rgba(248, 245, 240, 0.8);
+    border-color: var(--gaia-border);
   }
   
   .nav-scrolled {
-    @apply bg-white/95 backdrop-blur-lg shadow-sm;
+    @apply backdrop-blur-lg shadow-sm;
+    background-color: rgba(248, 245, 240, 0.95);
   }
   
   .logo-gaia {
-    @apply font-display text-2xl tracking-tight;
+    font-family: var(--font-display);
+    @apply text-2xl tracking-tight;
   }
   
   /* ─── LINKS ─── */
   .link-gaia {
-    @apply transition-colors duration-300 hover:text-gaia-crimson font-body;
+    font-family: var(--font-body);
+    @apply transition-colors duration-300;
   }
   
-  /* ─── INPUTS ─── */
+  .link-gaia:hover {
+    color: var(--gaia-crimson);
+  }
+  
+  /* ─── INPUTS Y FORMS ─── */
   .input-gaia {
-    @apply w-full px-4 py-3 bg-white border border-gaia-border-solid focus:border-gaia-black focus:outline-none transition-colors duration-300 font-body text-sm;
+    font-family: var(--font-body);
+    @apply w-full px-4 py-3 border transition-colors duration-300 text-sm;
+    background-color: var(--gaia-bone);
+    border-color: var(--gaia-border-solid);
+    color: var(--gaia-black-soft);
+  }
+  
+  .input-gaia:focus {
+    outline: none;
+    border-color: var(--gaia-black-soft);
   }
   
   .textarea-gaia {
@@ -216,7 +307,8 @@
   
   /* ─── DIVIDERS ─── */
   .divider-gaia {
-    @apply border-t border-gaia-border my-12;
+    @apply my-12;
+    border-top: 1px solid var(--gaia-border);
   }
 }
 
@@ -224,7 +316,8 @@
    6. UTILIDADES PERSONALIZADAS
    ─────────────────────────────────────────────────────────────── */
 @layer utilities {
-  /* Ocultar scrollbar pero mantener funcionalidad */
+  
+  /* Ocultar scrollbar manteniendo funcionalidad */
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -234,23 +327,56 @@
     display: none;
   }
   
-  /* Text balance para títulos */
+  /* Text balance para títulos (CSS nativo) */
   .text-balance {
     text-wrap: balance;
   }
   
-  /* Gradientes Gaia */
-  .gradient-overlay-gaia {
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2), transparent);
+  /* ─── GRADIENTES SIGNATURE GAIA SIX ─── */
+  
+  /* Hero gradient — Suave, no ahoga la foto */
+  .gradient-hero-gaia {
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 40%,
+      var(--gaia-overlay-light) 80%,
+      rgba(26, 26, 26, 0.25) 100%
+    );
   }
   
+  /* Overlay general — Para product cards */
+  .gradient-overlay-gaia {
+    background: linear-gradient(
+      to top,
+      rgba(26, 26, 26, 0.7) 0%,
+      rgba(26, 26, 26, 0.2) 50%,
+      transparent 100%
+    );
+  }
+  
+  /* Fade horizontal — Para carruseles */
   .gradient-fade-gaia {
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4));
+    background: linear-gradient(
+      to right,
+      rgba(26, 26, 26, 0.8) 0%,
+      rgba(26, 26, 26, 0.6) 50%,
+      rgba(26, 26, 26, 0.4) 100%
+    );
+  }
+  
+  /* Gradient radial — Para fondos de sección */
+  .gradient-radial-gaia {
+    background: radial-gradient(
+      circle at center,
+      var(--gaia-cream) 0%,
+      var(--gaia-bone) 100%
+    );
   }
 }
 
 /* ───────────────────────────────────────────────────────────────
-   7. ANIMACIONES — Minimalista, sin efectos pesados
+   7. ANIMACIONES — Minimalistas y elegantes
    ─────────────────────────────────────────────────────────────── */
 @keyframes fadeIn {
   from {
@@ -283,6 +409,15 @@
   }
 }
 
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 /* Clases de animación */
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out forwards;
@@ -296,6 +431,16 @@
   animation: scaleIn 0.4s ease-out forwards;
 }
 
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+  display: flex;
+  width: max-content;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
 /* ───────────────────────────────────────────────────────────────
    8. RESPONSIVE — Mobile first
    ─────────────────────────────────────────────────────────────── */
@@ -305,7 +450,7 @@
   }
   
   .product-card {
-    @apply hover:translate-y-0; /* Desactivar hover en mobile */
+    @apply hover:translate-y-0; /* Desactivar lift en mobile */
   }
   
   .container-gaia {
@@ -315,15 +460,26 @@
   .section-gaia {
     @apply py-16;
   }
+  
+  .title-hero {
+    @apply text-5xl;
+  }
+  
+  .title-section {
+    @apply text-4xl;
+  }
 }
 
 /* ───────────────────────────────────────────────────────────────
-   9. PRINT STYLES 
+   9. PRINT STYLES
    ─────────────────────────────────────────────────────────────── */
 @media print {
   .nav-gaia,
   .product-overlay-base,
-  .btn-gaia {
+  .btn-gaia,
+  .badge-new,
+  .badge-sale,
+  .badge-limited {
     display: none !important;
   }
   
@@ -331,23 +487,8 @@
     background: white;
     color: black;
   }
-}
-
-@keyframes marquee {
-  0% {
-    transform: translateX(0);
+  
+  .product-card {
+    break-inside: avoid;
   }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-.animate-marquee {
-  animation: marquee 30s linear infinite;
-  display: flex;
-  width: max-content;
-}
-
-.animate-marquee:hover {
-  animation-play-state: paused;
 }

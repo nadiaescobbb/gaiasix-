@@ -1,4 +1,3 @@
-// components/layout/cart/CartSidebar.tsx - VERSIÓN CORREGIDA
 "use client";
 
 import { X, Trash2, Plus, Minus, ShoppingBag, Truck, Clock, Store, ArrowRight } from 'lucide-react';
@@ -12,7 +11,7 @@ import {
   getEstimatedDelivery,
   type ShippingMethod,
   shippingConfig 
-} from '../../../config/shipping'; // ← CORREGIDO: ../../../config/shipping
+} from '../../../config/shipping'; 
 import { type CartItem as CartItemType, type User } from '../../../lib/types';
 
 // ===================================================
@@ -638,17 +637,7 @@ function EmptyCartState({ onClose }: EmptyCartStateProps) {
         </button>
       </div>
 
-      {/* Beneficios Gaia Six */}
-      <div className="mt-8 grid grid-cols-2 gap-4 text-xs text-gaia-silver w-full max-w-xs font-body">
-        <div className="text-center">
-          <div className="text-lg mb-1">🚚</div>
-          <p>Envío desde ${shippingConfig.freeShippingThreshold.toLocaleString()}</p>
-        </div>
-        <div className="text-center">
-          <div className="text-lg mb-1">↩️</div>
-          <p>Devoluciones en 7 días</p>
-        </div>
-      </div>
+     
     </div>
   );
 }

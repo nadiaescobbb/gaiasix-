@@ -27,17 +27,9 @@ export default function Header({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // DEBUG: Mostrar valores actuales
-  useEffect(() => {
-    console.log('=== HEADER DEBUG ===');
-    console.log('wishlistItemsCount:', wishlistItemsCount);
-    console.log('cartItemsCount:', cartItemsCount);
-    console.log('currentUser:', currentUser);
-  }, [wishlistItemsCount, cartItemsCount, currentUser]);
-
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 32);
+      setIsScrolled(window.scrollY > 20); // Trigger más rápido
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -53,26 +45,26 @@ export default function Header({
 
   return (
     <>
-      {/* HEADER CON BANNER SUPERIOR */}
+      {/* HEADER FIJO CON BANNER */}
       <div className="fixed top-0 left-0 right-0 z-50">
-        {/* BANNER DE DESPLAZAMIENTO CONTINUO */}
-        <div className="bg-black text-white py-2 overflow-hidden">
-          <div className="max-w-7xl mx-auto px-8 md:px-16">
-            <div className="flex items-center justify-between whitespace-nowrap">
-              <div className="flex space-x-8 animate-marquee">
-                {/* Contenido del banner que se repite para el efecto continuo */}
-                {[...Array(4)].map((_, blockIndex) => (
-                  <div key={blockIndex} className="flex items-center">
-                    <span className="text-xs font-semibold uppercase tracking-wider">
+        
+        {/* BANNER SUPERIOR — Más suave, menos agresivo */}
+        <div className="bg-gaia-black-soft text-gaia-bone py-1.5 overflow-hidden">
+          <div className="container-gaia">
+            <div className="flex items-center justify-center whitespace-nowrap">
+              <div className="flex space-x-6 animate-marquee">
+                {[...Array(3)].map((_, blockIndex) => (
+                  <div key={blockIndex} className="flex items-center font-body">
+                    <span className="text-[10px] font-medium uppercase tracking-wider">
                       15% OFF x TRANSFERENCIA
                     </span>
-                    <span className="mx-8 text-gray-400">•</span>
-                    <span className="text-xs font-semibold uppercase tracking-wider">
-                      ENVÍO GRATIS A PARTIR DE $150.000
+                    <span className="mx-6 text-gaia-ash">•</span>
+                    <span className="text-[10px] font-medium uppercase tracking-wider">
+                      ENVÍO GRATIS +$150.000
                     </span>
-                    <span className="mx-8 text-gray-400">•</span>
-                    <span className="text-xs font-semibold uppercase tracking-wider">
-                      3 & 6  CUOTAS SIN INTERÉS
+                    <span className="mx-6 text-gaia-ash">•</span>
+                    <span className="text-[10px] font-medium uppercase tracking-wider">
+                      3 & 6 CUOTAS SIN INTERÉS
                     </span>
                   </div>
                 ))}
@@ -81,28 +73,28 @@ export default function Header({
           </div>
         </div>
 
-        {/* HEADER PRINCIPAL */}
+        {/* HEADER PRINCIPAL — Compacto y elegante */}
         <header className={`
-          transition-all duration-500 bg-white
+          transition-all duration-300 bg-gaia-bone border-b
           ${isScrolled 
-            ? 'bg-white/95 backdrop-blur-md shadow-sm py-3' 
-            : 'bg-white py-6'
+            ? 'bg-gaia-bone/95 backdrop-blur-lg shadow-sm py-2 border-gaia-border' 
+            : 'bg-gaia-bone py-4 border-transparent'
           }
         `}>
-          <div className="max-w-7xl mx-auto px-8 md:px-16">
+          <div className="container-gaia">
             <div className="flex items-center justify-between">
               
-              {/* LOGO MÁS GRANDE */}
+              {/* LOGO — Tamaño reducido y proporcional */}
               <div className="flex-1 md:flex-none">
                 <button 
                   onClick={() => onNavigate('home')}
-                  className="hover:opacity-80 transition-opacity flex items-center"
+                  className="hover:opacity-80 transition-opacity duration-300 flex items-center"
                 >
                   <img 
-                    src="/logo.avif" 
+                    src="/gaialogo-header.png" 
                     alt="Gaia Six"
-                    className={`transition-all duration-500 object-contain ${
-                      isScrolled ? 'h-20 md:h-24' : 'h-24 md:h-28'  // LOGO MÁS GRANDE
+                    className={`transition-all duration-300 object-contain ${
+                      isScrolled ? 'h-12 md:h-14' : 'h-16 md:h-18'
                     }`}
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "/logo.avif";
@@ -112,16 +104,16 @@ export default function Header({
               </div>
 
               {/* NAVEGACIÓN CENTRAL */}
-              <nav className="hidden md:flex items-center gap-10 absolute left-1/2 transform -translate-x-1/2">
+              <nav className="hidden md:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2">
                 {navItems.map((item) => (
                   <button 
                     key={item.id}
                     onClick={() => onNavigate(item.id)}
                     className={`
-                      text-xs uppercase tracking-[0.25em] transition-all duration-300 font-light
+                      font-body text-[10px] uppercase tracking-[0.25em] transition-colors duration-300
                       ${currentPage === item.id 
-                        ? 'text-red-500' 
-                        : 'text-neutral-600 hover:text-black'
+                        ? 'text-gaia-crimson font-medium' 
+                        : 'text-gaia-ash hover:text-gaia-black-soft font-light'
                       }
                     `}
                   >
@@ -130,36 +122,36 @@ export default function Header({
                 ))}
               </nav>
 
-              {/* ICONOS */}
-              <div className="flex items-center gap-4 flex-1 justify-end">
+              {/* ICONOS — Más espaciados y elegantes */}
+              <div className="flex items-center gap-3 flex-1 justify-end">
                 
                 {/* Buscador */}
                 <button 
                   onClick={() => setIsSearchOpen(!isSearchOpen)}
-                  className="p-2 hover:text-red-500 transition-colors group"
+                  className="p-2 hover:text-gaia-crimson transition-colors duration-300 group"
                   aria-label="Buscar"
                 >
-                  <Search size={18} className="text-neutral-500 group-hover:text-red-500 transition-colors" />
+                  <Search size={16} className="text-gaia-concrete group-hover:text-gaia-crimson transition-colors" />
                 </button>
 
                 {/* Cuenta */}
                 <button 
                   onClick={() => onNavigate(currentUser ? 'profile' : 'auth')}
-                  className="hidden md:block p-2 hover:text-red-500 transition-colors group"
+                  className="hidden md:block p-2 hover:text-gaia-crimson transition-colors duration-300 group"
                   aria-label="Cuenta"
                 >
-                  <User size={18} className="text-neutral-500 group-hover:text-red-500 transition-colors" />
+                  <User size={16} className="text-gaia-concrete group-hover:text-gaia-crimson transition-colors" />
                 </button>
 
                 {/* Favoritos */}
                 <button 
                   onClick={() => onNavigate('wishlist')}
-                  className="hidden md:block p-2 hover:text-red-500 transition-colors group relative"
+                  className="hidden md:block p-2 hover:text-gaia-crimson transition-colors duration-300 group relative"
                   aria-label="Favoritos"
                 >
-                  <Heart size={18} className="text-neutral-500 group-hover:text-red-500 transition-colors" />
+                  <Heart size={16} className="text-gaia-concrete group-hover:text-gaia-crimson transition-colors" />
                   {wishlistItemsCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-medium">
+                    <span className="absolute -top-1 -right-1 bg-gaia-crimson text-gaia-bone text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-body font-medium">
                       {wishlistItemsCount}
                     </span>
                   )}
@@ -168,12 +160,12 @@ export default function Header({
                 {/* Carrito */}
                 <button 
                   onClick={onCartToggle}
-                  className="p-2 hover:text-red-500 transition-colors group relative"
+                  className="p-2 hover:text-gaia-crimson transition-colors duration-300 group relative"
                   aria-label="Carrito"
                 >
-                  <ShoppingBag size={18} className="text-neutral-500 group-hover:text-red-500 transition-colors" />
+                  <ShoppingBag size={16} className="text-gaia-concrete group-hover:text-gaia-crimson transition-colors" />
                   {cartItemsCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-medium">
+                    <span className="absolute -top-1 -right-1 bg-gaia-crimson text-gaia-bone text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-body font-medium">
                       {cartItemsCount}
                     </span>
                   )}
@@ -181,14 +173,14 @@ export default function Header({
 
                 {/* Menú Mobile */}
                 <button 
-                  className="md:hidden p-2 hover:text-red-500 transition-colors"
+                  className="md:hidden p-2 hover:text-gaia-crimson transition-colors duration-300"
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   aria-label="Menú"
                 >
                   {isMobileMenuOpen ? (
-                    <X size={20} className="text-red-500" />
+                    <X size={18} className="text-gaia-crimson" />
                   ) : (
-                    <Menu size={20} className="text-neutral-500" />
+                    <Menu size={18} className="text-gaia-concrete" />
                   )}
                 </button>
               </div>
@@ -196,19 +188,19 @@ export default function Header({
 
             {/* BUSCADOR EXPANDIBLE */}
             {isSearchOpen && (
-              <div className="mt-6 animate-fade-in">
+              <div className="mt-4 animate-fade-in">
                 <div className="relative max-w-2xl mx-auto">
                   <input
                     type="text"
                     placeholder="Buscar prendas, estilos, colecciones..."
-                    className="w-full bg-transparent border-0 border-b border-neutral-200 py-3 px-0 text-black placeholder-neutral-400 focus:outline-none focus:border-red-500 transition-colors text-sm"
+                    className="w-full bg-transparent border-0 border-b border-gaia-border-solid py-2 px-0 text-gaia-black-soft placeholder-gaia-silver focus:outline-none focus:border-gaia-crimson transition-colors duration-300 text-sm font-body font-light"
                     autoFocus
                   />
                   <button 
                     onClick={() => setIsSearchOpen(false)}
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-red-500 transition-colors"
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gaia-concrete hover:text-gaia-crimson transition-colors duration-300"
                   >
-                    <X size={18} />
+                    <X size={16} />
                   </button>
                 </div>
               </div>
@@ -217,16 +209,16 @@ export default function Header({
         </header>
       </div>
 
-      {/* MENÚ MÓVIL */}
+      {/* MENÚ MÓVIL — Más suave y coherente */}
       <div className={`
-        fixed inset-0 z-40 bg-white transform transition-transform duration-500 ease-out md:hidden
+        fixed inset-0 z-40 bg-gaia-bone transform transition-transform duration-300 ease-out md:hidden
         ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}
       `}>
-        <div className="pt-24 pb-8 px-8 h-full flex flex-col">
+        <div className="pt-20 pb-8 px-6 h-full flex flex-col">
           
           {/* Navegación móvil */}
           <nav className="flex-1">
-            <div className="space-y-2">
+            <div className="space-y-1">
               {navItems.map((item) => (
                 <button 
                   key={item.id}
@@ -235,10 +227,10 @@ export default function Header({
                     setIsMobileMenuOpen(false);
                   }}
                   className={`
-                    block w-full text-left py-4 text-xl font-light tracking-tight transition-colors
+                    block w-full text-left py-3 font-display text-2xl tracking-tight transition-colors duration-300
                     ${currentPage === item.id 
-                      ? 'text-red-500' 
-                      : 'text-black hover:text-red-500'
+                      ? 'text-gaia-crimson' 
+                      : 'text-gaia-black-soft hover:text-gaia-crimson'
                     }
                   `}
                 >
@@ -247,16 +239,16 @@ export default function Header({
               ))}
               
               {/* Sección de usuario móvil */}
-              <div className="pt-8 mt-8 border-t border-neutral-200 space-y-4">
+              <div className="pt-6 mt-6 border-t border-gaia-border space-y-3">
                 <button 
                   onClick={() => {
                     onNavigate(currentUser ? 'profile' : 'auth');
                     setIsMobileMenuOpen(false);
                   }}
-                  className="flex items-center gap-3 text-neutral-600 hover:text-red-500 transition-colors"
+                  className="flex items-center gap-3 text-gaia-ash hover:text-gaia-crimson transition-colors duration-300"
                 >
-                  <User size={18} />
-                  <span className="text-sm uppercase tracking-widest">
+                  <User size={16} />
+                  <span className="font-body text-xs uppercase tracking-[0.2em]">
                     {currentUser ? 'Mi Cuenta' : 'Ingresar'}
                   </span>
                 </button>
@@ -266,14 +258,14 @@ export default function Header({
                     onNavigate('wishlist');
                     setIsMobileMenuOpen(false);
                   }}
-                  className="flex items-center justify-between w-full text-neutral-600 hover:text-red-500 transition-colors"
+                  className="flex items-center justify-between w-full text-gaia-ash hover:text-gaia-crimson transition-colors duration-300"
                 >
                   <div className="flex items-center gap-3">
-                    <Heart size={18} />
-                    <span className="text-sm uppercase tracking-widest">Favoritos</span>
+                    <Heart size={16} />
+                    <span className="font-body text-xs uppercase tracking-[0.2em]">Favoritos</span>
                   </div>
                   {wishlistItemsCount > 0 && (
-                    <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                    <span className="bg-gaia-crimson text-gaia-bone text-[9px] px-2 py-0.5 rounded-full font-body font-medium">
                       {wishlistItemsCount}
                     </span>
                   )}
@@ -283,11 +275,11 @@ export default function Header({
           </nav>
 
           {/* Footer móvil */}
-          <div className="pt-8 border-t border-neutral-200">
-            <div className="text-xs text-neutral-500 space-y-2">
+          <div className="pt-6 border-t border-gaia-border">
+            <div className="font-body text-[10px] text-gaia-ash space-y-1.5">
               <p>gaiashowroom@gmail.com</p>
               <p>+54 9 2964 479923</p>
-              <p className="uppercase tracking-widest">@gaiasix</p>
+              <p className="uppercase tracking-[0.2em]">@gaiasix</p>
             </div>
           </div>
         </div>
@@ -296,13 +288,13 @@ export default function Header({
       {/* OVERLAY */}
       {isMobileMenuOpen && (
         <div 
-          className="fixed inset-0 z-30 bg-black/20 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-30 bg-gaia-black-soft/20 backdrop-blur-sm md:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
 
-      {/* SPACER para compensar el header fixed CON BANNER */}
-      <div className={isScrolled ? 'h-[100px]' : 'h-[140px]'}></div>
+      {/* SPACER */}
+      <div className={isScrolled ? 'h-[68px]' : 'h-[88px]'}></div>
     </>
   );
 }

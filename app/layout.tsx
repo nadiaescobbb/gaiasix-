@@ -36,32 +36,6 @@ const galiska = localFont({
   preload: true,
 })
 
-/**
- * CSTUNKER — Tipografía body para UI y textos
- * Usamos el archivo único que tenés: CSTunker.woff2
- */
-const cstunker = localFont({
-  src: [
-    {
-      path: '../public/fonts/CSTunker.woff2',
-      weight: '300', // Light
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/CSTunker.woff2', 
-      weight: '400', // Regular
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/CSTunker.woff2', 
-      weight: '700', // Bold
-      style: 'normal',
-    },
-  ],
-  variable: '--font-body',
-  display: 'swap',
-  preload: true,
-})
 
 // ═══════════════════════════════════════════════════════════════
 // METADATA — SEO y Open Graph
@@ -73,7 +47,6 @@ export const metadata = {
   authors: [{ name: 'GAIA SIX' }],
   creator: 'GAIA SIX',
   
-  // Open Graph (para compartir en redes)
   openGraph: {
     type: 'website',
     locale: 'es_AR',
@@ -83,7 +56,7 @@ export const metadata = {
     siteName: 'GAIA SIX',
     images: [
       {
-        url: '/logo.jpg', 
+        url: '/gaialogo.avif', 
         width: 1200,
         height: 630,
         alt: 'GAIA SIX',
@@ -139,7 +112,7 @@ export default function RootLayout({
   return (
     <html 
       lang="es" 
-      className={`${galiska.variable} ${cstunker.variable} scroll-smooth`}
+      className={`${galiska.variable} scroll-smooth`}
       suppressHydrationWarning
     >
       <body className="font-body antialiased bg-white text-black">

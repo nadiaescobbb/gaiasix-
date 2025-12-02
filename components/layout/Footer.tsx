@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Image from 'next/image'; 
 
 export default function Footer() {
   const router = useRouter();
@@ -23,14 +24,22 @@ export default function Footer() {
     <footer className="bg-black text-white py-20 border-t border-white/10">
       <div className="max-w-7xl mx-auto px-8 md:px-16">
         <div className="grid md:grid-cols-4 gap-12 mb-12 pb-12 border-b border-white/10">
-          {/* Columna 1: Logo y descripción */}
+          {/* Columna 1: Logo */}
           <div>
             <button 
               onClick={() => handleNavigation('/')}
               disabled={isNavigating}
-              className="text-2xl font-light tracking-wider mb-3 hover:opacity-80 transition-opacity disabled:opacity-50 text-left"
+              className="mb-3 hover:opacity-80 transition-opacity disabled:opacity-50 text-left"
             >
-              GAIA<span className="italic font-serif text-red-500">SIX</span>
+              <div className="relative w-32 h-12"> 
+                <Image
+                  src="/logo.avif" 
+                  alt="GAIA SIX Logo"
+                  fill
+                  className="object-contain object-left"
+                  priority
+                />
+              </div>
             </button>
             <p className="text-xs text-neutral-500 leading-relaxed">
               ropa para salir
