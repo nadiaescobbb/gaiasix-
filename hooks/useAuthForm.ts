@@ -17,6 +17,27 @@ export const useAuthForm = () => {
     }
   }, [currentUser]);
 
+  // ✅ NUEVO: Auto-limpiar mensajes después de 5 segundos
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    
+    if (successMessage) {
+      timer = setTimeout(() => {
+        setSuccessMessage('');
+      }, 5000);
+    }
+    
+    if (error) {
+      timer = setTimeout(() => {
+        setError(null);
+      }, 5000);
+    }
+    
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [successMessage, error]);
+
   const handleLogin = useCallback(async (email: string, password: string): Promise<LoginResult> => {
     setIsLoading(true);
     setError(null);

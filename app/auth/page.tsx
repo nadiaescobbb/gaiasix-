@@ -17,11 +17,13 @@ export default function AuthRoute() {
     clearSuccess
   } = useAuthForm();
 
-  // Mostrar spinner mientras se inicializa
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gaia-white">
-        <LoadingSpinner message="Preparando tu experiencia..." />
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gaia-white">
+        <LoadingSpinner />
+        <p className="mt-4 text-gaia-ash text-sm">
+          Preparando tu experiencia...
+        </p>
       </div>
     );
   }

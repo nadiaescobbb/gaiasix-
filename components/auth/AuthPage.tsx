@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, ChangeEvent, FormEvent, useCallback, useMemo } from 'react';
+import { useState, ChangeEvent, FormEvent, useCallback, useMemo, useEffect } from 'react';
 import { Mail, Lock, User, Phone, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react';
 import { type LoginResult, type RegisterResult, type RegisterUserData } from '../../lib/types';
 
@@ -10,6 +10,9 @@ interface AuthPageProps {
   onRegister: (userData: RegisterUserData) => Promise<RegisterResult>; 
   onToggleMode: () => void;
   error?: string;
+  successMessage?: string;
+  onClearError?: () => void;
+  onClearSuccess?: () => void;
 }
 
 interface FormData {
@@ -50,8 +53,16 @@ const validateConfirmPassword = (password: string, confirmPassword: string): str
   return password === confirmPassword ? '' : 'Las contraseñas no coinciden';
 };
 
-export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, error }: AuthPageProps) {
-  // Estado simplificado - sin debounce
+export default function AuthPage({ 
+  mode, 
+  onLogin, 
+  onRegister, 
+  onToggleMode, 
+  error,
+  successMessage,
+  onClearError,
+  onClearSuccess
+}: AuthPageProps) {
   const [formData, setFormData] = useState<FormData>({ 
     email: '', 
     password: '', 
@@ -61,15 +72,25 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
   });
   
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+  const [localErrors, setLocalErrors] = useState<Record<string, string>>({});
+
+  // Auto-limpiar mensaje de éxito después de 5 segundos
+  useEffect(() => {
+    if (successMessage && onClearSuccess) {
+      const timer = setTimeout(() => {
+        onClearSuccess();
+      }, 5000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage, onClearSuccess]);
 
   // Validaciones en tiempo real optimizadas
   const errors = useMemo(() => {
     const newErrors: Record<string, string> = {};
     
-    // Solo validar campos con contenido
     if (formData.email) newErrors.email = validateEmail(formData.email);
     if (formData.password) newErrors.password = validatePassword(formData.password);
     
@@ -81,20 +102,29 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
       }
     }
     
-    // Remover errores vacíos
     Object.keys(newErrors).forEach(key => {
       if (!newErrors[key]) delete newErrors[key];
     });
     
-    return newErrors;
-  }, [formData, mode]);
+    return { ...localErrors, ...newErrors };
+  }, [formData, mode, localErrors]);
 
-  // Handler de cambio directo y rápido
   const handleChange = useCallback((field: keyof FormData, value: string): void => {
     setFormData(prev => ({ ...prev, [field]: value }));
-  }, []);
+    
+    if (localErrors[field]) {
+      setLocalErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
+    
+    if (error && onClearError) {
+      onClearError();
+    }
+  }, [error, localErrors, onClearError]);
 
-  // Validación solo al submit
   const validateForm = (): boolean => {
     const submitErrors: Record<string, string> = {};
     
@@ -107,58 +137,55 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
       submitErrors.confirmPassword = validateConfirmPassword(formData.password, formData.confirmPassword || '');
     }
     
-    // Solo mostrar errores que existen
     const hasErrors = Object.values(submitErrors).some(error => error !== '');
     
     if (hasErrors) {
-      // Mostrar solo errores relevantes en la UI
+      const filteredErrors: Record<string, string> = {};
       Object.keys(submitErrors).forEach(key => {
-        if (!submitErrors[key]) delete submitErrors[key];
+        if (submitErrors[key]) filteredErrors[key] = submitErrors[key];
       });
+      
+      setLocalErrors(filteredErrors);
       return false;
     }
     
+    setLocalErrors({});
     return true;
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    setSuccessMessage('');
+    
+    if (onClearError) onClearError();
+    if (onClearSuccess) onClearSuccess();
     
     if (!validateForm()) return;
 
     setIsSubmitting(true);
 
     try {
-      let result: LoginResult | RegisterResult;
-
       if (mode === 'login') {
-        result = await onLogin(formData.email, formData.password);
-        if (result.success) {
-          setSuccessMessage('¡Bienvenida de nuevo! 👋');
-          // No limpiar form inmediatamente para mejor UX
-        } else {
-          // El error se maneja desde el prop
-        }
+        await onLogin(formData.email, formData.password);
       } else {
         const { confirmPassword, ...userData } = formData;
-        result = await onRegister(userData);
+        await onRegister(userData);
         
-        if (result.success) {
-          setSuccessMessage('¡Cuenta creada exitosamente! 🎊');
+        if (!error) {
+          setFormData({ email: '', password: '', name: '', phone: '', confirmPassword: '' });
         }
       }
     } catch (error) {
       console.error('Auth error:', error);
-      // El error se maneja desde el contexto
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleToggleMode = (): void => {
-    setSuccessMessage('');
     setFormData({ email: '', password: '', name: '', phone: '', confirmPassword: '' });
+    setLocalErrors({});
+    if (onClearError) onClearError();
+    if (onClearSuccess) onClearSuccess();
     onToggleMode();
   };
 
@@ -170,7 +197,6 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
     setShowConfirmPassword(prev => !prev);
   };
 
-  // Determinar si el formulario puede enviarse
   const canSubmit = mode === 'login' 
     ? formData.email && formData.password && !errors.email && !errors.password
     : formData.email && formData.password && formData.name && formData.phone && formData.confirmPassword &&
@@ -179,7 +205,6 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
   return (
     <div className="min-h-screen bg-gaia-white flex items-center justify-center px-6 py-12 pt-24">
       <div className="max-w-md w-full">
-        {/* Header Gaia Six */}
         <div className="text-center mb-12">
           <div className="logo-gaia text-3xl mb-4">
             GAIA<span className="text-gaia-crimson">SIX</span>
@@ -189,7 +214,6 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
           </h2>
         </div>
         
-        {/* Mensaje de error general */}
         {error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-sm flex items-start gap-3">
             <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
@@ -197,7 +221,6 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
           </div>
         )}
 
-        {/* Mensaje de éxito */}
         {successMessage && (
           <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-sm flex items-start gap-3">
             <CheckCircle className="text-green-600 flex-shrink-0 mt-0.5" size={20} />
@@ -208,7 +231,6 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
         <form onSubmit={handleSubmit} className="space-y-6">
           {mode === 'register' && (
             <>
-              {/* Campo Nombre */}
               <div>
                 <div className="relative">
                   <User className="absolute left-3 top-3 text-gaia-silver" size={18} />
@@ -226,7 +248,6 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
                 )}
               </div>
 
-              {/* Campo Teléfono */}
               <div>
                 <div className="relative">
                   <Phone className="absolute left-3 top-3 text-gaia-silver" size={18} />
@@ -246,7 +267,6 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
             </>
           )}
           
-          {/* Campo Email */}
           <div>
             <div className="relative">
               <Mail className="absolute left-3 top-3 text-gaia-silver" size={18} />
@@ -264,7 +284,6 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
             )}
           </div>
           
-          {/* Campo Contraseña */}
           <div>
             <div className="relative">
               <Lock className="absolute left-3 top-3 text-gaia-silver" size={18} />
@@ -290,7 +309,6 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
             )}
           </div>
 
-          {/* Campo Confirmar Contraseña (solo registro) */}
           {mode === 'register' && (
             <div>
               <div className="relative">
@@ -343,7 +361,6 @@ export default function AuthPage({ mode, onLogin, onRegister, onToggleMode, erro
             {mode === 'login' ? '¿Nuevo en Gaia Six? Crear cuenta' : '¿Ya tienes cuenta? Acceder'}
           </button>
         </div>
-
       </div>
     </div>
   );

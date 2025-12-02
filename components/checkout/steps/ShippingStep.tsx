@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Truck, User, Mail, Phone, MapPin } from 'lucide-react';
-import { ShippingMethod, getAvailableMethodsForProvince, calculateShipping } from '../../../config/shipping';
-import { useShipping } from '.../../../hooks/useShipping';
+import { ShippingMethod, getAvailableMethodsForProvince, calculateShipping } from './../../../config/shipping';
+import { useShipping } from '../../../hooks/useShipping';
 import { ContactInfo } from './../forms/ContactInfo';
 import { AddressForm } from './../forms/AddressForm';
 import { ShippingSelector } from './../forms/shippingSelector';

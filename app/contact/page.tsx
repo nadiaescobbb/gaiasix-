@@ -1,7 +1,7 @@
 "use client";
 
-import { ContactHero } from '.../../components/contact/ContactHero';
-import { ContactInfo } from '.../../components/contact/ContactInfo';
+import { ContactHero } from '../../components/contact/ContactHero';
+import { ContactInfo } from '../../components/contact/ContactInfo';
 import { ContactForm } from './../../components/contact/ContactForm/ContactForm';
 import { FAQ } from './../../components/contact/FAQ';
 
