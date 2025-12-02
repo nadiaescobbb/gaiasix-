@@ -10,23 +10,23 @@ import ClientLayout from '../components/layout/ClientLayout'
 // ═══════════════════════════════════════════════════════════════
 
 /**
- * GALISCKA — Tipografía display para títulos y hero
- * Usamos el archivo único que tenés: Galiscka.woff2
+ * GALISKA — Tipografía display para títulos y hero
+ * Usamos el archivo único que tenés: Galiska.woff2
  */
-const galiscka = localFont({
+const galiska = localFont({
   src: [
     {
-      path: '../public/fonts/Galiscka.woff2',
+      path: '../public/fonts/Galiska.woff2',
       weight: '300', // Light
       style: 'normal',
     },
     {
-      path: '../public/fonts/Galiscka.woff2', 
+      path: '../public/fonts/Galiska.woff2', 
       weight: '400', 
       style: 'normal',
     },
     {
-      path: '../public/fonts/Galiscka.woff2', 
+      path: '../public/fonts/Galiska.woff2', 
       weight: '700', // Bold
       style: 'normal',
     },
@@ -139,7 +139,7 @@ export default function RootLayout({
   return (
     <html 
       lang="es" 
-      className={`${galiscka.variable} ${cstunker.variable} scroll-smooth`}
+      className={`${galiska.variable} ${cstunker.variable} scroll-smooth`}
       suppressHydrationWarning
     >
       <body className="font-body antialiased bg-white text-black">

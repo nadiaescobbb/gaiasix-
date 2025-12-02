@@ -34,8 +34,9 @@ module.exports = {
       // 🔤 SISTEMA TIPOGRÁFICO — Solo 2 familias
       // ═══════════════════════════════════════════════
       fontFamily: {
-        display: ['Galiscka', 'Inter', 'serif'], // Títulos, hero
-        body: ['Galiscka', 'Inter', 'system-ui', 'sans-serif'], // UI, textos
+      display: ['Galiska', 'Inter', 'serif'],
+      body: ['Galiska', 'Inter', 'system-ui', 'sans-serif'],
+
       
 
       },

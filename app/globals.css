@@ -1,5 +1,5 @@
 /* ───────────────────────────────────────────────────────────────
-   1. FUENTES — Inter (fallback) + fuentes locales
+   1. FUENTES + fuentes locales
    ─────────────────────────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
@@ -8,19 +8,19 @@
 @tailwind utilities;
 
 /* ───────────────────────────────────────────────────────────────
-   2. FUENTES LOCALES — Galiscka (Display) y CSTunker (UI)
+   2. FUENTES LOCALES — Galiska (Display) y CSTunker (UI)
    ─────────────────────────────────────────────────────────────── */
 
-/* Galiscka — Para títulos y hero */
+/* Galiska — Display (títulos) */
 @font-face {
-  font-family: 'Galiscka';
-  src: url('/fonts/Galiscka.woff2') format('woff2');
+  font-family: 'Galiska';
+  src: url('/fonts/Galiska.woff2') format('woff2');
   font-weight: 300 700;
   font-style: normal;
   font-display: swap;
 }
 
-/* CSTunker — Para UI y cuerpo de texto */
+/* CSTunker — UI (cuerpo de texto) */
 @font-face {
   font-family: 'CSTunker';
   src: url('/fonts/CSTunker.woff2') format('woff2');
@@ -50,8 +50,8 @@
   --gaia-border-solid: rgba(201, 201, 201, 0.3);
   
   /* Tipografía */
-  --font-display: 'Galiscka', 'Inter', 'Georgia', serif;
-  --font-body: 'Galiscka', 'Inter', system-ui, sans-serif;
+  --font-display: 'Galiska', 'Inter', 'Georgia', serif;
+  --font-body: 'Galiska', 'Inter', system-ui, sans-serif;
 }
 
 /* ───────────────────────────────────────────────────────────────
