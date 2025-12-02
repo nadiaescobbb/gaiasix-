@@ -33,25 +33,25 @@
    3. VARIABLES CSS — Sincronizadas con tailwind.config.js
    ─────────────────────────────────────────────────────────────── */
 :root {
-  /* Colores principales */
-  --gaia-black: #000000;
-  --gaia-white: #F0F3F4;
-  --gaia-crimson: #AF161F; 
+  --gaia-bone: #F8F5F0;           
+  --gaia-cream: #EDE7DD;        
+  --gaia-concrete: #7A7D7F;       
+  --gaia-black-soft: #1A1A1A;     
+  --gaia-crimson: #AF161F;     
   
-  /* Grises */
-  --gaia-charcoal: #111111;
-  --gaia-silver: #C9C9C9;
-  --gaia-ash: #666666;
+  /* Grises auxiliares */
+  --gaia-charcoal: #2B2B2B;       
+  --gaia-silver: #C9C9C9;         
+  --gaia-ash: #666666;            
   
   /* Utilidades */
-  --gaia-overlay: rgba(0, 0, 0, 0.85);
-  --gaia-overlay-light: rgba(0, 0, 0, 0.40);
-  --gaia-border: rgba(201, 201, 201, 0.15);
-  --gaia-border-solid: rgba(201, 201, 201, 0.3);
+  --gaia-overlay: rgba(26, 26, 26, 0.50);      
+  --gaia-overlay-light: rgba(26, 26, 26, 0.15); 
+  --gaia-overlay-hover: rgba(26, 26, 26, 0.60); 
   
   /* Tipografía */
-  --font-display: 'Galiska', 'Inter', 'Georgia', serif;
-  --font-body: 'Galiska', 'Inter', system-ui, sans-serif;
+--font-display: 'Galiska', 'Georgia', 'Playfair Display', serif;
+--font-body: 'CSTunker', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* ───────────────────────────────────────────────────────────────
@@ -64,10 +64,9 @@
   }
   
   body {
-    @apply bg-white text-black antialiased;
-    font-family: var(--font-body);
-    font-weight: 300;
-    line-height: 1.6;
+    @apply antialiased;
+    background-color: var(--gaia-bone);
+    color: var(--gaia-black-soft);
   }
 
   /* Selection personalizado */
@@ -184,7 +183,9 @@
   
   /* ─── BADGES ─── */
   .badge-new {
-    @apply absolute top-4 left-4 bg-gaia-black text-white px-3 py-1 text-[9px] tracking-[0.25em] uppercase font-body font-medium z-10;
+   @apply absolute top-4 left-4 bg-gaia-crimson px-3 py-1.5 text-[9px] tracking-[0.25em] uppercase font-body font-medium z-10;
+    color: var(--gaia-bone);
+    box-shadow: 0 2px 8px rgba(175, 22, 31, 0.3);
   }
   
   /* ─── NAVEGACIÓN ─── */
@@ -238,6 +239,15 @@
   .text-balance {
     text-wrap: balance;
   }
+   
+  .gradient-hero-gaia {
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 40%,
+      var(--gaia-overlay-light) 80%,
+      rgba(26, 26, 26, 0.25) 100%
+    );
   
   /* Gradientes Gaia */
   .gradient-overlay-gaia {
